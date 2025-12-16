@@ -1,0 +1,31 @@
+
+h1 {
+    font-size: 2em;
+    text-align: center;
+    color: blue;
+}
+.container {
+  display: grid;
+  grid-template-columns:  1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-gap: 5px;
+}
+.tile {
+  background-color: rgba(219, 219, 219, 0.541);
+  aspect-ratio: 1;
+}
+
+.tile-active {
+  background-color: rgb(195, 195, 195);
+  aspect-ratio: 1;
+}
+
+.hand{
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns:  1fr 1fr 1fr 1fr 1fr 1fr 1fr; 
+  grid-gap: 5px;
+}
+
+.hand .tile{
+  line-height: 50px
+}
