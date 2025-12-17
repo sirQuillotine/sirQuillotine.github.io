@@ -1,12 +1,14 @@
-
 h1 {
-    font-size: 2em;
-    text-align: center;
-    color: blue;
+  font-size: 2em;
+  text-align: center;
+  color: blue;
 }
 .container {
+  user-select: none;
+  outline: none;
+  border: none;
   display: grid;
-  grid-template-columns:  1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
   grid-gap: 5px;
 }
 .tile {
@@ -19,13 +21,31 @@ h1 {
   aspect-ratio: 1;
 }
 
-.hand{
+.tile-write-horizontal {
+  background-color: rgb(98, 192, 11);
+  aspect-ratio: 1;
+}
+
+.tile-write-vertical {
+  background-color: rgb(11, 135, 192);
+  aspect-ratio: 1;
+}
+
+.solution {
+  background-color: rgb(192, 53, 11);
+}
+
+.solved {
+  background-color: rgb(92, 192, 11);
+}
+.hand {
   margin-top: 10px;
   display: grid;
-  grid-template-columns:  1fr 1fr 1fr 1fr 1fr 1fr 1fr; 
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
   grid-gap: 5px;
 }
 
-.hand .tile{
-  line-height: 50px
+.hand .tile {
+  user-select: none;
+  line-height: 50px;
 }
