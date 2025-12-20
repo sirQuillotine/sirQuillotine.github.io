@@ -53,6 +53,10 @@ body {
     cursor: pointer;
 }
 .has-letter {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
     background-color: #ff000000 !important;
     border: none !important;
     filter: drop-shadow(0vh 0vh 0.2vh #000000);
@@ -67,27 +71,15 @@ body {
 }
 .base-tile-2x-letter {
     background-image: url('/graphics/tiles/2xkirj.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
 }
 .base-tile-3x-letter {
     background-image: url('/graphics/tiles/3xkirj.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
 }
 .base-tile-2x-word {
     background-image: url('/graphics/tiles/2xsana.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
 }
 .base-tile-3x-word {
     background-image: url('/graphics/tiles/3xsana.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
 }
 .base-tile-center {
     box-sizing: border-box;
