@@ -21,24 +21,6 @@ const TILE_STYLES = [
   [4, 0, 0, 1, 0, 0, 0, 4, 0, 0, 0, 1, 0, 0, 4],
 ];
 
-const GENERATED_BOARD = [
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, "K", "E", "R", "M", "A", 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-];
-
 const STYLE_MAP: any = {
   0: "base-tile-empty",
   1: "base-tile-2x-letter",
@@ -49,7 +31,6 @@ const STYLE_MAP: any = {
 };
 
 var guess = "";
-var guessPointer: number[] = [7, 7];
 var oguessPointer: number[] = [];
 var generatedBoard: string[][] = [];
 var generatedHand: string[] = [];
@@ -902,43 +883,6 @@ const LBoard = () => {
           })
         )}
 
-        {/* Karettti */}
-        <div
-          id="cursor"
-          onClick={handleCursorClick}
-          style={{
-            transform: `translate(${(cursor.col - 1) * step}vh, ${
-              (cursor.row - 1) * step
-            }vh)`,
-            transition: "transform 0.02s ease-out",
-            zIndex: 10,
-          }}
-        >
-          <img
-            src="/graphics/tab_tag.svg"
-            id="cursor-tag"
-            className="cursor-inner"
-            alt=""
-            style={{
-              top: `${guess.length > 0 ? "2" : "1"}`,
-            }}
-          />
-          <img
-            src="/graphics/cursor_moving.svg"
-            id="cursor-border"
-            className={`cursor-inner ${
-              direction === "r" ? "cursor-right" : "cursor-down"
-            }`}
-            alt=""
-          />
-          <img
-            src="/graphics/cursor_icon.svg"
-            id="cursor-key"
-            className="cursor-inner"
-            alt=""
-          />
-        </div>
-
         {/* Alkupää */}
         <div
           id="cursor"
@@ -953,13 +897,44 @@ const LBoard = () => {
           }}
         >
           <img
-            src="/graphics/tab_tag.svg"
+            src="/graphics/cursor_half.png"
+            id="cursor-border"
+            className={`cursor-inner ${
+              direction === "r" ? "cursor-right" : "cursor-down"
+            }`}
+            alt=""
+          />
+        </div>
+
+        {/* Karettti */}
+        <div
+          id="cursor"
+          onClick={handleCursorClick}
+          style={{
+            transform: `translate(${(cursor.col - 1) * step}vh, ${
+              (cursor.row - 1) * step
+            }vh)`,
+            transition: "transform 0.02s ease-out",
+            zIndex: 10,
+          }}
+        >
+          <img
+            src={
+              guess.length > 0
+                ? "/graphics/enter_tag.svg"
+                : "/graphics/tab_tag.svg"
+            }
             id="cursor-tag"
             className="cursor-inner"
             alt=""
+            style={{
+              top: `${
+                guess.length > 0 && direction == "d" ? "5.75vh" : "-2.5vh"
+              }`,
+            }}
           />
           <img
-            src="/graphics/cursor_moving.svg"
+            src="/graphics/cursor_half_caretside.png"
             id="cursor-border"
             className={`cursor-inner ${
               direction === "r" ? "cursor-right" : "cursor-down"
@@ -971,6 +946,19 @@ const LBoard = () => {
             id="cursor-key"
             className="cursor-inner"
             alt=""
+          />
+          <img
+            src="/graphics/cursor_arrow.svg"
+            id="cursor-arrow"
+            className={`cursor-inner ${
+              guess.length == 0 && direction == "r"
+                ? "cursor-arrow-right"
+                : "cursor-arrow-down"
+            }`}
+            alt=""
+            style={{
+              opacity: `${guess.length > 0 ? "0" : "100"}`,
+            }}
           />
         </div>
       </div>
