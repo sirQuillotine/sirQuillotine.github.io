@@ -1,6 +1,7 @@
 import "./App.css";
 
-//import Board from "./component/board"; // ORIGINAALI
+// Valitse yksi:
+//import Board from "./component/Board"; // ORIGINAALI
 import Board from "./component/front"; // LEEVIN
 
 function App() {
