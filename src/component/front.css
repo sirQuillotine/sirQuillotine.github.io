@@ -82,7 +82,7 @@ body {
   25% {
     transform: scale(1.05);
     opacity: 1;
-    filter: brightness(0.8) sepia(1) hue-rotate(90deg) saturate(400%);
+    filter: brightness(0.8) sepia(1) hue-rotate(90deg) saturate(350%);
   }
   80% {
     transform: scale(1);
