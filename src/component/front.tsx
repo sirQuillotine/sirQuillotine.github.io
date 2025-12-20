@@ -902,13 +902,48 @@ const LBoard = () => {
           })
         )}
 
-        {/* Kursori */}
+        {/* Karettti */}
         <div
           id="cursor"
           onClick={handleCursorClick}
           style={{
             transform: `translate(${(cursor.col - 1) * step}vh, ${
               (cursor.row - 1) * step
+            }vh)`,
+            transition: "transform 0.02s ease-out",
+            zIndex: 10,
+          }}
+        >
+          <img
+            src="/graphics/tab_tag.svg"
+            id="cursor-tag"
+            className="cursor-inner"
+            alt=""
+          />
+          <img
+            src="/graphics/cursor_moving.svg"
+            id="cursor-border"
+            className={`cursor-inner ${
+              direction === "r" ? "cursor-right" : "cursor-down"
+            }`}
+            alt=""
+          />
+          <img
+            src="/graphics/cursor_icon.svg"
+            id="cursor-key"
+            className="cursor-inner"
+            alt=""
+          />
+        </div>
+
+        {/* Alkupää */}
+        <div
+          id="cursor"
+          style={{
+            transform: `translate(${
+              (guess.length > 0 ? oguessPointer[1] : cursor.col - 1) * step
+            }vh, ${
+              (guess.length > 0 ? oguessPointer[0] : cursor.row - 1) * step
             }vh)`,
             transition: "transform 0.02s ease-out",
             zIndex: 10,
