@@ -896,7 +896,11 @@ const LBoard = () => {
           }}
         >
           <img
-            src="/graphics/tab_tag.svg"
+            src={
+              guess.length > 0
+                ? "/graphics/enter_tag.svg"
+                : "/graphics/tab_tag.svg"
+            }
             id="cursor-tag"
             className="cursor-inner"
             alt=""
