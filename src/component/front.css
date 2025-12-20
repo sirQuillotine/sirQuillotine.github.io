@@ -10,17 +10,27 @@
 
   --color-main-dark-green: rgb(32, 45, 40);
 
+  --color-2xletter-opaque: rgb(141, 184, 219);
+  --color-2xletter-transparent: rgb(141, 184, 219, 0.25);
+  --color-3xletter-opaque: rgb(69, 143, 211);
+  --color-3xletter-transparent: rgb(69, 143, 211, 0.25);
+  --color-2xword-opaque: rgb(220, 174, 83);
+  --color-2xword-transparent: rgb(220, 174, 83, 0.25);
+  --color-3xword-opaque: rgb(228, 91, 78);
+  --color-3xword-transparent: rgb(228, 91, 78, 0.25);
+
   --color-empty-tile-fill: rgba(255, 255, 255, 0.02);
   --color-center-tile-fill: rgba(0, 0, 0, 0.15);
   --color-empty-and-enter-tile-border: rgba(255, 255, 255, 0.1);
   /* Center tile border uses same color as empty */
 
-  --px-empty-and-enter-tile-border-thickness: 0.05vh;
+  --tile-border-thickness: 0.05vh;
+  --tile-border-radius: 10%;
 
   --dropshadow-transparent: drop-shadow(0 0 0.5vh #0000005f);
   --dropshadow-opaque: drop-shadow(0vh 0vh 0.2vh #000000);
 }
-
+/* jos animaatio muuttuu 331----- 247
 /* ------------------------------------------------ GENERAL */
 body {
   height: 100vh;
@@ -104,31 +114,43 @@ body {
 }
 .base-tile-empty {
   box-sizing: border-box;
-  border-radius: 10%;
+  border-radius: var(--tile-border-radius);
 
   background-color: var(--color-empty-tile-fill);
-  border: var(--px-empty-and-enter-tile-border-thickness) solid
+  border: var(--tile-border-thickness) solid
     var(--color-empty-and-enter-tile-border);
 }
 .base-tile-2x-letter {
   background-image: url("/graphics/tiles/2xkirj.png");
+  border: var(--color-2xletter-opaque) solid var(--tile-border-thickness);
+  border-radius: var(--tile-border-radius);
+  box-sizing: border-box;
 }
 .base-tile-3x-letter {
   background-image: url("/graphics/tiles/3xkirj.png");
+  border: var(--color-3xletter-opaque) solid var(--tile-border-thickness);
+  border-radius: var(--tile-border-radius);
+  box-sizing: border-box;
 }
 .base-tile-2x-word {
   background-image: url("/graphics/tiles/2xsana.png");
+  border: var(--color-2xword-opaque) solid var(--tile-border-thickness);
+  border-radius: var(--tile-border-radius);
+  box-sizing: border-box;
 }
 .base-tile-3x-word {
   background-image: url("/graphics/tiles/3xsana.png");
+  border: var(--color-3xword-opaque) solid var(--tile-border-thickness);
+  border-radius: var(--tile-border-radius);
+  box-sizing: border-box;
 }
 .base-tile-center {
   box-sizing: border-box;
 
-  border-radius: 10%;
+  border-radius: var(--tile-border-radius);
 
   background-color: var(--color-center-tile-fill);
-  border: var(--px-empty-and-enter-tile-border-thickness) solid
+  border: var(--tile-border-thickness) solid
     var(--color-empty-and-enter-tile-border);
 }
 
@@ -214,8 +236,4 @@ body {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-}
-
-.hand-tile {
-  /*background-size: contain;*/
 }

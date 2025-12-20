@@ -67,7 +67,7 @@ function Board() {
 
   const [board, setBoard] = useState<string[][]>(boardTemplate);
   useEffect(() => {
-    fetch("/siisti.txt")
+    fetch("/sanalista.txt")
       .then((res) => res.text())
       .then((text) => {
         // Split by line, filter out empty lines

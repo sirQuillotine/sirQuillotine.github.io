@@ -1,12 +1,9 @@
-import "./App.css";
-
-// Valitse yksi:
-//import Board from "./component/Board"; // ORIGINAALI
-import Board from "./component/front"; // LEEVIN
+// import "./App.css";
+import Board from "./component/front";
 
 function App() {
   return (
-    <div>
+    <div id="app-div">
       <Board />
     </div>
   );
