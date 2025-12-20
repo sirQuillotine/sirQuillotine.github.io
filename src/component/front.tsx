@@ -21,6 +21,24 @@ const TILE_STYLES = [
     [4, 0, 0, 1, 0, 0, 0, 4, 0, 0, 0, 1, 0, 0, 4]
 ];
 
+const GENERATED_BOARD = [
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, "K", "E", "R", "M", "A", 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+];
+
 const STYLE_MAP: any = {
     0: 'base-tile-empty',
     1: 'base-tile-2x-letter',
@@ -98,16 +116,21 @@ const LBoard = () => {
                         const rowNum = r + 1;
                         const colNum = c + 1;
                         const coordKey = `${rowNum}-${colNum}`;
-                        const letter = placedLetters[coordKey]; // Check if a letter exists at these coordinates
+
+                        const userLetter = placedLetters[coordKey];
+                        const generatedLetter = GENERATED_BOARD[r][c];
+
+                        const isAlpha = /[a-z|ä|ö]/i.test(generatedLetter as string);
+                        const finalLetter = userLetter || (isAlpha ? generatedLetter : null);
 
                         return (
                             <div 
-                                key={coordKey} 
-                                className={`base-tile ${STYLE_MAP[cellValue]} ${letter ? 'has-letter' : ''}`}
-                                onClick={() => moveCursorTo(colNum, rowNum)} // This enables clicking squares!
+                                key={coordKey}
+                                className={`base-tile ${STYLE_MAP[cellValue]} ${finalLetter ? 'has-letter' : ''}`}
+                                onClick={() => moveCursorTo(colNum, rowNum)}
                                 style={{
-                                    // If a letter exists in state, show its image
-                                    backgroundImage: letter ? `url(/graphics/tiles/letters/${letter}.png)` : undefined,
+                                    
+                                    backgroundImage: finalLetter ? `url(/graphics/tiles/letters/${finalLetter}.png)` : undefined,
                                     backgroundSize: 'cover'
                                 }}
                             >
