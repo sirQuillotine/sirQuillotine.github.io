@@ -196,21 +196,6 @@ body {
   justify-content: space-between;
 }
 
-.hand-div {
-  width: 8vh;
-  height: 8vh;
-
-  cursor: pointer;
-
-  background-image: url("/graphics/tiles/letters/A.png");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-
-.hand-div-empty {
-  background-image: none !important;
-  background-color: rgba(0, 0, 0, 0.2);
-  box-shadow: #00000075 0px 0px 1vh inset;
-  border-radius: 12%;
+.hand-tile {
+  /*background-size: contain;*/
 }
