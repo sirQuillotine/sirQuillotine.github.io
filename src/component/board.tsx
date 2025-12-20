@@ -134,6 +134,7 @@ function Board() {
     word: string,
     position: number[],
     board: string[][],
+    handt: string[],
     isHorizontal: boolean
   ) {
     var boardCopy = board.map((row) => row.slice());
@@ -148,7 +149,12 @@ function Board() {
       }
     }
 
-    //Tarkista sopiiko sana
+    var handcopy = handt.slice();
+    //Tarkista sopiiko sana ja että kädessä on kirjaimet
+    /*
+    if (isalpha(boardCopy[position[0]][position[1]])) {
+      return false;
+    }*/
     for (var i = 0; i < word.length; i++) {
       var x = isHorizontal ? position[0] : position[0] + i;
       var y = isHorizontal ? position[1] + i : position[1];
@@ -158,10 +164,18 @@ function Board() {
       }
 
       //Lisätään samalla sanaa pöydän kopioon
+
+      if (!isalpha(boardCopy[x][y])) {
+        if (handcopy.includes(word[i])) {
+          handcopy.splice(handcopy.indexOf(word[i]), 1);
+        } else {
+          return false;
+        }
+      }
       boardCopy[x][y] = word[i];
     }
 
-    //Tarkista kelpaako sana
+    //Tarkista kelpaako pöytä
     if (!validateBoard(boardCopy)) {
       return false;
     }
@@ -179,14 +193,24 @@ function Board() {
     return board[row].filter((t) => isalpha(t)).join("");
   }
 
-  function contains(word: string, hand: string, letters: string) {
+  function contains(word: string, letters: string) {
+    return [...word].every(
+      (l) =>
+        letters.includes(l) &&
+        word.split(l).length - 1 <= letters.split(l).length - 1
+    );
+    /*
     const combined = hand + letters;
     return (
       [...letters].every((l) => word.includes(l)) &&
       [...word].every(
         (l) => word.split(l).length - 1 <= combined.split(l).length - 1
       )
-    );
+    );*/
+  }
+
+  function wordsFromLetters(letters: string) {
+    return dictionary.filter((word) => contains(word, letters));
   }
 
   function generateBoard() {
@@ -336,7 +360,7 @@ function Board() {
       }
     }
 
-    var handt: any[] = [];
+    var handt: string[] = [];
     for (let i = 0; i < 7; i++) {
       handt.push(bag.splice(getRandomInt(0, bag.length - 1), 1)[0]);
     }
@@ -353,10 +377,22 @@ function Board() {
           var horlet = rowToString(b, i);
           var verlet = columnToString(b, j);
 
+          wordsFromLetters(horlet + handt).forEach((word) => {
+            if (validateWord(word, [i, j], b, handt, true)) {
+              h.push([word, [i, j], getScore(word, [i, j], true)]);
+            }
+          });
+
+          wordsFromLetters(verlet + handt).forEach((word) => {
+            if (validateWord(word, [i, j], b, handt, false)) {
+              v.push([word, [i, j], getScore(word, [i, j], false)]);
+            }
+          });
+          /*
           dictionary.forEach((word) => {
             if (contains(word, handt.join(""), horlet)) {
               if (
-                validateWord(word, [i, j], b, true) &&
+                validateWord(word, [i, j], b, handt, true) &&
                 !placedWords.some(
                   (pw) => pw[0] === word && pw[1][0] === i && pw[1][1] === j
                 )
@@ -366,7 +402,7 @@ function Board() {
             }
             if (contains(word, handt.join(""), verlet)) {
               if (
-                validateWord(word, [i, j], b, false) &&
+                validateWord(word, [i, j], b, handt, false) &&
                 !placedWords.some(
                   (pw) => pw[0] === word && pw[1][0] === i && pw[1][1] === j
                 )
@@ -375,6 +411,8 @@ function Board() {
               }
             }
           });
+
+          */
         }
       }
     }
@@ -447,6 +485,8 @@ function Board() {
         });
       }
     }
+
+    //console.log(word, score);
 
     for (var i = 0; i < word.length; i++) {
       //Kerätään uuden sanan pisteet
@@ -729,7 +769,7 @@ function Board() {
       <div className="horizontal-solutions">
         {horizontalSolutions.map((tile, i) => (
           <div key={i} className={renderSolution(tile[0], tile[1])}>
-            {tile[0] + " " + tile[1] + " " + tile[2]}
+            {tile[0] + " " + tile[1] + " h " + tile[2]}
           </div>
         ))}
       </div>
@@ -737,7 +777,7 @@ function Board() {
       <div className="vertical-solutions">
         {verticalSolutions.map((tile, i) => (
           <div key={i} className={renderSolution(tile[0], tile[1])}>
-            {tile[0] + " " + tile[1] + " " + tile[2]}
+            {tile[0] + " " + tile[1] + " v " + tile[2]}
           </div>
         ))}
       </div>
