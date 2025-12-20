@@ -63,7 +63,7 @@ body {
     border-radius: 10%;
 
     background-color: rgba(255, 255, 255, 0.02);
-    border: 0.5px solid rgba(255, 255, 255, 0.2);
+    border: 0.5px solid rgba(255, 255, 255, 0.1);
 }
 .base-tile-2x-letter {
     background-image: url('/graphics/tiles/2xkirj.png');
