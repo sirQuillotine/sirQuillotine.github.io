@@ -246,10 +246,11 @@ const LBoard = () => {
 
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [cursor, direction]); // IMPORTANT: Added cursor and direction here
+
   const delay = (ms: number | undefined) =>
     new Promise((res) => setTimeout(res, ms));
   const removeAnimation = async () => {
-    await delay(5000);
+    await delay(2000);
     setAnimationBoard(generatedBoard);
   };
 
@@ -325,6 +326,7 @@ const LBoard = () => {
         );
       });
   }, []);
+
   useEffect(() => {
     if (dictionary.length > 0) {
       generateBoard();

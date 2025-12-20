@@ -30,7 +30,7 @@
   --dropshadow-transparent: drop-shadow(0 0 0.5vh #0000005f);
   --dropshadow-opaque: drop-shadow(0vh 0vh 0.2vh #000000);
 }
-/* jos animaatio muuttuu 331----- 247
+/* jos animaatio muuttuu 331----- 250
 /* ------------------------------------------------ GENERAL */
 body {
   height: 100vh;
@@ -77,14 +77,25 @@ body {
   0% {
     transform: scale(1);
     opacity: 1;
+    filter: brightness(1) sepia(0) hue-rotate(0deg) saturate(1);
+  }
+  25% {
+    transform: scale(1.05);
+    opacity: 1;
+    filter: brightness(0.8) sepia(1) hue-rotate(90deg) saturate(400%);
+  }
+  80% {
+    transform: scale(1);
+    opacity: 1;
+    filter: brightness(1) sepia(0) hue-rotate(0deg) saturate(1);
   }
   100% {
-    transform: scale(0.5);
+    transform: scale(1);
     opacity: 0;
   }
 }
 .letter-disappears-animation {
-  animation: letter-disappears 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+  animation: letter-disappears 2s ease-out;
 }
 
 /* ------------------------------------------------ GAME CONTAINER */
