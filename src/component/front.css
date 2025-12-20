@@ -49,6 +49,28 @@ body {
   }
 }
 
+@keyframes letter-appears {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes letter-disappears {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+}
+
 /* ------------------------------------------------ GAME CONTAINER */
 #game-container {
   width: 82vh;
@@ -110,6 +132,13 @@ body {
   background-color: var(--color-center-tile-fill);
   border: var(--px-empty-and-enter-tile-border-thickness) solid
     var(--color-empty-and-enter-tile-border);
+}
+
+.letter-appears-animation {
+  animation: letter-appears 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+.letter-disappears-animation {
+  animation: letter-disappears 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
 }
 
 /* ------------------------------------------------ CURSOR */

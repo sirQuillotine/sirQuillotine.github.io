@@ -865,9 +865,9 @@ const LBoard = () => {
 
             return (
               <div
-                key={coordKey}
+                key={coordKey + finalLetter}
                 className={`base-tile ${STYLE_MAP[cellValue]} ${
-                  finalLetter ? "has-letter" : ""
+                  finalLetter ? "has-letter letter-appears-animation" : ""
                 }`}
                 onClick={() => moveCursorTo(colNum, rowNum)}
                 style={{
