@@ -49,6 +49,28 @@ body {
   }
 }
 
+@keyframes letter-appears {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes letter-disappears {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+}
+
 /* ------------------------------------------------ GAME CONTAINER */
 #game-container {
   width: 82vh;
@@ -110,6 +132,13 @@ body {
   background-color: var(--color-center-tile-fill);
   border: var(--px-empty-and-enter-tile-border-thickness) solid
     var(--color-empty-and-enter-tile-border);
+}
+
+.letter-appears-animation {
+  animation: letter-appears 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+.letter-disappears-animation {
+  animation: letter-disappears 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
 }
 
 /* ------------------------------------------------ CURSOR */
@@ -196,21 +225,6 @@ body {
   justify-content: space-between;
 }
 
-.hand-div {
-  width: 8vh;
-  height: 8vh;
-
-  cursor: pointer;
-
-  background-image: url("/graphics/tiles/letters/A.png");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-
-.hand-div-empty {
-  background-image: none !important;
-  background-color: rgba(0, 0, 0, 0.2);
-  box-shadow: #00000075 0px 0px 1vh inset;
-  border-radius: 12%;
+.hand-tile {
+  /*background-size: contain;*/
 }

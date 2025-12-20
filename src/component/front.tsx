@@ -865,9 +865,9 @@ const LBoard = () => {
 
             return (
               <div
-                key={coordKey}
+                key={coordKey + finalLetter}
                 className={`base-tile ${STYLE_MAP[cellValue]} ${
-                  finalLetter ? "has-letter" : ""
+                  finalLetter ? "has-letter letter-appears-animation" : ""
                 }`}
                 onClick={() => moveCursorTo(colNum, rowNum)}
                 style={{
@@ -967,12 +967,15 @@ const LBoard = () => {
         {hand.map((tile, i) => (
           <div
             key={i}
-            className={`base-tile ${tile.toUpperCase() ? "has-letter" : ""}`}
+            className={`base-tile hand-tile ${
+              tile.toUpperCase() ? "has-letter" : ""
+            }`}
             style={{
               backgroundImage: tile.toUpperCase()
                 ? `url(/graphics/tiles/letters/${tile.toUpperCase()}.png)`
                 : undefined,
-              backgroundSize: "cover",
+              backgroundSize: "contain",
+              filter: "none",
             }}
           >
             {/* Visual letters are handled by the backgroundImage style above */}
