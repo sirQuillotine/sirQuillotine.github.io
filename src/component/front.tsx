@@ -919,6 +919,9 @@ const LBoard = () => {
             id="cursor-tag"
             className="cursor-inner"
             alt=""
+            style={{
+              top: `${guess.length > 0 ? "2" : "1"}`,
+            }}
           />
           <img
             src="/graphics/cursor_moving.svg"
