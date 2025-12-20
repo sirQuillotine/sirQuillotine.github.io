@@ -1,6 +1,18 @@
 /* ------------------------------------------------ VARIABLES */
 :root {
     --gradient-main-background: linear-gradient(90deg, #1F2924 0%, #24322B 30%, #24322B 70%, #1F2924 100%);
+
+    --color-main-dark-green: rgb(32, 45, 40);
+
+    --color-empty-tile-fill: rgba(255, 255, 255, 0.02);
+    --color-center-tile-fill: rgba(0, 0, 0, 0.15);
+    --color-empty-and-enter-tile-border: rgba(255, 255, 255, 0.1);
+    /* Center tile border uses same color as empty */
+
+    --px-empty-and-enter-tile-border-thickness: 0.05vh;
+
+    --dropshadow-transparent: drop-shadow(0 0 0.5vh #0000005f);
+    --dropshadow-opaque: drop-shadow(0vh 0vh 0.2vh #000000);
 }
 
 
@@ -23,6 +35,14 @@ body {
 
     flex-direction: column;
     align-items: center;
+
+}
+
+/* ------------------------------------------------ ANIMATIONS */
+@keyframes blinker {
+    50% {
+        opacity: 0.1;
+    }
 }
 
 
@@ -30,8 +50,6 @@ body {
 #game-container {
     width: 82vh;
     height: 100vh;
-
-    background-color: rgba(180, 124, 12, 0);
 
     display: flex;
     justify-content: center;
@@ -57,17 +75,16 @@ body {
     background-position: center;
     background-repeat: no-repeat;
 
-    background-color: #ff000000 !important;
+    background-color: #00000000 !important;
     border: none !important;
-    filter: drop-shadow(0vh 0vh 0.2vh #000000);
+    filter: var(--dropshadow-opaque);
 }
 .base-tile-empty {
     box-sizing: border-box;
-
     border-radius: 10%;
 
-    background-color: rgba(255, 255, 255, 0.02);
-    border: 0.5px solid rgba(255, 255, 255, 0.1);
+    background-color: var(--color-empty-tile-fill);
+    border: var(--px-empty-and-enter-tile-border-thickness) solid var(--color-empty-and-enter-tile-border);
 }
 .base-tile-2x-letter {
     background-image: url('/graphics/tiles/2xkirj.png');
@@ -86,10 +103,12 @@ body {
 
     border-radius: 10%;
 
-    background-color: rgba(0, 0, 0, 0.1);
-    border: 0.5px solid rgba(255, 255, 255, 0.2);
+    background-color: var(--color-center-tile-fill);
+    border: var(--px-empty-and-enter-tile-border-thickness) solid var(--color-empty-and-enter-tile-border);
 }
 
+
+/* ------------------------------------------------ CURSOR */
 #cursor {
     width: 4.96vh;
     height: 4.96vh;
@@ -102,8 +121,8 @@ body {
 
     top: 5vh;
 
-    background-color: #1f2924cf;
-    backdrop-filter: blur(1px);
+    /* background-color: #1f2924cf;
+    backdrop-filter: blur(1px);   blurry background */
 
     transform: translate(37.52vh, 37.52vh);
 
@@ -117,17 +136,17 @@ body {
 }
 
 #cursor-tag {
-    height: 1.5vh;
+    height: 1.75vh;
     top: -2.5vh;
 
-    filter: drop-shadow(0 0 0.5vh #0000005f);
+    filter: var(--dropshadow-transparent);
 }
 
 #cursor-border {
     width: 6vh;
     height: 6vh;
 
-    filter: drop-shadow(0 0 0.5vh #0000005f);
+    filter: var(--dropshadow-opaque);
 
     z-index: 999;
 }
@@ -142,19 +161,16 @@ body {
     width: 3vh;
     height: 3vh;
 
+    filter: var(--dropshadow-opaque);
+
     object-fit: contain;
 
     animation: blinker 1.5s linear infinite;
 }
 
-@keyframes blinker {
-    50% {
-        opacity: 0.1;
-    }
-}
 
 
-/* ------------------------------------------------ HAND AND OTHER UI */
+/* ------------------------------------------------ HAND */
 #hand-container {
     height: 8vh;
     width: 62vh;
