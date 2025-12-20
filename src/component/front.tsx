@@ -178,6 +178,18 @@ const LBoard = () => {
           var guessedCopy = guessed.slice();
           guessedCopy.push([guess, oguessPointer]);
           setGuessed(guessedCopy);
+          const copy = animationBoard.map((r) => r.slice());
+          if (direction === "r") {
+            for (var i = 0; i < guess.length; i++) {
+              copy[oguessPointer[0]][oguessPointer[1] + i] = guess[i];
+            }
+          } else {
+            for (var i = 0; i < guess.length; i++) {
+              copy[oguessPointer[0] + i][oguessPointer[1]] = guess[i];
+            }
+          }
+          setAnimationBoard(copy);
+          removeAnimation();
         } else {
           console.log("Ei sovi");
         }
@@ -234,6 +246,12 @@ const LBoard = () => {
 
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [cursor, direction]); // IMPORTANT: Added cursor and direction here
+  const delay = (ms: number | undefined) =>
+    new Promise((res) => setTimeout(res, ms));
+  const removeAnimation = async () => {
+    await delay(5000);
+    setAnimationBoard(generatedBoard);
+  };
 
   //MEIKÄMANDARIININ KOODIMOODI
 
@@ -292,6 +310,8 @@ const LBoard = () => {
   const [verticalSolutions, setVer] = useState<any[]>([]);
 
   const [board, setBoard] = useState<string[][]>(boardTemplate);
+  const [animationBoard, setAnimationBoard] =
+    useState<string[][]>(boardTemplate);
   useEffect(() => {
     fetch("/siisti.txt")
       .then((res) => res.text())
@@ -858,21 +878,31 @@ const LBoard = () => {
 
             const userLetter = placedLetters[coordKey];
             const generatedLetter = board[r][c];
+            const outLetter = animationBoard[r][c];
 
             const isAlpha = /[a-z|ä|ö]/i.test(generatedLetter as string);
+            const isAlpha2 = /[a-z|ä|ö]/i.test(outLetter as string);
+
             const finalLetter =
               userLetter || (isAlpha ? (generatedLetter as string) : null);
+            const finalout = isAlpha2 ? (outLetter as string) : null;
 
             return (
               <div
                 key={coordKey + finalLetter}
                 className={`base-tile ${STYLE_MAP[cellValue]} ${
-                  finalLetter ? "has-letter letter-appears-animation" : ""
+                  finalLetter
+                    ? "has-letter letter-appears-animation"
+                    : finalout
+                    ? "has-letter letter-disappears-animation"
+                    : ""
                 }`}
                 onClick={() => moveCursorTo(colNum, rowNum)}
                 style={{
                   backgroundImage: finalLetter
                     ? `url(/graphics/tiles/letters/${finalLetter.toUpperCase()}.png)`
+                    : finalout
+                    ? `url(/graphics/tiles/letters/${finalout.toUpperCase()}.png)`
                     : undefined,
                   backgroundSize: "cover",
                 }}
