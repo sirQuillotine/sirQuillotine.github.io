@@ -883,6 +883,29 @@ const LBoard = () => {
           })
         )}
 
+        {/* Alkupää */}
+        <div
+          id="cursor"
+          style={{
+            transform: `translate(${
+              (guess.length > 0 ? oguessPointer[1] : cursor.col - 1) * step
+            }vh, ${
+              (guess.length > 0 ? oguessPointer[0] : cursor.row - 1) * step
+            }vh)`,
+            transition: "transform 0.02s ease-out",
+            zIndex: 10,
+          }}
+        >
+          <img
+            src="/graphics/cursor_half.png"
+            id="cursor-border"
+            className={`cursor-inner ${
+              direction === "r" ? "cursor-right" : "cursor-down"
+            }`}
+            alt=""
+          />
+        </div>
+
         {/* Karettti */}
         <div
           id="cursor"
@@ -904,13 +927,14 @@ const LBoard = () => {
             id="cursor-tag"
             className="cursor-inner"
             alt=""
+            style={{
+              top: `${
+                guess.length > 0 && direction == "d" ? "5.75vh" : "-2.5vh"
+              }`,
+            }}
           />
           <img
-            src={
-              guess.length > 0
-                ? "/graphics/cursor_writing.svg"
-                : "/graphics/cursor_moving.svg"
-            }
+            src="/graphics/cursor_half_caretside.png"
             id="cursor-border"
             className={`cursor-inner ${
               direction === "r" ? "cursor-right" : "cursor-down"
@@ -923,40 +947,18 @@ const LBoard = () => {
             className="cursor-inner"
             alt=""
           />
-        </div>
-
-        {/* Alkupää */}
-        <div
-          id="cursor"
-          style={{
-            transform: `translate(${
-              (guess.length > 0 ? oguessPointer[1] : cursor.col - 1) * step
-            }vh, ${
-              (guess.length > 0 ? oguessPointer[0] : cursor.row - 1) * step
-            }vh)`,
-            transition: "transform 0.02s ease-out",
-            zIndex: 10,
-          }}
-        >
           <img
-            src="/graphics/tab_tag.svg"
-            id="cursor-tag"
-            className="cursor-inner"
-            alt=""
-          />
-          <img
-            src="/graphics/cursor_moving.svg"
-            id="cursor-border"
+            src="/graphics/cursor_arrow.svg"
+            id="cursor-arrow"
             className={`cursor-inner ${
-              direction === "r" ? "cursor-right" : "cursor-down"
+              guess.length == 0 && direction == "r"
+                ? "cursor-arrow-right"
+                : "cursor-arrow-down"
             }`}
             alt=""
-          />
-          <img
-            src="/graphics/cursor_icon.svg"
-            id="cursor-key"
-            className="cursor-inner"
-            alt=""
+            style={{
+              opacity: `${guess.length > 0 ? "0" : "100"}`,
+            }}
           />
         </div>
       </div>
