@@ -59,6 +59,9 @@ body {
     opacity: 1;
   }
 }
+.letter-appears-animation {
+  animation: letter-appears 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
 
 @keyframes letter-disappears {
   0% {
@@ -70,16 +73,11 @@ body {
     opacity: 0;
   }
 }
-
-/* ------------------------------------------------ GAME CONTAINER */
-#game-container {
-  width: 82vh;
-  height: 100vh;
-
-  display: flex;
-  justify-content: center;
+.letter-disappears-animation {
+  animation: letter-disappears 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
 }
 
+/* ------------------------------------------------ GAME CONTAINER */
 #base-grid-container {
   width: 80vh;
   height: 80vh;
@@ -132,13 +130,6 @@ body {
   background-color: var(--color-center-tile-fill);
   border: var(--px-empty-and-enter-tile-border-thickness) solid
     var(--color-empty-and-enter-tile-border);
-}
-
-.letter-appears-animation {
-  animation: letter-appears 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
-}
-.letter-disappears-animation {
-  animation: letter-disappears 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
 }
 
 /* ------------------------------------------------ CURSOR */
