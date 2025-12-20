@@ -1,0 +1,195 @@
+/* ------------------------------------------------ VARIABLES */
+:root {
+    --gradient-main-background: linear-gradient(90deg, #1F2924 0%, #24322B 30%, #24322B 70%, #1F2924 100%);
+}
+
+
+/* ------------------------------------------------ GENERAL */
+body {
+    height: 100vh;
+    min-height: 100vh;
+    
+    background: var(--gradient-main-background);
+    
+    margin: 0;
+    
+    display: flex;
+    justify-content: center;
+}
+
+#master-div {
+    height: 100vh;
+    display: flex;
+
+    flex-direction: column;
+    align-items: center;
+}
+
+
+/* ------------------------------------------------ GAME CONTAINER */
+#game-container {
+    width: 82vh;
+    height: 100vh;
+
+    background-color: rgba(180, 124, 12, 0);
+
+    display: flex;
+    justify-content: center;
+}
+
+#base-grid-container {
+    width: 80vh;
+    height: 80vh;
+    display: grid;
+    grid-template-columns: repeat(15, 1fr);
+    gap: 0.4vh;
+    padding-top: 5vh;
+}
+
+.base-tile {
+    width: 100%;
+    height: 100%;
+
+    cursor: pointer;
+}
+.has-letter {
+    background-color: #ff000000 !important;
+    border: none !important;
+    filter: drop-shadow(0vh 0vh 0.2vh #000000);
+}
+.base-tile-empty {
+    box-sizing: border-box;
+
+    border-radius: 10%;
+
+    background-color: rgba(255, 255, 255, 0.02);
+    border: 0.5px solid rgba(255, 255, 255, 0.2);
+}
+.base-tile-2x-letter {
+    background-image: url('/graphics/tiles/2xkirj.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.base-tile-3x-letter {
+    background-image: url('/graphics/tiles/3xkirj.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.base-tile-2x-word {
+    background-image: url('/graphics/tiles/2xsana.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.base-tile-3x-word {
+    background-image: url('/graphics/tiles/3xsana.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.base-tile-center {
+    box-sizing: border-box;
+
+    border-radius: 10%;
+
+    background-color: rgba(0, 0, 0, 0.1);
+    border: 0.5px solid rgba(255, 255, 255, 0.2);
+}
+
+#cursor {
+    width: 4.96vh;
+    height: 4.96vh;
+
+    position: absolute;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    top: 5vh;
+
+    background-color: #1f2924cf;
+    backdrop-filter: blur(1px);
+
+    transform: translate(37.52vh, 37.52vh);
+
+    cursor: pointer;
+}
+
+.cursor-inner {
+    position: absolute;
+
+    pointer-events: none;
+}
+
+#cursor-tag {
+    height: 1.5vh;
+    top: -2.5vh;
+
+    filter: drop-shadow(0 0 0.5vh #0000005f);
+}
+
+#cursor-border {
+    width: 6vh;
+    height: 6vh;
+
+    filter: drop-shadow(0 0 0.5vh #0000005f);
+
+    z-index: 999;
+}
+.cursor-right {
+    transform: rotate(0deg);
+}
+.cursor-down {
+    transform: rotate(90deg);
+}
+
+#cursor-key {
+    width: 3vh;
+    height: 3vh;
+
+    object-fit: contain;
+
+    animation: blinker 1.5s linear infinite;
+}
+
+@keyframes blinker {
+    50% {
+        opacity: 0.1;
+    }
+}
+
+
+/* ------------------------------------------------ HAND AND OTHER UI */
+#hand-container {
+    height: 8vh;
+    width: 62vh;
+
+    margin-top: 2vh;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.hand-div {
+    width: 8vh;
+    height: 8vh;
+
+    cursor: pointer;
+
+    background-image: url('/graphics/tiles/letters/A.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+}
+
+.hand-div-empty {
+    background-image: none !important;
+    background-color: rgba(0, 0, 0, 0.2);
+    box-shadow: #00000075 0px 0px 1vh inset;
+    border-radius: 12%;
+}
