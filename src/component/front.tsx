@@ -113,16 +113,33 @@ const LBoard = () => {
 
         if (direction === "r") {
           if (isalpha(board[row - 1][col - 2])) {
+            //Lisätään käteen kirjain
             var handcopy = hand.slice();
-            handcopy.push(guess[guess.length - 1]);
+            for (var i = generatedHand.length - 1; i >= 0; i--) {
+              if (
+                handcopy[i] == "0" &&
+                generatedHand[i] == guess[guess.length - 1]
+              ) {
+                handcopy[i] = guess[guess.length - 1];
+                break;
+              }
+            }
             setHand(handcopy);
           }
 
           copy[row - 1][col - 2] = generatedBoard[row - 1][col - 2];
         } else {
           if (isalpha(board[row - 2][col - 1])) {
+            //Lisätään käteen kirjain
             var handcopy = hand.slice();
-            handcopy.push(guess[guess.length - 1]);
+            for (var i = generatedHand.length - 1; i >= 0; i--) {
+              if (
+                handcopy[i] == "0" &&
+                generatedHand[i] == guess[guess.length - 1]
+              ) {
+                handcopy[i] = guess[guess.length - 1];
+              }
+            }
             setHand(handcopy);
           }
 
@@ -177,9 +194,6 @@ const LBoard = () => {
         }
         if (isalpha(board[cursor.row - 1][cursor.col - 1])) {
           if (isalpha(generatedBoard[cursor.row - 1][cursor.col - 1])) {
-            console.log(
-              "mooS " + generatedBoard[cursor.row - 1][cursor.col - 1]
-            );
             guess += board[cursor.row - 1][cursor.col - 1];
             const copy = board.map((r) => r.slice());
             setBoard(copy);
@@ -193,8 +207,9 @@ const LBoard = () => {
             });
           }
         } else if (hand.includes(key)) {
+          //Poistetaan kädestä kirjotettu kirjain
           var handcopy = hand.slice();
-          handcopy.splice(handcopy.indexOf(key), 1);
+          handcopy[handcopy.indexOf(key)] = "0";
           setHand(handcopy);
 
           guess += key;
