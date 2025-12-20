@@ -297,6 +297,7 @@ function Board() {
 
     generatedBoard = b.map((r) => r.slice());
     setBoard(b);
+    console.log(b);
     console.log("Luotu pöytä");
 
     const letter_counts = {
