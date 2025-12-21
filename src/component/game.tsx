@@ -58,21 +58,22 @@ const LBoard = () => {
     setDirection((prev) => (prev === "r" ? "d" : "r"));
   };
 
+  const handleShuffle = () => {
+    if (guess.length === 0) {
+      const shuffled = currentHand.slice();
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+      currentHand = shuffled;
+      setHand(shuffled);
+    }
+  };
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       const key = e.key.toLowerCase();
       const allowedLetters = "abcdefghijklmnoprstuvwyäö".split("");
-
-      // SHUFFLE HAND
-      if (key === "0" && guess.length === 0) {
-        const shuffled = currentHand.slice();
-        for (let i = shuffled.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-        }
-        currentHand = shuffled;
-        setHand(shuffled);
-      }
 
       // NUOLET
       if (e.key === "ArrowUp") {
@@ -1029,6 +1030,7 @@ const LBoard = () => {
             {/* Visual letters are handled by the backgroundImage style above */}
           </div>
         ))}
+        <div id="shuffle-button" onClick={handleShuffle}></div>
       </div>
     </div>
   );
