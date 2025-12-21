@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import "./front.css";
+import "./game.css";
 
 // (0) = tyhjä, (1) = 2x kirjain, (2) = 3x kirjain,
 // (3) = 2x sana, (4) = 3x sana, (5) = keskikohta (tyhjä mutta eri design)
@@ -34,6 +34,7 @@ var guess = "";
 var oguessPointer: number[] = [];
 var generatedBoard: string[][] = [];
 var generatedHand: string[] = [];
+var currentHand: string[] = []; // Track the current hand state
 
 const LBoard = () => {
   const [cursor, setCursor] = useState({ col: 8, row: 8 }); // kursori aluksi keskellä
@@ -49,7 +50,7 @@ const LBoard = () => {
     setCursor({ col: c, row: r });
     guess = "";
     setBoard(generatedBoard);
-    setHand(generatedHand);
+    setHand(currentHand);
   };
 
   const handleCursorClick = () => {
@@ -59,34 +60,44 @@ const LBoard = () => {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // <- e
       const key = e.key.toLowerCase();
       const allowedLetters = "abcdefghijklmnoprstuvwyäö".split("");
+
+      // SHUFFLE HAND
+      if (key === "0" && guess.length === 0) {
+        const shuffled = currentHand.slice();
+        for (let i = shuffled.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        currentHand = shuffled;
+        setHand(shuffled);
+      }
 
       // NUOLET
       if (e.key === "ArrowUp") {
         setCursor((prev) => ({ ...prev, row: Math.max(1, prev.row - 1) }));
         guess = "";
         setBoard(generatedBoard);
-        setHand(generatedHand);
+        setHand(currentHand);
       }
       if (e.key === "ArrowDown") {
         setCursor((prev) => ({ ...prev, row: Math.min(15, prev.row + 1) }));
         guess = "";
         setBoard(generatedBoard);
-        setHand(generatedHand);
+        setHand(currentHand);
       }
       if (e.key === "ArrowLeft") {
         setCursor((prev) => ({ ...prev, col: Math.max(1, prev.col - 1) }));
         guess = "";
         setBoard(generatedBoard);
-        setHand(generatedHand);
+        setHand(currentHand);
       }
       if (e.key === "ArrowRight") {
         setCursor((prev) => ({ ...prev, col: Math.min(15, prev.col + 1) }));
         guess = "";
         setBoard(generatedBoard);
-        setHand(generatedHand);
+        setHand(currentHand);
       }
 
       // TAB
@@ -165,19 +176,24 @@ const LBoard = () => {
         if (isalpha(board[cursor.row - 1][cursor.col - 1])) {
           guess += board[cursor.row - 1][cursor.col - 1];
         }
-        if (
-          validateWord(
-            guess,
-            oguessPointer,
-            generatedBoard,
-            generatedHand,
-            direction === "r" ? true : false
-          ) > 0
-        ) {
+        const wordScore = validateWord(
+          guess,
+          oguessPointer,
+          generatedBoard,
+          generatedHand,
+          direction === "r" ? true : false
+        );
+        if (wordScore > 0) {
           console.log("Sopii");
           var guessedCopy = guessed.slice();
           guessedCopy.push([guess, oguessPointer]);
           setGuessed(guessedCopy);
+          // Total pisteet
+          setTotalScore((prev) => {
+            const newTotal = prev + wordScore;
+            console.log(`Sanapisteet: ${wordScore}, Yhteensä: ${newTotal}`);
+            return newTotal;
+          });
           const copy = animationBoard.map((r) => r.slice());
           if (direction === "r") {
             for (var i = 0; i < guess.length; i++) {
@@ -194,7 +210,7 @@ const LBoard = () => {
           console.log("Ei sovi");
         }
         setBoard(generatedBoard);
-        setHand(generatedHand);
+        setHand(currentHand);
         setActive([-1, -1]);
         guess = "";
       }
@@ -250,7 +266,7 @@ const LBoard = () => {
   const delay = (ms: number | undefined) =>
     new Promise((res) => setTimeout(res, ms));
   const removeAnimation = async () => {
-    await delay(2000);
+    await delay(1500);
     setAnimationBoard(generatedBoard);
   };
 
@@ -309,6 +325,7 @@ const LBoard = () => {
   const [guessed, setGuessed] = useState<any[]>([]);
   const [horizontalSolutions, setHor] = useState<any[]>([]);
   const [verticalSolutions, setVer] = useState<any[]>([]);
+  const [totalScore, setTotalScore] = useState<number>(0);
 
   const [board, setBoard] = useState<string[][]>(boardTemplate);
   const [animationBoard, setAnimationBoard] =
@@ -776,10 +793,9 @@ const LBoard = () => {
     for (let i = 0; i < 7; i++) {
       handt.push(bag.splice(getRandomInt(0, bag.length - 1), 1)[0]);
     }
-    //test
-    //handt = ["e", "o"];
     setHand(handt);
     generatedHand = handt;
+    currentHand = handt.slice(); // Initialize currentHand with the new hand
 
     // Find possible words - optimized
     const h: any[] = [];

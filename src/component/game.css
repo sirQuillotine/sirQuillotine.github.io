@@ -79,23 +79,28 @@ body {
     opacity: 1;
     filter: brightness(1) sepia(0) hue-rotate(0deg) saturate(1);
   }
-  25% {
-    transform: scale(1.05);
+  15% {
+    transform: scale(1.08);
     opacity: 1;
-    filter: brightness(0.8) sepia(1) hue-rotate(90deg) saturate(350%);
+    filter: brightness(1) sepia(1) hue-rotate(70deg) saturate(250%);
   }
-  80% {
+  30% {
     transform: scale(1);
     opacity: 1;
-    filter: brightness(1) sepia(0) hue-rotate(0deg) saturate(1);
+    filter: brightness(1) sepia(0) hue-rotate(70deg) saturate(250%);
+  }
+  95% {
+    transform: scale(1);
+    opacity: 1;
+    filter: brightness(1) sepia(0) hue-rotate(70deg) saturate(250%);
   }
   100% {
-    transform: scale(1);
+    transform: scale(0.9);
     opacity: 0;
   }
 }
 .letter-disappears-animation {
-  animation: letter-disappears 2s ease-out;
+  animation: letter-disappears 1.5s ease-out;
 }
 
 /* ------------------------------------------------ GAME CONTAINER */
