@@ -253,7 +253,7 @@ body {
   flex-direction: row;
   justify-content: space-between;
 
-  padding-left: 8.8vh;
+  padding-left: 7.8vh;
 }
 
 .hand-tile {
@@ -263,7 +263,7 @@ body {
 #shuffle-button {
   position: relative;
   height: 8vh;
-  width: 8vh;
+  width: 7vh;
 
   cursor: pointer;
 
