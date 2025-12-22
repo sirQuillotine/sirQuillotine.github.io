@@ -267,12 +267,15 @@ body {
   transform: translate(37.52vh, 37.52vh);
 
   cursor: pointer;
+
+  user-select: none;
 }
 
 .cursor-inner {
   position: absolute;
 
   pointer-events: none;
+  user-select: none;
 }
 
 #cursor-tag {
@@ -434,7 +437,9 @@ body {
 }
 
 .progress-bar-text {
-  font-size: 1.3vh;
+  margin-top: -0.2vh;
+
+  font-size: 1.6vh;
   font-weight: bold;
   color: white;
   font-family: Arial, Helvetica, sans-serif;
