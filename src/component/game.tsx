@@ -236,7 +236,6 @@ const Board = ({ onScoreChange, onstatsChange }: BoardProps) => {
         }
         setBoard(generatedBoard);
         setHand(currentHand);
-        setActive([-1, -1]);
         guess = "";
       }
 
@@ -670,7 +669,6 @@ const Board = ({ onScoreChange, onstatsChange }: BoardProps) => {
 
     var count = getRandomInt(2, 4);
     //var count = 1;
-    setActive([-1, -1]);
 
     var position = [7, 7];
 
