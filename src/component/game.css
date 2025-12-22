@@ -56,7 +56,7 @@ body {
   display: flex;
 
   padding-left: 5vh;
-  padding-right: 5vh; /* 5 normal , 30 center */
+  padding-right: 3vh; /* 5 normal , 30 center */
   transition: padding-right 0.5s ease-in-out;
 
   flex-direction: column;
@@ -371,7 +371,7 @@ body {
 
   top: 5vh;
 
-  margin-left: 4vh;
+  margin-left: 2vh;
   /*display: flex;
   justify-content: center;
   align-items: center;*/
