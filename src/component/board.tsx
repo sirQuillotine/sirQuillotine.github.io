@@ -65,6 +65,9 @@ function Board() {
   const [horizontalSolutions, setHor] = useState<any[]>([]);
   const [verticalSolutions, setVer] = useState<any[]>([]);
 
+  var maxScore = 0;
+  var maxWords = 0;
+
   const [board, setBoard] = useState<string[][]>(boardTemplate);
   useEffect(() => {
     fetch("/sanalista.txt")
@@ -560,6 +563,8 @@ function Board() {
             const r = validateWord(word, [i, j], b, handt, true);
             if (r !== 0) {
               h.push([word, [i, j], r]);
+              maxScore += r;
+              maxWords += 1;
             }
           }
         });
@@ -574,6 +579,8 @@ function Board() {
             const r = validateWord(word, [j, i], b, handt, false);
             if (r !== 0) {
               v.push([word, [j, i], r]);
+              maxScore += r;
+              maxWords += 1;
             }
           }
         });

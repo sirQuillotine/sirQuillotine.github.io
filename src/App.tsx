@@ -4,12 +4,12 @@ import Board from "./component/game";
 import Panel from "./component/panel";
 
 function App() {
-  const [totalScore, setTotalScore] = useState(0);
+  const [stats, setStats] = useState<number[]>([]);
 
   return (
     <div id="app-div">
-      <Panel totalScore={totalScore} />
-      <Board onScoreChange={setTotalScore} />
+      <Panel stats={stats} />
+      <Board onstatsChange={setStats} />
     </div>
   );
 }

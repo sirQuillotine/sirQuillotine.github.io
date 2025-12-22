@@ -35,12 +35,15 @@ var oguessPointer: number[] = [];
 var generatedBoard: string[][] = [];
 var generatedHand: string[] = [];
 var currentHand: string[] = []; // Track the current hand state
+var maxScore = 100;
+var maxWord = 100;
 
 interface BoardProps {
   onScoreChange?: (score: number) => void;
+  onstatsChange?: (stats: number[]) => void;
 }
 
-const Board = ({ onScoreChange }: BoardProps) => {
+const Board = ({ onScoreChange, onstatsChange }: BoardProps) => {
   const [cursor, setCursor] = useState({ col: 8, row: 8 }); // kursori aluksi keskellä
   const [direction, setDirection] = useState("r"); // 'r' = oikealle (default),  'd' = alas
   const [placedLetters, setPlacedLetters] = useState<Record<string, string>>(
@@ -189,28 +192,46 @@ const Board = ({ onScoreChange }: BoardProps) => {
           direction === "r" ? true : false
         );
         if (wordScore > 0) {
-          console.log("Sopii");
-          var guessedCopy = guessed.slice();
-          guessedCopy.push([guess, oguessPointer]);
-          setGuessed(guessedCopy);
-          // Total pisteet
-          setTotalScore((prev) => {
-            const newTotal = prev + wordScore;
-            console.log(`Sanapisteet: ${wordScore}, Yhteensä: ${newTotal}`);
-            return newTotal;
-          });
-          const copy = animationBoard.map((r) => r.slice());
-          if (direction === "r") {
-            for (var i = 0; i < guess.length; i++) {
-              copy[oguessPointer[0]][oguessPointer[1] + i] = guess[i];
-            }
-          } else {
-            for (var i = 0; i < guess.length; i++) {
-              copy[oguessPointer[0] + i][oguessPointer[1]] = guess[i];
+          var g = guessed.slice();
+
+          var contains = false;
+          for (var i = 0; i < g.length; i++) {
+            if (
+              g[i][0] === guess &&
+              g[i][1][0] === oguessPointer[0] &&
+              g[i][1][1] === oguessPointer[1] &&
+              g[i][2] === direction
+            ) {
+              contains = true;
             }
           }
-          setAnimationBoard(copy);
-          removeAnimation();
+
+          if (!contains) {
+            console.log("Sopii");
+            g.push([guess, oguessPointer, direction]);
+            setGuessed(g);
+            // Total pisteet
+            setTotalScore((prev) => {
+              const newTotal = prev + wordScore;
+              console.log(`Sanapisteet: ${wordScore}, Yhteensä: ${newTotal}`);
+              return newTotal;
+            });
+
+            const copy = animationBoard.map((r) => r.slice());
+            if (direction === "r") {
+              for (var i = 0; i < guess.length; i++) {
+                copy[oguessPointer[0]][oguessPointer[1] + i] = guess[i];
+              }
+            } else {
+              for (var i = 0; i < guess.length; i++) {
+                copy[oguessPointer[0] + i][oguessPointer[1]] = guess[i];
+              }
+            }
+            setAnimationBoard(copy);
+            removeAnimation();
+          } else {
+            console.log("Sana on jo käytetty");
+          }
         } else {
           console.log("Ei sovi");
         }
@@ -272,7 +293,7 @@ const Board = ({ onScoreChange }: BoardProps) => {
     new Promise((res) => setTimeout(res, ms));
   const removeAnimation = async () => {
     await delay(1500);
-    setAnimationBoard(generatedBoard);
+    setAnimationBoard(boardTemplate);
   };
 
   //MEIKÄMANDARIININ KOODIMOODI
@@ -820,6 +841,8 @@ const Board = ({ onScoreChange }: BoardProps) => {
             const r = validateWord(word, [i, j], b, handt, true);
             if (r !== 0) {
               h.push([word, [i, j], r]);
+              maxScore += r;
+              maxWord += 1;
             }
           }
         });
@@ -834,6 +857,8 @@ const Board = ({ onScoreChange }: BoardProps) => {
             const r = validateWord(word, [j, i], b, handt, false);
             if (r !== 0) {
               v.push([word, [j, i], r]);
+              maxScore += r;
+              maxWord += 1;
             }
           }
         });
@@ -843,6 +868,8 @@ const Board = ({ onScoreChange }: BoardProps) => {
     diff = new Date().getTime() - time;
     setHor(h);
     setVer(v);
+
+    console.log("maxScore: " + maxScore + "  maxWords: " + maxWord);
   }
 
   function getWord(pos: number[], isHorizontal: boolean, board: string[][]) {
@@ -894,6 +921,10 @@ const Board = ({ onScoreChange }: BoardProps) => {
     onScoreChange?.(totalScore);
   }, [totalScore, onScoreChange]);
 
+  useEffect(() => {
+    onstatsChange?.([totalScore, maxScore, guessed.length, maxWord]);
+  }, [totalScore, maxScore, maxWord, guessed.length, onstatsChange]);
+
   return (
     <div id="master-div">
       <div id="coords-x" className="coords-xy">
@@ -941,15 +972,14 @@ const Board = ({ onScoreChange }: BoardProps) => {
             const finalLetter =
               userLetter || (isAlpha ? (generatedLetter as string) : null);
             const finalout = isAlpha2 ? (outLetter as string) : null;
-
             return (
               <div
                 key={coordKey + finalLetter}
                 className={`base-tile ${STYLE_MAP[cellValue]} ${
-                  finalLetter
-                    ? "has-letter letter-appears-animation"
-                    : finalout
+                  finalout
                     ? "has-letter letter-disappears-animation"
+                    : finalLetter
+                    ? "has-letter letter-appears-animation"
                     : ""
                 }`}
                 onClick={() => moveCursorTo(colNum, rowNum)}
