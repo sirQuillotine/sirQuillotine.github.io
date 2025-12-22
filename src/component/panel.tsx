@@ -3,6 +3,8 @@ import "./game.css";
 interface PanelProps {
   totalScore: number;
 }
+const maxScore = 256; //ESIMERKKIARVOT
+const maxWords = 256;
 
 const Panel = ({ totalScore }: PanelProps) => {
   return (
@@ -12,8 +14,13 @@ const Panel = ({ totalScore }: PanelProps) => {
         <span className="points-header"> PISTETTÄ</span>
         <div id="progress-bar-points" className="progress-bar">
           <div className="progress-bar-background progress-bar-item"></div>
-          <div className="progress-bar-bar progress-bar-item"></div>
-          <span className="progress-bar-text progress-bar-item">15 %</span>
+          <div
+            className="progress-bar-bar progress-bar-item"
+            style={{ width: `${(totalScore / maxScore) * 100}%` }}
+          ></div>
+          <span className="progress-bar-text progress-bar-item">
+            {((totalScore / maxScore) * 100).toFixed(1)}%
+          </span>
         </div>
       </div>
       <div className="display-container">
@@ -21,8 +28,13 @@ const Panel = ({ totalScore }: PanelProps) => {
         <span className="points-header"> SANAA</span>
         <div id="progress-bar-words" className="progress-bar">
           <div className="progress-bar-background progress-bar-item"></div>
-          <div className="progress-bar-bar progress-bar-item"></div>
-          <span className="progress-bar-text progress-bar-item">25 %</span>
+          <div
+            className="progress-bar-bar progress-bar-item"
+            style={{ width: `${(totalScore / maxScore) * 100}%` }}
+          ></div>
+          <span className="progress-bar-text progress-bar-item">
+            {((totalScore / maxScore) * 100).toFixed(1)}%
+          </span>
         </div>
       </div>
     </div>

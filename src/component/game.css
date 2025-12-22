@@ -407,7 +407,7 @@ body {
 }
 
 #progress-bar-points .progress-bar-bar {
-  width: 6vh; /* PLACEHOLDER */
+  width: 100%; /* PLACEHOLDER */
   background-color: var(--color-3xletter-opaque);
 }
 
