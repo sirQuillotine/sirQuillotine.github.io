@@ -176,7 +176,6 @@ const Board = ({ onScoreChange, onstatsChange }: BoardProps) => {
         });
 
         setBoard(copy);
-        console.log(guess);
       }
 
       // ENTER
@@ -506,8 +505,8 @@ const Board = ({ onScoreChange, onstatsChange }: BoardProps) => {
         }
       }
 
-      // Use original board's tile modifier values (board), not boardCopy which may contain letters
-      const tile = boardCopy[x]?.[y];
+      // Use original board's tile modifier values
+      const tile = generatedBoard[x]?.[y];
       if (tile === "1") {
         multiplier *= 3;
         score += LETTER_SCORES[word[i]] || 0;
