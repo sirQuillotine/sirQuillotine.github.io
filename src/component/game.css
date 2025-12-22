@@ -35,7 +35,7 @@
   --dropshadow-transparent: drop-shadow(0 0 0.5vh #0000005f);
   --dropshadow-opaque: drop-shadow(0vh 0vh 0.2vh #000000);
 }
-/* jos animaatio muuttuu 331----- 250
+
 /* ------------------------------------------------ GENERAL */
 body {
   width: fit-content;
@@ -56,10 +56,17 @@ body {
   display: flex;
 
   padding-left: 5vh;
-  padding-right: 5vh;
+  padding-right: 5vh; /* 5 normal , 30 center */
+  transition: padding-right 0.5s ease-in-out;
 
   flex-direction: column;
   align-items: center;
+}
+/* kun VW > (VH * 1.5) */
+@media (aspect-ratio > 1.5) {
+  #master-div {
+    padding-right: 30vh;
+  }
 }
 
 /* ------------------------------------------------ ANIMATIONS */
