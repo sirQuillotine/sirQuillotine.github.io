@@ -888,6 +888,34 @@ const LBoard = () => {
 
   return (
     <div id="master-div">
+      <div id="coords-x" className="coords-xy">
+        {Array.from({ length: 15 }, (_, i) => (
+          <div
+            key={i}
+            className={`coord-character-x ${
+              guess.length === 0 && cursor.col === i + 1
+                ? "coord-highlighted"
+                : ""
+            }`}
+          >
+            {i + 1}
+          </div>
+        ))}
+      </div>
+      <div id="coords-y" className="coords-xy">
+        {Array.from({ length: 15 }, (_, i) => (
+          <div
+            key={i}
+            className={`coord-character-y ${
+              guess.length === 0 && cursor.row === i + 1
+                ? "coord-highlighted"
+                : ""
+            }`}
+          >
+            {String.fromCharCode(65 + i)}
+          </div>
+        ))}
+      </div>
       <div id="base-grid-container" style={{ position: "relative" }}>
         {TILE_STYLES.map((row, r) =>
           row.map((cellValue, c) => {
