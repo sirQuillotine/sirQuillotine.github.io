@@ -63,9 +63,9 @@ body {
   align-items: center;
 }
 /* kun VW > (VH * 1.5) */
-@media (aspect-ratio > 1.5) {
+@media (aspect-ratio > 1.3) {
   #master-div {
-    padding-right: 30vh;
+    padding-right: 18vh;
   }
 }
 
