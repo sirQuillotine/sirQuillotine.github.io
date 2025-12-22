@@ -6,21 +6,23 @@ interface PanelProps {
 
 const Panel = ({ totalScore }: PanelProps) => {
   return (
-    <div className="points-and-bar-container">
-      <div id="score-display">
-        <span className="points-header">PISTEITÄ KERÄTTY</span>
+    <div id="points-and-bar-container">
+      <div className="display-container">
         <span className="points-points">{totalScore}</span>
+        <span className="points-header"> PISTETTÄ</span>
         <div id="progress-bar-points" className="progress-bar">
-          <div className="progressbar-bar"></div>
-          <div className="progress-bar-background"></div>
+          <div className="progress-bar-background progress-bar-item"></div>
+          <div className="progress-bar-bar progress-bar-item"></div>
+          <span className="progress-bar-text progress-bar-item">15 %</span>
         </div>
       </div>
-      <div className="points-and-bar-container">
-        <span className="points-header">SANOJA LÖYDETTY</span>
+      <div className="display-container">
         <span className="points-points">{totalScore}</span>
+        <span className="points-header"> SANAA</span>
         <div id="progress-bar-words" className="progress-bar">
-          <div className="progressbar-bar"></div>
-          <div className="progress-bar-background"></div>
+          <div className="progress-bar-background progress-bar-item"></div>
+          <div className="progress-bar-bar progress-bar-item"></div>
+          <span className="progress-bar-text progress-bar-item">25 %</span>
         </div>
       </div>
     </div>
