@@ -364,7 +364,7 @@ body {
 #points-and-bar-container {
   position: relative;
 
-  width: 25vh;
+  width: 16vh;
   min-height: 30vh;
   height: fit-content;
   max-height: 80vh;
@@ -379,6 +379,8 @@ body {
 
 .display-container {
   padding-bottom: 4vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .points-header {
@@ -424,7 +426,7 @@ body {
 }
 
 .progress-bar {
-  margin-top: -1.25vh;
+  margin-top: 0.25vh;
 }
 
 .progress-bar span {
