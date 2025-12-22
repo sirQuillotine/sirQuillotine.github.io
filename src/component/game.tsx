@@ -346,10 +346,8 @@ const Board = ({ onScoreChange, onstatsChange }: BoardProps) => {
   const [dictionary, setWords] = useState<string[]>([]);
   const dictionarySet = useMemo(() => new Set(dictionary), [dictionary]);
   const [hand, setHand] = useState<string[]>([]);
-  const [guessStartPos, setActive] = useState<number[]>([7, 7]);
   const [guessed, setGuessed] = useState<any[]>([]);
-  const [horizontalSolutions, setHor] = useState<any[]>([]);
-  const [verticalSolutions, setVer] = useState<any[]>([]);
+  const [solutions, setSolutions] = useState<any[]>([]);
   const [totalScore, setTotalScore] = useState<number>(0);
 
   const [board, setBoard] = useState<string[][]>(boardTemplate);
@@ -823,8 +821,7 @@ const Board = ({ onScoreChange, onstatsChange }: BoardProps) => {
     currentHand = handt.slice(); // Initialize currentHand with the new hand
 
     // Find possible words - optimized
-    const h: any[] = [];
-    const v: any[] = [];
+    const solutiones: any[] = [];
     const handStr = handt.join("");
     const processedRows = new Set<string>();
     const processedCols = new Set<string>();
@@ -839,7 +836,7 @@ const Board = ({ onScoreChange, onstatsChange }: BoardProps) => {
           for (let j = 0; j < b[i].length; j++) {
             const r = validateWord(word, [i, j], b, handt, true);
             if (r !== 0) {
-              h.push([word, [i, j], r]);
+              solutiones.push([word, [i, j], r, direction]);
               maxScore += r;
               maxWord += 1;
             }
@@ -855,7 +852,7 @@ const Board = ({ onScoreChange, onstatsChange }: BoardProps) => {
           for (let j = 0; j < b.length; j++) {
             const r = validateWord(word, [j, i], b, handt, false);
             if (r !== 0) {
-              v.push([word, [j, i], r]);
+              solutiones.push([word, [j, i], r, direction]);
               maxScore += r;
               maxWord += 1;
             }
@@ -865,8 +862,7 @@ const Board = ({ onScoreChange, onstatsChange }: BoardProps) => {
     }
 
     diff = new Date().getTime() - time;
-    setHor(h);
-    setVer(v);
+    setSolutions(solutiones);
 
     console.log("maxScore: " + maxScore + "  maxWords: " + maxWord);
   }
