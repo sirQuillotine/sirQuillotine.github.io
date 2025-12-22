@@ -208,7 +208,19 @@ const Board = ({ onScoreChange, onstatsChange }: BoardProps) => {
           if (!contains) {
             console.log("Sopii");
             g.push([guess, oguessPointer, direction]);
-            setGuessed(g);
+            var sol = solutions.slice();
+            for (var i = 0; i < sol.length; i++) {
+              if (
+                sol[i][0] === guess &&
+                sol[i][1][0] === oguessPointer[0] &&
+                sol[i][1][1] === oguessPointer[1] &&
+                sol[i][3] === direction
+              ) {
+                sol[i][4] = true;
+              }
+            }
+            console.log(sol);
+            setSolutions(sol);
             // Total pisteet
             setTotalScore((prev) => {
               const newTotal = prev + wordScore;
@@ -834,7 +846,7 @@ const Board = ({ onScoreChange, onstatsChange }: BoardProps) => {
           for (let j = 0; j < b[i].length; j++) {
             const r = validateWord(word, [i, j], b, handt, true);
             if (r !== 0) {
-              solutiones.push([word, [i, j], r, direction]);
+              solutiones.push([word, [i, j], r, "r", false]);
               maxScore += r;
               maxWord += 1;
             }
@@ -850,7 +862,7 @@ const Board = ({ onScoreChange, onstatsChange }: BoardProps) => {
           for (let j = 0; j < b.length; j++) {
             const r = validateWord(word, [j, i], b, handt, false);
             if (r !== 0) {
-              solutiones.push([word, [j, i], r, direction]);
+              solutiones.push([word, [j, i], r, "d", false]);
               maxScore += r;
               maxWord += 1;
             }
