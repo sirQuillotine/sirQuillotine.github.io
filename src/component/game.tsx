@@ -36,7 +36,11 @@ var generatedBoard: string[][] = [];
 var generatedHand: string[] = [];
 var currentHand: string[] = []; // Track the current hand state
 
-const LBoard = () => {
+interface BoardProps {
+  onScoreChange?: (score: number) => void;
+}
+
+const Board = ({ onScoreChange }: BoardProps) => {
   const [cursor, setCursor] = useState({ col: 8, row: 8 }); // kursori aluksi keskellä
   const [direction, setDirection] = useState("r"); // 'r' = oikealle (default),  'd' = alas
   const [placedLetters, setPlacedLetters] = useState<Record<string, string>>(
@@ -886,6 +890,10 @@ const LBoard = () => {
     return word;
   }
 
+  useEffect(() => {
+    onScoreChange?.(totalScore);
+  }, [totalScore, onScoreChange]);
+
   return (
     <div id="master-div">
       <div id="coords-x" className="coords-xy">
@@ -1064,4 +1072,4 @@ const LBoard = () => {
   );
 };
 
-export default LBoard;
+export default Board;
