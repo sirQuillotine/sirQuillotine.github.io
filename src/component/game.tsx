@@ -1017,7 +1017,6 @@ const Board = ({
   }, [totalScore, maxScore, maxWord, guessed.length, onstatsChange]);
 
   useEffect(() => {
-    console.log("Vinkki");
     if (solutions.length > 0) {
       var h = solutions[getRandomInt(0, solutions.length)];
 
