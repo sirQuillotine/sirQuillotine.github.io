@@ -33,6 +33,7 @@ const Sanapeli = ({ seedProp }: Props) => {
         onstatsChange={setStats}
         seed={s}
         onSolutionsChange={setSolutions}
+        hint={hint}
       />
       <PanelR solutions={solutions} />
     </div>

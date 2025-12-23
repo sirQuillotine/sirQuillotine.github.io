@@ -64,6 +64,7 @@ const Board = ({
   onScoreChange,
   onstatsChange,
   seed = "0",
+  hint,
   onSolutionsChange,
 }: BoardProps) => {
   const [cursor, setCursor] = useState({ col: 8, row: 8 }); // kursori aluksi keskellä
