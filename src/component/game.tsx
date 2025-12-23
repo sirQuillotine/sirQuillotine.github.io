@@ -72,7 +72,6 @@ const Board = ({
   const [placedLetters, setPlacedLetters] = useState<Record<string, string>>(
     {}
   );
-  //console.log(seed);
   if (seedNumber === 0) {
     seedNumber = parseFloat(seed);
   }
@@ -237,7 +236,6 @@ const Board = ({
           generatedHand,
           direction === "r" ? true : false
         );
-        console.log(wordScore, guess);
         if (wordScore > 0) {
           var g = guessed.slice();
 
@@ -295,6 +293,11 @@ const Board = ({
         } else {
           console.log("Ei sovi");
         }
+        setCursor(() => {
+          let newCol = oguessPointer[1] + 1;
+          let newRow = oguessPointer[0] + 1;
+          return { col: newCol, row: newRow };
+        });
         setBoard(generatedBoard);
         setHand(currentHand);
         guess = "";
