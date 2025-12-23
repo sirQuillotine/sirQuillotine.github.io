@@ -4,7 +4,7 @@ interface PanelProps {
   stats?: number[];
 }
 
-const Panel = ({ stats = [1, 100, 1, 100] }: PanelProps) => {
+const PanelL = ({ stats = [1, 100, 1, 100] }: PanelProps) => {
   return (
     <div id="side-panel-container">
       <div id="points-and-bar-container">
@@ -43,4 +43,4 @@ const Panel = ({ stats = [1, 100, 1, 100] }: PanelProps) => {
   );
 };
 
-export default Panel;
+export default PanelL;

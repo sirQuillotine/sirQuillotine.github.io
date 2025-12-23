@@ -9,7 +9,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import Board from "./component/game";
-import Panel from "./component/panel";
+import Panel from "./component/panel_l";
 import Sanapeli from "./Sanapeli";
 
 const SeedRedirect = () => {

@@ -1,8 +1,16 @@
 import "./App.css";
-import { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useState } from "react";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Link,
+  useParams,
+  Navigate,
+  useLocation,
+} from "react-router-dom";
 import Board from "./component/game";
-import Panel from "./component/panel";
+import Panel from "./component/panel_l";
 
 interface Props {
   seedProp?: string;
@@ -11,20 +19,9 @@ interface Props {
 const Sanapeli = ({ seedProp }: Props) => {
   const [stats, setStats] = useState<number[]>([]);
   const location = useLocation();
-  const navigate = useNavigate();
-
   const seedFromState = (location.state as { seed?: string } | null)?.seed;
 
-  const [sessionSeed, setSessionSeed] = useState<string | undefined>(undefined);
-
-  useEffect(() => {
-    if (seedFromState) {
-      setSessionSeed(seedFromState);
-      navigate(location.pathname, { replace: true, state: null });
-    }
-  }, [seedFromState, location.pathname, navigate]);
-
-  const s = seedProp ?? sessionSeed ?? "0";
+  const s = seedProp ?? seedFromState ?? "0";
 
   return (
     <div id="app-div">
