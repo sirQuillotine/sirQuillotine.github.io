@@ -1,16 +1,30 @@
 import "./App.css";
 import { useState } from "react";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Link,
+  useParams,
+  Navigate,
+} from "react-router-dom";
 import Board from "./component/game";
 import Panel from "./component/panel";
+import Sanapeli from "./Sanapeli";
+
+const SeedRedirect = () => {
+  const { seed } = useParams();
+  return <Navigate to="/" state={{ seed }} replace />;
+};
 
 function App() {
-  const [stats, setStats] = useState<number[]>([]);
-
   return (
-    <div id="app-div">
-      <Panel stats={stats} />
-      <Board onstatsChange={setStats} />
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Sanapeli />} />
+        <Route path="/:seed" element={<SeedRedirect />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
