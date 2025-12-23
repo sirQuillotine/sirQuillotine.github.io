@@ -236,6 +236,7 @@ const Board = ({
           generatedHand,
           direction === "r" ? true : false
         );
+        console.log(wordScore, guess);
         if (wordScore > 0) {
           var g = guessed.slice();
 

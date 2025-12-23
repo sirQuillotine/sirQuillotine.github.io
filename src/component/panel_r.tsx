@@ -20,9 +20,7 @@ const PanelR = ({ solutions }: Props) => {
         <table id="word-table">
           <thead>
             <tr>
-              <th className="header-icon">
-                <img src="graphics/word_icon.svg" alt="Word" />
-              </th>
+              <th> Sana</th>
               <th className="header-icon">
                 <img src="graphics/location_icon.svg" alt="Loc" />
               </th>
@@ -37,7 +35,7 @@ const PanelR = ({ solutions }: Props) => {
           <tbody>
             {solutions.map((sol, idx) => {
               var [word, [i, j], points, dir, isSolved] = sol;
-              isSolved = true; // kaikki ratkaisut näkyviin
+              //isSolved = true; //-------näytä kaikki ratkaisut
               return (
                 <tr key={idx}>
                   <td>
@@ -61,7 +59,7 @@ const PanelR = ({ solutions }: Props) => {
                       <div
                         style={{
                           backgroundColor: "#161917ba",
-                          width: "4vh",
+                          width: "3.5vh",
                           height: "2vh",
                           borderRadius: "1vh",
                         }}
