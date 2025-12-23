@@ -36,7 +36,8 @@ const PanelR = ({ solutions }: Props) => {
           </thead>
           <tbody>
             {solutions.map((sol, idx) => {
-              const [word, [i, j], points, dir, isSolved] = sol;
+              var [word, [i, j], points, dir, isSolved] = sol;
+              isSolved = true; // kaikki ratkaisut näkyviin
               return (
                 <tr key={idx}>
                   <td>
