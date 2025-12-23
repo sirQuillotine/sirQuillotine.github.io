@@ -155,7 +155,6 @@ const Board = ({
 
       // TAB
       if (e.key === "Tab") {
-        console.log(rand(0, 10));
         if (guess.length === 0) {
           e.preventDefault();
           setDirection((prev) => (prev === "r" ? "d" : "r"));
@@ -597,6 +596,8 @@ const Board = ({
         }
       }
 
+      console.log(score);
+
       // Use original board's tile modifier values
       const tile = generatedBoard[x]?.[y];
       if (tile === "1") {
@@ -620,7 +621,7 @@ const Board = ({
         var existing = getWord(
           [position[0], position[1] - 1],
           isHorizontal,
-          boardCopy
+          generatedBoard
         );
         for (let k = 0; k < existing.length; k++) {
           adjacentScore += LETTER_SCORES[existing[k]] || 0;
@@ -631,7 +632,7 @@ const Board = ({
         var existing = getWord(
           [position[0] - 1, position[1]],
           isHorizontal,
-          boardCopy
+          generatedBoard
         );
         for (let k = 0; k < existing.length; k++) {
           adjacentScore += LETTER_SCORES[existing[k]] || 0;
@@ -932,11 +933,9 @@ const Board = ({
         const combinedRow = rowStr + handStr;
 
         wordsFromLetters(combinedRow).forEach((word) => {
-          if (i === 12) {
-            console.log(word);
-          }
           for (let j = 0; j < b[i].length; j++) {
             const r = validateWord(word, [i, j], b, handt, true);
+
             if (r !== 0) {
               solutiones.push([word, [i, j], r, "r", false]);
               maxScore += r;
@@ -1025,7 +1024,6 @@ const Board = ({
   useEffect(() => {
     if (solutions.length > 0) {
       var h = solutions[getRandomInt(0, solutions.length)];
-
       hintDirection = h[3];
       hintPosition = [
         h[1],
@@ -1033,6 +1031,8 @@ const Board = ({
           ? [h[1][0], h[1][1] + h[0].length]
           : [h[1][0] + h[0].length, h[1][1]],
       ];
+      var c = direction === "r" ? "r" : "d";
+      setDirection(c);
       setHintVis(true);
       removing = h[0];
       removeHint(h[0]);
