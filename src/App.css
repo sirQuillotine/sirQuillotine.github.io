@@ -4,3 +4,19 @@
 
   flex-direction: row;
 }
+
+@keyframes master-appear-animation {
+  0% {
+    opacity: 0;
+  }
+  80% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.master-appear-animation {
+  animation: 2s ease-out 0s 1 master-appear-animation;
+}

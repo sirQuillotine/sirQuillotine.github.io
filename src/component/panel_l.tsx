@@ -21,7 +21,7 @@ const PanelL = ({
   }
 
   return (
-    <div>
+    <div className="master-appear-animation">
       <div id="points-and-bar-container">
         <div className="display-container">
           <span className="points-points">{stats[0]}</span>
