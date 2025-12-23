@@ -56,7 +56,7 @@ body {
   display: flex;
 
   padding-left: 5vh;
-  padding-right: 3vh; /* 5 normal , 18 about center */
+  padding-right: 3vh; /* 21.5vh about center jos isdepnalei aei muuta */
   transition: padding-right 0.5s ease-in-out;
 
   flex-direction: column;
