@@ -60,6 +60,26 @@ const Board = ({ onScoreChange, onstatsChange, seed = "0" }: BoardProps) => {
 
   const step = 5.36; // laatta (4.96vh) + rako (0.4vh) = 5.36vh
 
+  const setCookieFunction = (name: any, value: any, days: any) => {
+    let expires = "";
+    if (days) {
+      const date = new Date();
+      date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+      expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + value + expires + "; path=/";
+  };
+
+  const getCookie = (name: any) => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) {
+      const popped = parts.pop();
+      return popped?.split(";").shift();
+    }
+    return null;
+  };
+
   // kursorin liikutus
   const moveCursorTo = (c: number, r: number) => {
     setCursor({ col: c, row: r });
@@ -228,7 +248,7 @@ const Board = ({ onScoreChange, onstatsChange, seed = "0" }: BoardProps) => {
                 sol[i][4] = true;
               }
             }
-
+            setGuessed(g);
             setSolutions(sol);
             // Total pisteet
             setTotalScore((prev) => {
@@ -920,6 +940,7 @@ const Board = ({ onScoreChange, onstatsChange, seed = "0" }: BoardProps) => {
       }
 
       setSolutions(solutiones);
+      setCookieFunction("board", b, 7);
 
       console.log("maxScore: " + maxScore + "  maxWords: " + maxWord);
 
