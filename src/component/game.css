@@ -115,6 +115,21 @@ body {
   animation: letter-disappears 1.5s ease-out;
 }
 
+@keyframes highlight-fade {
+  0% {
+    color: yellow;
+    font-weight: 1000;
+  }
+  80% {
+    color: yellow;
+    font-weight: 1000;
+  }
+  100% {
+    color: white;
+    font-weight: 700;
+  }
+}
+
 /* ------------------------------------------------ BOARD GRID */
 /* coordinates */
 .coords-xy {
@@ -536,4 +551,9 @@ td.points-unsolved {
 thead tr th img {
   height: 1.5vh;
   opacity: 0.9;
+}
+
+/* The class to apply */
+.row-highlight {
+  animation: highlight-fade 3s ease-out;
 }

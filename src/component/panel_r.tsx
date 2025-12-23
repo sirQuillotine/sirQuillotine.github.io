@@ -18,7 +18,8 @@ const SolutionRow = ({ sol }: { sol: Solution }) => {
   }, [isSolved]);
 
   return (
-    <tr ref={rowRef}>
+    <tr ref={rowRef} className={isSolved ? "row-highlight" : ""}>
+      {/* 1. Sana Column */}
       <td>
         {isSolved ? (
           word.toUpperCase()
@@ -33,6 +34,7 @@ const SolutionRow = ({ sol }: { sol: Solution }) => {
           />
         )}
       </td>
+      {/* 2. Location Column */}
       <td>
         {isSolved ? (
           `${String.fromCharCode(64 + i + 1)}${j + 1}`
@@ -47,6 +49,7 @@ const SolutionRow = ({ sol }: { sol: Solution }) => {
           />
         )}
       </td>
+      {/* 3. Direction Column */}
       <td
         style={{
           display: "flex",
@@ -72,6 +75,7 @@ const SolutionRow = ({ sol }: { sol: Solution }) => {
           />
         )}
       </td>
+      {/* 4. Points Column */}
       <td className={isSolved ? "" : "points-unsolved"}>{points}</td>
     </tr>
   );
