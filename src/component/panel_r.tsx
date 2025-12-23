@@ -14,7 +14,7 @@ interface Props {
 
 const PanelR = ({ solutions }: Props) => {
   return (
-    <div id="side-panel-container">
+    <div id="side-panel-container" className="master-appear-animation">
       <span>RATKAISUT</span>
       <div id="table-container">
         <table id="word-table">

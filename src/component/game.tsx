@@ -35,8 +35,8 @@ var oguessPointer: number[] = [];
 var generatedBoard: string[][] = [];
 var generatedHand: string[] = [];
 var currentHand: string[] = []; // Track the current hand state
-var maxScore = 100;
-var maxWord = 100;
+var maxScore = 0;
+var maxWord = 0;
 
 var hintPosition = [
   [7, 4],
@@ -72,7 +72,7 @@ const Board = ({
   const [placedLetters, setPlacedLetters] = useState<Record<string, string>>(
     {}
   );
-  console.log(seed);
+  //console.log(seed);
   if (seedNumber === 0) {
     seedNumber = parseFloat(seed);
   }
@@ -1256,7 +1256,7 @@ const Board = ({
         </div>
       </div>
 
-      <div id="hand-container">
+      <div id="hand-container" className="master-appear-animation">
         {hand.map((tile, i) => (
           <div
             key={i}
