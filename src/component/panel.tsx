@@ -6,35 +6,39 @@ interface PanelProps {
 
 const Panel = ({ stats = [1, 100, 1, 100] }: PanelProps) => {
   return (
-    <div id="points-and-bar-container">
-      <div className="display-container">
-        <span className="points-points">{stats[0]}</span>
-        <span className="points-header"> PISTETTÄ</span>
-        <div id="progress-bar-points" className="progress-bar">
-          <div className="progress-bar-background progress-bar-item"></div>
-          <div
-            className="progress-bar-bar progress-bar-item"
-            style={{ width: `${(stats[0] / stats[1]) * 100}%` }}
-          ></div>
-          <span className="progress-bar-text progress-bar-item">
-            {((stats[0] / stats[1]) * 100).toFixed(1)}%
-          </span>
+    <div id="side-panel-container">
+      <div id="points-and-bar-container">
+        <div className="display-container">
+          <span className="points-points">{stats[0]}</span>
+          <span className="points-header"> PISTETTÄ</span>
+          <div id="progress-bar-points" className="progress-bar">
+            <div className="progress-bar-background progress-bar-item"></div>
+            <div
+              className="progress-bar-bar progress-bar-item"
+              style={{ width: `${(stats[0] / stats[1]) * 100}%` }}
+            ></div>
+            <span className="progress-bar-text progress-bar-item">
+              {((stats[0] / stats[1]) * 100).toFixed(1)}%
+            </span>
+          </div>
+        </div>
+        <div className="display-container">
+          <span className="points-points">{stats[2]}</span>
+          <span className="points-header"> SANAA</span>
+          <div id="progress-bar-words" className="progress-bar">
+            <div className="progress-bar-background progress-bar-item"></div>
+            <div
+              className="progress-bar-bar progress-bar-item"
+              style={{ width: `${(stats[2] / stats[3]) * 100}%` }}
+            ></div>
+            <span className="progress-bar-text progress-bar-item">
+              {((stats[2] / stats[3]) * 100).toFixed(1)}%
+            </span>
+          </div>
         </div>
       </div>
-      <div className="display-container">
-        <span className="points-points">{stats[2]}</span>
-        <span className="points-header"> SANAA</span>
-        <div id="progress-bar-words" className="progress-bar">
-          <div className="progress-bar-background progress-bar-item"></div>
-          <div
-            className="progress-bar-bar progress-bar-item"
-            style={{ width: `${(stats[2] / stats[3]) * 100}%` }}
-          ></div>
-          <span className="progress-bar-text progress-bar-item">
-            {((stats[2] / stats[3]) * 100).toFixed(1)}%
-          </span>
-        </div>
-      </div>
+      <div id="side-panel-button-hint" className="side-panel-button"></div>
+      <div id="side-panel-button-restart" className="side-panel-button"></div>
     </div>
   );
 };
