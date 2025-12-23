@@ -5,17 +5,13 @@ interface PanelProps {
   onHint?: (hint: string) => void;
 }
 
-<<<<<<< HEAD:src/component/panel.tsx
 var hint = "";
 
-const Panel = ({ stats = [1, 100, 1, 100], onHint }: PanelProps) => {
+const PanelL = ({ stats = [1, 100, 1, 100], onHint }: PanelProps) => {
   function setHint() {
     onHint?.(Math.random().toString());
   }
 
-=======
-const PanelL = ({ stats = [1, 100, 1, 100] }: PanelProps) => {
->>>>>>> d3cdc5d5961a1f1d5842b0292f029a531164bd71:src/component/panel_l.tsx
   return (
     <div id="side-panel-container">
       <div id="points-and-bar-container">

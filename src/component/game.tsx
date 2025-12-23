@@ -38,6 +38,13 @@ var currentHand: string[] = []; // Track the current hand state
 var maxScore = 100;
 var maxWord = 100;
 
+var hintPosition = [
+  [7, 4],
+  [7, 9],
+];
+var hintDirection = "r";
+var removing: any;
+
 var generating = false;
 var rand: (arg0: number, arg1: number) => any;
 
@@ -394,11 +401,6 @@ const Board = ({
   const [solutions, setSolutions] = useState<any[]>([]);
   const [totalScore, setTotalScore] = useState<number>(0);
 
-  const [hintPosition, setHintPosition] = useState<number[][]>([
-    [0, 0],
-    [0, 0],
-  ]);
-  const [hintDirection, setHintDirection] = useState<string>("r");
   const [hintVis, setHintVis] = useState<boolean>(false);
 
   const [board, setBoard] = useState<string[][]>(boardTemplate);
@@ -1014,28 +1016,27 @@ const Board = ({
     onstatsChange?.([totalScore, maxScore, guessed.length, maxWord]);
   }, [totalScore, maxScore, maxWord, guessed.length, onstatsChange]);
 
-  var removing = false;
   useEffect(() => {
+    console.log("Vinkki");
     if (solutions.length > 0) {
-      removing = false;
       var h = solutions[getRandomInt(0, solutions.length)];
 
-      setHintDirection(h[3]);
-      setHintPosition([
+      hintDirection = h[3];
+      hintPosition = [
         h[1],
         h[3] === "r"
           ? [h[1][0], h[1][1] + h[0].length]
           : [h[1][0] + h[0].length, h[1][1]],
-      ]);
+      ];
       setHintVis(true);
-      removeHint();
+      removing = h[0];
+      removeHint(h[0]);
     }
   }, [hint]);
 
-  const removeHint = async () => {
-    removing = true;
-    await delay(6000);
-    if (removing) {
+  const removeHint = async (word: string) => {
+    await delay(10000);
+    if (removing === word) {
       setHintVis(false);
     }
   };
@@ -1195,7 +1196,11 @@ const Board = ({
         {/* Vinkki Alkupää */}
         <div
           id="cursor"
-          className={hintVis ? "hint-visible" : "hint-invisible"}
+          className={
+            hintVis
+              ? "hint-visible tile-appear"
+              : "hint-invisible tile-disappear"
+          }
           style={{
             transform: `translate(${hintPosition[0][1] * step}vh, ${
               hintPosition[0][0] * step
@@ -1217,7 +1222,11 @@ const Board = ({
         {/* Vinkki Loppupää */}
         <div
           id="cursor"
-          className={hintVis ? "hint-visible" : "hint-invisible"}
+          className={
+            hintVis
+              ? "hint-visible tile-appear"
+              : "hint-invisible tile-disappear"
+          }
           style={{
             transform: `translate(${hintPosition[1][1] * step}vh, ${
               hintPosition[1][0] * step

@@ -10,7 +10,7 @@ import {
   useLocation,
 } from "react-router-dom";
 import Board from "./component/game";
-import Panel from "./component/panel_l";
+import PanelL from "./component/panel_l";
 
 interface Props {
   seedProp?: string;
@@ -26,7 +26,7 @@ const Sanapeli = ({ seedProp }: Props) => {
 
   return (
     <div id="app-div">
-      <Panel stats={stats} onHint={setHint} />
+      <PanelL stats={stats} onHint={setHint} />
       <Board onstatsChange={setStats} seed={s} hint={hint} />
     </div>
   );
