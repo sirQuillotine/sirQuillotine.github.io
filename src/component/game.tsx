@@ -1019,6 +1019,35 @@ const Board = ({
     onstatsChange?.([totalScore, maxScore, guessed.length, maxWord]);
   }, [totalScore, maxScore, maxWord, guessed.length, onstatsChange]);
 
+  useEffect(() => {
+    console.log("Vinkki");
+    if (solutions.length > 0) {
+      var h = solutions[getRandomInt(0, solutions.length)];
+
+      hintDirection = h[3];
+      hintPosition = [
+        h[1],
+        h[3] === "r"
+          ? [h[1][0], h[1][1] + h[0].length]
+          : [h[1][0] + h[0].length, h[1][1]],
+      ];
+      setHintVis(true);
+      removing = h[0];
+      removeHint(h[0]);
+    }
+  }, [hint]);
+
+  const removeHint = async (word: string) => {
+    await delay(10000);
+    if (removing === word) {
+      setHintVis(false);
+    }
+  };
+
+  useEffect(() => {
+    onSolutionsChange?.(solutions);
+  }, [solutions, onSolutionsChange]);
+
   return (
     <div id="master-div">
       <div id="coords-x" className="coords-xy">

@@ -10,7 +10,7 @@ import {
   useLocation,
 } from "react-router-dom";
 import Board from "./component/game";
-import PanelLL from "./component/panel_l";
+import PanelL from "./component/panel_l";
 import PanelR from "./component/panel_r";
 
 interface Props {
