@@ -38,6 +38,13 @@ var currentHand: string[] = []; // Track the current hand state
 var maxScore = 100;
 var maxWord = 100;
 
+var hintPosition = [
+  [7, 4],
+  [7, 9],
+];
+var hintDirection = "r";
+var removing: any;
+
 var generating = false;
 var rand: (arg0: number, arg1: number) => any;
 
@@ -48,6 +55,7 @@ export type Solutions = [string, [number, number], number, "r" | "d", boolean];
 interface BoardProps {
   onScoreChange?: (score: number) => void;
   onstatsChange?: (stats: number[]) => void;
+  hint?: any;
   seed?: string;
   onSolutionsChange: React.Dispatch<React.SetStateAction<Solutions[]>>;
 }
@@ -395,6 +403,8 @@ const Board = ({
   const [guessed, setGuessed] = useState<any[]>([]);
   const [solutions, setSolutions] = useState<any[]>([]);
   const [totalScore, setTotalScore] = useState<number>(0);
+
+  const [hintVis, setHintVis] = useState<boolean>(false);
 
   const [board, setBoard] = useState<string[][]>(boardTemplate);
   const [animationBoard, setAnimationBoard] =
@@ -1009,10 +1019,6 @@ const Board = ({
     onstatsChange?.([totalScore, maxScore, guessed.length, maxWord]);
   }, [totalScore, maxScore, maxWord, guessed.length, onstatsChange]);
 
-  useEffect(() => {
-    onSolutionsChange?.(solutions);
-  }, [solutions, onSolutionsChange]);
-
   return (
     <div id="master-div">
       <div id="coords-x" className="coords-xy">
@@ -1162,6 +1168,58 @@ const Board = ({
             style={{
               opacity: `${guess.length > 0 ? "0" : "100"}`,
             }}
+          />
+        </div>
+
+        {/* Vinkki Alkupää */}
+        <div
+          id="cursor"
+          className={
+            hintVis
+              ? "hint-visible tile-appear"
+              : "hint-invisible tile-disappear"
+          }
+          style={{
+            transform: `translate(${hintPosition[0][1] * step}vh, ${
+              hintPosition[0][0] * step
+            }vh)`,
+            transition: "transform 0.02s ease-out",
+            zIndex: 10,
+          }}
+        >
+          <img
+            src="/graphics/cursor_half.png"
+            id="cursor-border"
+            className={`cursor-inner ${
+              hintDirection === "r" ? "cursor-right" : "cursor-down"
+            }`}
+            alt=""
+          />
+        </div>
+
+        {/* Vinkki Loppupää */}
+        <div
+          id="cursor"
+          className={
+            hintVis
+              ? "hint-visible tile-appear"
+              : "hint-invisible tile-disappear"
+          }
+          style={{
+            transform: `translate(${hintPosition[1][1] * step}vh, ${
+              hintPosition[1][0] * step
+            }vh)`,
+            transition: "transform 0.02s ease-out",
+            zIndex: 10,
+          }}
+        >
+          <img
+            src="/graphics/cursor_half_caretside.png"
+            id="cursor-border"
+            className={`cursor-inner ${
+              hintDirection === "r" ? "cursor-right" : "cursor-down"
+            }`}
+            alt=""
           />
         </div>
       </div>

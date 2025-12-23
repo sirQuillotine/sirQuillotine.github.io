@@ -10,7 +10,7 @@ import {
   useLocation,
 } from "react-router-dom";
 import Board from "./component/game";
-import PanelL from "./component/panel_l";
+import PanelLL from "./component/panel_l";
 import PanelR from "./component/panel_r";
 
 interface Props {
@@ -19,6 +19,7 @@ interface Props {
 
 const Sanapeli = ({ seedProp }: Props) => {
   const [stats, setStats] = useState<number[]>([]);
+  const [hint, setHint] = useState<string>();
   const location = useLocation();
   const seedFromState = (location.state as { seed?: string } | null)?.seed;
   const [solutions, setSolutions] = useState<any[]>([]);
