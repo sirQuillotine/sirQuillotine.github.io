@@ -18,7 +18,6 @@ const PanelR = ({ solutions }: Props) => {
       <span>RATKAISUT</span>
       <div id="table-container">
         <table id="word-table">
-          {" "}
           <thead>
             <tr>
               <th className="header-icon">

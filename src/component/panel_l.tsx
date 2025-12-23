@@ -5,8 +5,6 @@ interface PanelProps {
   onHint?: (hint: string) => void;
 }
 
-var hint = "";
-
 const PanelL = ({ stats = [1, 100, 1, 100], onHint }: PanelProps) => {
   function setHint() {
     onHint?.(Math.random().toString());
