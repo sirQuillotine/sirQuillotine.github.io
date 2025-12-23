@@ -372,7 +372,7 @@ body {
 #points-and-bar-container {
   position: relative;
 
-  width: 15vh;
+  width: 23vh;
   min-height: 30vh;
   height: fit-content;
   max-height: 80vh;
@@ -477,4 +477,59 @@ body {
 }
 .side-panel-button:hover {
   filter: brightness(100%);
+}
+
+/* right side */
+#side-panel-container {
+  position: relative;
+  width: 25vh;
+  height: 80vh;
+
+  top: 5vh;
+
+  font-size: 1.5vh;
+  font-weight: 500;
+  color: white;
+  font-family: "Nunito", sans-serif;
+
+  overflow: hidden;
+}
+#side-panel-container span {
+  font-weight: 900;
+  font-size: 1.9vh;
+}
+
+#table-container {
+  height: 77.4vh;
+
+  overflow-y: scroll;
+  scrollbar-width: none;
+}
+.header-icon {
+  top: 0.3vh;
+  position: relative;
+}
+#table {
+  position: relative;
+  /*top: 7vh;*/
+
+  height: 80vh;
+
+  overflow-x: hidden;
+  overflow-y: scroll;
+  scrollbar-width: none;
+}
+td {
+  padding-left: 0.2vh;
+  max-width: 12vh;
+  overflow: clip;
+  font-weight: 700;
+}
+td.points-unsolved {
+  opacity: 0.3;
+  font-weight: 400;
+}
+thead tr th img {
+  height: 1.5vh;
+  opacity: 0.9;
 }

@@ -11,6 +11,7 @@ import {
 } from "react-router-dom";
 import Board from "./component/game";
 import PanelL from "./component/panel_l";
+import PanelR from "./component/panel_r";
 
 interface Props {
   seedProp?: string;
@@ -21,13 +22,19 @@ const Sanapeli = ({ seedProp }: Props) => {
   const [hint, setHint] = useState<string>();
   const location = useLocation();
   const seedFromState = (location.state as { seed?: string } | null)?.seed;
+  const [solutions, setSolutions] = useState<any[]>([]);
 
   const s = seedProp ?? seedFromState ?? "0";
 
   return (
     <div id="app-div">
-      <PanelL stats={stats} onHint={setHint} />
-      <Board onstatsChange={setStats} seed={s} hint={hint} />
+      <PanelL stats={stats} />
+      <Board
+        onstatsChange={setStats}
+        seed={s}
+        onSolutionsChange={setSolutions}
+      />
+      <PanelR solutions={solutions} />
     </div>
   );
 };

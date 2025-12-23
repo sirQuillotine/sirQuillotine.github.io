@@ -14,26 +14,95 @@ interface Props {
 
 const PanelR = ({ solutions }: Props) => {
   return (
-    <table>
-      <thead>
-        <tr>
-          <th>Word</th>
-          <th>Pos</th>
-          <th>Pts</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        {solutions.map((sol, idx) => (
-          <tr key={idx}>
-            <td>{sol[0]}</td>
-            <td>{`${sol[1][0]},${sol[1][1]}`}</td>
-            <td>{sol[2]}</td>
-            <td>{sol[4] ? "Solved" : "Pending"}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <div id="side-panel-container">
+      <span>RATKAISUT</span>
+      <div id="table-container">
+        <table id="word-table">
+          {" "}
+          <thead>
+            <tr>
+              <th className="header-icon">
+                <img src="graphics/word_icon.svg" alt="Word" />
+              </th>
+              <th className="header-icon">
+                <img src="graphics/location_icon.svg" alt="Loc" />
+              </th>
+              <th className="header-icon">
+                <img src="graphics/direction_icon.svg" alt="Dir" />
+              </th>
+              <th className="header-icon">
+                <img src="graphics/points_icon.svg" alt="Pts" />
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {solutions.map((sol, idx) => {
+              const [word, [i, j], points, dir, isSolved] = sol;
+              return (
+                <tr key={idx}>
+                  <td>
+                    {isSolved ? (
+                      `${word.toUpperCase()}`
+                    ) : (
+                      <div
+                        style={{
+                          backgroundColor: "#161917ba",
+                          width: "12vh",
+                          height: "2vh",
+                          borderRadius: "1vh",
+                        }}
+                      />
+                    )}
+                  </td>
+                  <td>
+                    {isSolved ? (
+                      `${String.fromCharCode(64 + i + 1)}${j + 1}`
+                    ) : (
+                      <div
+                        style={{
+                          backgroundColor: "#161917ba",
+                          width: "4vh",
+                          height: "2vh",
+                          borderRadius: "1vh",
+                        }}
+                      />
+                    )}
+                  </td>
+                  <td
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      height: "100%",
+                    }}
+                  >
+                    {isSolved ? (
+                      dir === "r" ? (
+                        "→"
+                      ) : (
+                        "↓"
+                      )
+                    ) : (
+                      <div
+                        style={{
+                          backgroundColor: "#161917ba",
+                          width: "2vh",
+                          height: "2vh",
+                          borderRadius: "1vh",
+                        }}
+                      />
+                    )}
+                  </td>
+                  <td className={isSolved ? "" : "points-unsolved"}>
+                    {points}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </div>
   );
 };
 

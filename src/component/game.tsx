@@ -50,18 +50,21 @@ var rand: (arg0: number, arg1: number) => any;
 
 var seedNumber;
 
+export type Solutions = [string, [number, number], number, "r" | "d", boolean];
+
 interface BoardProps {
   onScoreChange?: (score: number) => void;
   onstatsChange?: (stats: number[]) => void;
   hint?: any;
   seed?: string;
+  onSolutionsChange: React.Dispatch<React.SetStateAction<Solutions[]>>;
 }
 
 const Board = ({
   onScoreChange,
   onstatsChange,
-  hint,
   seed = "0",
+  onSolutionsChange,
 }: BoardProps) => {
   const [cursor, setCursor] = useState({ col: 8, row: 8 }); // kursori aluksi keskellä
   const [direction, setDirection] = useState("r"); // 'r' = oikealle (default),  'd' = alas
@@ -1039,6 +1042,10 @@ const Board = ({
       setHintVis(false);
     }
   };
+
+  useEffect(() => {
+    onSolutionsChange?.(solutions);
+  }, [solutions, onSolutionsChange]);
 
   return (
     <div id="master-div">
