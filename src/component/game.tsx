@@ -253,6 +253,7 @@ const Board = ({
 
           if (!contains) {
             console.log("Sopii");
+            console.log(solutions);
             g.push([guess, oguessPointer, direction]);
             var sol = solutions.slice();
             for (var i = 0; i < sol.length; i++) {
