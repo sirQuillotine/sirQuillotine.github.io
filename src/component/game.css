@@ -260,6 +260,22 @@ body {
   user-select: none;
 }
 
+.hint-visible {
+  position: absolute;
+
+  pointer-events: none;
+  user-select: none;
+  visibility: visible;
+}
+
+.hint-invisible {
+  position: absolute;
+
+  pointer-events: none;
+  user-select: none;
+  visibility: hidden;
+}
+
 .cursor-inner {
   position: absolute;
 

@@ -2,9 +2,16 @@ import "./game.css";
 
 interface PanelProps {
   stats?: number[];
+  onHint?: (hint: string) => void;
 }
 
-const Panel = ({ stats = [1, 100, 1, 100] }: PanelProps) => {
+var hint = "";
+
+const Panel = ({ stats = [1, 100, 1, 100], onHint }: PanelProps) => {
+  function setHint() {
+    onHint?.(Math.random().toString());
+  }
+
   return (
     <div id="side-panel-container">
       <div id="points-and-bar-container">
@@ -37,8 +44,18 @@ const Panel = ({ stats = [1, 100, 1, 100] }: PanelProps) => {
           </div>
         </div>
       </div>
-      <div id="side-panel-button-hint" className="side-panel-button"></div>
-      <div id="side-panel-button-restart" className="side-panel-button"></div>
+      <div
+        id="side-panel-button-hint"
+        className="side-panel-button"
+        onClick={setHint}
+      ></div>
+      <div
+        id="side-panel-button-restart"
+        className="side-panel-button"
+        onClick={() => {
+          window.location.reload();
+        }}
+      ></div>
     </div>
   );
 };

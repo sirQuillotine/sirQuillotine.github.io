@@ -46,10 +46,16 @@ var seedNumber;
 interface BoardProps {
   onScoreChange?: (score: number) => void;
   onstatsChange?: (stats: number[]) => void;
+  hint?: any;
   seed?: string;
 }
 
-const Board = ({ onScoreChange, onstatsChange, seed = "0" }: BoardProps) => {
+const Board = ({
+  onScoreChange,
+  onstatsChange,
+  hint,
+  seed = "0",
+}: BoardProps) => {
   const [cursor, setCursor] = useState({ col: 8, row: 8 }); // kursori aluksi keskellä
   const [direction, setDirection] = useState("r"); // 'r' = oikealle (default),  'd' = alas
   const [placedLetters, setPlacedLetters] = useState<Record<string, string>>(
@@ -387,6 +393,13 @@ const Board = ({ onScoreChange, onstatsChange, seed = "0" }: BoardProps) => {
   const [guessed, setGuessed] = useState<any[]>([]);
   const [solutions, setSolutions] = useState<any[]>([]);
   const [totalScore, setTotalScore] = useState<number>(0);
+
+  const [hintPosition, setHintPosition] = useState<number[][]>([
+    [0, 0],
+    [0, 0],
+  ]);
+  const [hintDirection, setHintDirection] = useState<string>("r");
+  const [hintVis, setHintVis] = useState<boolean>(false);
 
   const [board, setBoard] = useState<string[][]>(boardTemplate);
   const [animationBoard, setAnimationBoard] =
@@ -1001,6 +1014,32 @@ const Board = ({ onScoreChange, onstatsChange, seed = "0" }: BoardProps) => {
     onstatsChange?.([totalScore, maxScore, guessed.length, maxWord]);
   }, [totalScore, maxScore, maxWord, guessed.length, onstatsChange]);
 
+  var removing = false;
+  useEffect(() => {
+    if (solutions.length > 0) {
+      removing = false;
+      var h = solutions[getRandomInt(0, solutions.length)];
+
+      setHintDirection(h[3]);
+      setHintPosition([
+        h[1],
+        h[3] === "r"
+          ? [h[1][0], h[1][1] + h[0].length]
+          : [h[1][0] + h[0].length, h[1][1]],
+      ]);
+      setHintVis(true);
+      removeHint();
+    }
+  }, [hint]);
+
+  const removeHint = async () => {
+    removing = true;
+    await delay(6000);
+    if (removing) {
+      setHintVis(false);
+    }
+  };
+
   return (
     <div id="master-div">
       <div id="coords-x" className="coords-xy">
@@ -1150,6 +1189,50 @@ const Board = ({ onScoreChange, onstatsChange, seed = "0" }: BoardProps) => {
             style={{
               opacity: `${guess.length > 0 ? "0" : "100"}`,
             }}
+          />
+        </div>
+
+        {/* Vinkki Alkupää */}
+        <div
+          id="cursor"
+          className={hintVis ? "hint-visible" : "hint-invisible"}
+          style={{
+            transform: `translate(${hintPosition[0][1] * step}vh, ${
+              hintPosition[0][0] * step
+            }vh)`,
+            transition: "transform 0.02s ease-out",
+            zIndex: 10,
+          }}
+        >
+          <img
+            src="/graphics/cursor_half.png"
+            id="cursor-border"
+            className={`cursor-inner ${
+              hintDirection === "r" ? "cursor-right" : "cursor-down"
+            }`}
+            alt=""
+          />
+        </div>
+
+        {/* Vinkki Loppupää */}
+        <div
+          id="cursor"
+          className={hintVis ? "hint-visible" : "hint-invisible"}
+          style={{
+            transform: `translate(${hintPosition[1][1] * step}vh, ${
+              hintPosition[1][0] * step
+            }vh)`,
+            transition: "transform 0.02s ease-out",
+            zIndex: 10,
+          }}
+        >
+          <img
+            src="/graphics/cursor_half_caretside.png"
+            id="cursor-border"
+            className={`cursor-inner ${
+              hintDirection === "r" ? "cursor-right" : "cursor-down"
+            }`}
+            alt=""
           />
         </div>
       </div>

@@ -10,6 +10,7 @@ interface Props {
 
 const Sanapeli = ({ seedProp }: Props) => {
   const [stats, setStats] = useState<number[]>([]);
+  const [hint, setHint] = useState<string>();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -28,8 +29,8 @@ const Sanapeli = ({ seedProp }: Props) => {
 
   return (
     <div id="app-div">
-      <Panel stats={stats} />
-      <Board onstatsChange={setStats} seed={s} />
+      <Panel stats={stats} onHint={setHint} />
+      <Board onstatsChange={setStats} seed={s} hint={hint} />
     </div>
   );
 };
