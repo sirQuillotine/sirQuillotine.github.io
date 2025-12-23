@@ -43,13 +43,21 @@ var rand: (arg0: number, arg1: number) => any;
 
 var seedNumber;
 
+export type Solutions = [string, [number, number], number, "r" | "d", boolean];
+
 interface BoardProps {
   onScoreChange?: (score: number) => void;
   onstatsChange?: (stats: number[]) => void;
   seed?: string;
+  onSolutionsChange: React.Dispatch<React.SetStateAction<Solutions[]>>;
 }
 
-const Board = ({ onScoreChange, onstatsChange, seed = "0" }: BoardProps) => {
+const Board = ({
+  onScoreChange,
+  onstatsChange,
+  seed = "0",
+  onSolutionsChange,
+}: BoardProps) => {
   const [cursor, setCursor] = useState({ col: 8, row: 8 }); // kursori aluksi keskellä
   const [direction, setDirection] = useState("r"); // 'r' = oikealle (default),  'd' = alas
   const [placedLetters, setPlacedLetters] = useState<Record<string, string>>(
@@ -1000,6 +1008,10 @@ const Board = ({ onScoreChange, onstatsChange, seed = "0" }: BoardProps) => {
   useEffect(() => {
     onstatsChange?.([totalScore, maxScore, guessed.length, maxWord]);
   }, [totalScore, maxScore, maxWord, guessed.length, onstatsChange]);
+
+  useEffect(() => {
+    onSolutionsChange?.(solutions);
+  }, [solutions, onSolutionsChange]);
 
   return (
     <div id="master-div">

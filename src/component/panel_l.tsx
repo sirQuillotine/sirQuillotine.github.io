@@ -6,7 +6,7 @@ interface PanelProps {
 
 const PanelL = ({ stats = [1, 100, 1, 100] }: PanelProps) => {
   return (
-    <div id="side-panel-container">
+    <div>
       <div id="points-and-bar-container">
         <div className="display-container">
           <span className="points-points">{stats[0]}</span>
@@ -24,7 +24,7 @@ const PanelL = ({ stats = [1, 100, 1, 100] }: PanelProps) => {
         </div>
         <div className="display-container">
           <span className="points-points">{stats[2]}</span>
-          <span className="points-header"> SANAA</span>
+          <span className="points-header"> RATKAISUA</span>
           <div id="progress-bar-words" className="progress-bar">
             <div className="progress-bar-background progress-bar-item"></div>
             <div
