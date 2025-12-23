@@ -27,17 +27,20 @@ const Sanapeli = ({ seedProp }: Props) => {
 
   const seedFromState = (location.state as { seed?: string } | null)?.seed;
 
-  const [sessionSeed, setSessionSeed] = useState<string | undefined>(undefined);
+  const [seed, setSeed] = useState<string>(
+    () =>
+      seedProp ??
+      seedFromState ??
+      Math.floor(Math.random() * 1000000).toString()
+  );
 
   useEffect(() => {
     if (seedFromState) {
-      setSessionSeed(seedFromState);
       navigate(location.pathname, { replace: true, state: null });
     }
   }, [seedFromState, location.pathname, navigate]);
 
-  const s =
-    seedProp ?? sessionSeed ?? Math.floor(Math.random() * 1000000).toString();
+  const s = seed;
 
   return (
     <div id="app-div">

@@ -6,9 +6,18 @@ interface PanelProps {
   seed?: string;
 }
 
-const PanelL = ({ stats = [1, 100, 1, 100], onHint, seed }: PanelProps) => {
+var seedNumber = "0";
+const PanelL = ({
+  stats = [1, 100, 1, 100],
+  onHint,
+  seed = "0",
+}: PanelProps) => {
   function setHint() {
     onHint?.(Math.random().toString());
+  }
+
+  if (seedNumber === "0") {
+    seedNumber = seed;
   }
 
   return (
@@ -52,7 +61,7 @@ const PanelL = ({ stats = [1, 100, 1, 100], onHint, seed }: PanelProps) => {
         id="side-panel-button-share"
         className="side-panel-button"
         onClick={() => {
-          navigator.clipboard.writeText(window.location.href + seed);
+          navigator.clipboard.writeText(window.location.href + seedNumber);
         }}
       ></div>
       <div

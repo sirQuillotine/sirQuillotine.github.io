@@ -48,7 +48,7 @@ var removing: any;
 var generating = false;
 var rand: (arg0: number, arg1: number) => any;
 
-var seedNumber;
+var seedNumber = 0;
 
 export type Solutions = [string, [number, number], number, "r" | "d", boolean];
 
@@ -72,8 +72,10 @@ const Board = ({
   const [placedLetters, setPlacedLetters] = useState<Record<string, string>>(
     {}
   );
-
-  var seedNumber = seed;
+  console.log(seed);
+  if (seedNumber === 0) {
+    seedNumber = parseFloat(seed);
+  }
 
   const step = 5.36; // laatta (4.96vh) + rako (0.4vh) = 5.36vh
 
@@ -595,8 +597,6 @@ const Board = ({
           }
         }
       }
-
-      console.log(score);
 
       // Use original board's tile modifier values
       const tile = generatedBoard[x]?.[y];
