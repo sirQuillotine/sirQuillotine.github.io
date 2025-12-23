@@ -72,10 +72,6 @@ const Board = ({
   const [placedLetters, setPlacedLetters] = useState<Record<string, string>>(
     {}
   );
-<<<<<<< HEAD
-=======
-  //console.log(seed);
->>>>>>> 354ae993966c6ec16c92a67948445a7367d8d94b
   if (seedNumber === 0) {
     seedNumber = parseFloat(seed);
   }
