@@ -927,36 +927,36 @@ const Board = ({
       for (let i = 0; i < b.length; i++) {
         const rowStr = rowToString(b, i);
 
-        if (!processedRows.has(rowStr)) {
-          processedRows.add(rowStr);
-          const combinedRow = rowStr + handStr;
-          wordsFromLetters(combinedRow).forEach((word) => {
-            for (let j = 0; j < b[i].length; j++) {
-              const r = validateWord(word, [i, j], b, handt, true);
-              if (r !== 0) {
-                solutiones.push([word, [i, j], r, "r", false]);
-                maxScore += r;
-                maxWord += 1;
-              }
+        processedRows.add(rowStr);
+        const combinedRow = rowStr + handStr;
+
+        wordsFromLetters(combinedRow).forEach((word) => {
+          if (i === 12) {
+            console.log(word);
+          }
+          for (let j = 0; j < b[i].length; j++) {
+            const r = validateWord(word, [i, j], b, handt, true);
+            if (r !== 0) {
+              solutiones.push([word, [i, j], r, "r", false]);
+              maxScore += r;
+              maxWord += 1;
             }
-          });
-        }
+          }
+        });
 
         const colStr = columnToString(b, i);
-        if (!processedCols.has(colStr)) {
-          processedCols.add(colStr);
-          const combinedCol = colStr + handStr;
-          wordsFromLetters(combinedCol).forEach((word) => {
-            for (let j = 0; j < b.length; j++) {
-              const r = validateWord(word, [j, i], b, handt, false);
-              if (r !== 0) {
-                solutiones.push([word, [j, i], r, "d", false]);
-                maxScore += r;
-                maxWord += 1;
-              }
+        processedCols.add(colStr);
+        const combinedCol = colStr + handStr;
+        wordsFromLetters(combinedCol).forEach((word) => {
+          for (let j = 0; j < b.length; j++) {
+            const r = validateWord(word, [j, i], b, handt, false);
+            if (r !== 0) {
+              solutiones.push([word, [j, i], r, "d", false]);
+              maxScore += r;
+              maxWord += 1;
             }
-          });
-        }
+          }
+        });
       }
 
       setSolutions(solutiones);
