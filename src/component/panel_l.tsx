@@ -3,9 +3,10 @@ import "./game.css";
 interface PanelProps {
   stats?: number[];
   onHint?: (hint: string) => void;
+  seed?: string;
 }
 
-const PanelL = ({ stats = [1, 100, 1, 100], onHint }: PanelProps) => {
+const PanelL = ({ stats = [1, 100, 1, 100], onHint, seed }: PanelProps) => {
   function setHint() {
     onHint?.(Math.random().toString());
   }
@@ -46,6 +47,13 @@ const PanelL = ({ stats = [1, 100, 1, 100], onHint }: PanelProps) => {
         id="side-panel-button-hint"
         className="side-panel-button"
         onClick={setHint}
+      ></div>
+      <div
+        id="side-panel-button-share"
+        className="side-panel-button"
+        onClick={() => {
+          navigator.clipboard.writeText(window.location.href + seed);
+        }}
       ></div>
       <div
         id="side-panel-button-restart"

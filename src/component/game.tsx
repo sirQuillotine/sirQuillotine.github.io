@@ -73,7 +73,7 @@ const Board = ({
     {}
   );
 
-  var seedNumber = parseFloat(seed);
+  var seedNumber = seed;
 
   const step = 5.36; // laatta (4.96vh) + rako (0.4vh) = 5.36vh
 
@@ -761,12 +761,13 @@ const Board = ({
     if (!generating) {
       generating = true;
 
-      if (seedNumber === 0) {
+      /*if (seedNumber === 0) {
         seedNumber = Math.floor(Math.random() * 1000000);
         rand = SeedRandom(seedNumber, 1000);
       } else {
         rand = SeedRandom(seedNumber, 1000);
-      }
+      }*/
+      rand = SeedRandom(seedNumber, 1000);
       guess = "";
       console.log("Generoidaan siemenellä " + seedNumber);
 

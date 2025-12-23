@@ -472,6 +472,9 @@ body {
 #side-panel-button-hint {
   background-image: url("/graphics/hint_button.png");
 }
+#side-panel-button-share {
+  background-image: url("/graphics/share_button.png");
+}
 #side-panel-button-restart {
   background-image: url("/graphics/restart_button.png");
 }

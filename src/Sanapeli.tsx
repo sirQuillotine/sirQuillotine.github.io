@@ -36,11 +36,12 @@ const Sanapeli = ({ seedProp }: Props) => {
     }
   }, [seedFromState, location.pathname, navigate]);
 
-  const s = seedProp ?? sessionSeed ?? "0";
+  const s =
+    seedProp ?? sessionSeed ?? Math.floor(Math.random() * 1000000).toString();
 
   return (
     <div id="app-div">
-      <PanelL stats={stats} onHint={setHint} />
+      <PanelL stats={stats} onHint={setHint} seed={s} />
       <Board
         onstatsChange={setStats}
         seed={s}
