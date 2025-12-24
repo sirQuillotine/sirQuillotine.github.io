@@ -850,7 +850,7 @@ const Board = ({
       guess = "";
       console.log("Generoidaan siemenellä " + seedNumber);
 
-      var count = getRandomInt(3, 8);
+      var count = getRandomInt(2, 4);
       //var count = 1;
 
       var position = [7, 7];
