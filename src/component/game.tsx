@@ -72,6 +72,14 @@ const Board = ({
   const [placedLetters, setPlacedLetters] = useState<Record<string, string>>(
     {}
   );
+  const [showPopup, setShowPopup] = useState(false);
+  const handleUsedWord = () => {
+    navigator.clipboard.writeText(window.location.href + seedNumber);
+    setShowPopup(true);
+    setTimeout(() => {
+      setShowPopup(false);
+    }, 2000);
+  };
   if (seedNumber === 0) {
     seedNumber = parseFloat(seed);
   }
@@ -346,6 +354,7 @@ const Board = ({
             setAnimationBoard(copy);
             removeAnimation();
           } else {
+            handleUsedWord();
             console.log("Sana on jo käytetty");
           }
         } else {
@@ -951,7 +960,7 @@ const Board = ({
         b = copy.map((row) => row.slice());
       }
       //test
-      b = test;
+      //b = test;
       generatedBoard = b.map((r) => r.slice());
       setBoard(b);
 
@@ -997,7 +1006,7 @@ const Board = ({
         handt.push(bag.splice(getRandomInt(0, bag.length - 1), 1)[0]);
       }
       //test
-      handt = ["a", "i", "k", "a", "t", "a"];
+      //handt = ["a", "i", "k", "a", "t", "a"];
       setHand(handt);
       generatedHand = handt;
       currentHand = handt.slice(); // Initialize currentHand with the new hand
@@ -1134,6 +1143,9 @@ const Board = ({
 
   return (
     <div id="master-div">
+      <div className={`popup-toast ${showPopup ? "show" : ""}`}>
+        Ratkaisit tämän jo!
+      </div>
       <div id="coords-x" className="coords-xy">
         {Array.from({ length: 15 }, (_, i) => (
           <div

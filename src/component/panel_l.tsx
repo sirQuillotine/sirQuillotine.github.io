@@ -1,3 +1,4 @@
+import { useState } from "react";
 import "./game.css";
 
 interface PanelProps {
@@ -12,6 +13,15 @@ const PanelL = ({
   onHint,
   seed = "0",
 }: PanelProps) => {
+  const [showPopup, setShowPopup] = useState(false);
+
+  const handleShare = () => {
+    navigator.clipboard.writeText(window.location.href + seedNumber);
+    setShowPopup(true);
+    setTimeout(() => {
+      setShowPopup(false);
+    }, 2000);
+  };
   function setHint() {
     onHint?.(Math.random().toString());
   }
@@ -22,15 +32,20 @@ const PanelL = ({
 
   return (
     <div className="master-appear-animation">
+      <div className={`popup-toast ${showPopup ? "show" : ""}`}>
+        Linkki kopioitu leikepöydälle!
+      </div>
       <div id="points-and-bar-container">
         <div className="display-container">
           <span className="points-points">{stats[0]}</span>
-          <span className="points-header"> PISTETTÄ</span>
+          <span className="points-header"> PISTETTÄ ({stats[1]})</span>
           <div id="progress-bar-points" className="progress-bar">
             <div className="progress-bar-background progress-bar-item"></div>
             <div
               className="progress-bar-bar progress-bar-item"
-              style={{ width: `${(stats[0] / stats[1]) * 100}%` }}
+              style={{
+                clipPath: `inset(0 ${100 - (stats[0] / stats[1]) * 100}% 0 0)`,
+              }}
             ></div>
             <span className="progress-bar-text progress-bar-item">
               {((stats[0] / stats[1]) * 100).toFixed(1)}%
@@ -39,12 +54,14 @@ const PanelL = ({
         </div>
         <div className="display-container">
           <span className="points-points">{stats[2]}</span>
-          <span className="points-header"> RATKAISUA</span>
+          <span className="points-header">RATKAISUA ({stats[3]})</span>
           <div id="progress-bar-words" className="progress-bar">
             <div className="progress-bar-background progress-bar-item"></div>
             <div
               className="progress-bar-bar progress-bar-item"
-              style={{ width: `${(stats[2] / stats[3]) * 100}%` }}
+              style={{
+                clipPath: `inset(0 ${100 - (stats[2] / stats[3]) * 100}% 0 0)`,
+              }}
             ></div>
             <span className="progress-bar-text progress-bar-item">
               {((stats[2] / stats[3]) * 100).toFixed(1)}%
@@ -61,7 +78,7 @@ const PanelL = ({
         id="side-panel-button-share"
         className="side-panel-button"
         onClick={() => {
-          navigator.clipboard.writeText(window.location.href + seedNumber);
+          handleShare();
         }}
       ></div>
       <div
