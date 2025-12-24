@@ -226,12 +226,71 @@ const Board = ({
 
       // ENTER
       if (key === "enter" && guess.length > 0) {
-        if (isalpha(board[cursor.row - 1][cursor.col - 1])) {
-          guess += board[cursor.row - 1][cursor.col - 1];
+        /*
+        if (isalpha(generatedBoard[cursor.row - 1][cursor.col - 1])) {
+          guess += generatedBoard[cursor.row - 1][cursor.col - 1];
+        }*/
+
+        var x = oguessPointer[0];
+        var y = oguessPointer[1];
+
+        if (direction === "r") {
+          if (isalpha(generatedBoard[x]?.[y - 1])) {
+            guess =
+              getWord(
+                [x, y - 1],
+                direction === "r" ? true : false,
+                generatedBoard
+              ) + guess;
+
+            var i = y;
+            while (i >= 1) {
+              if (!isalpha(generatedBoard[x]?.[i - 1])) {
+                y = i;
+                break;
+              }
+              i -= 1;
+            }
+          } else if (
+            isalpha(generatedBoard[cursor.row - 1]?.[cursor.col - 1])
+          ) {
+            guess += getWord(
+              [cursor.row - 1, cursor.col - 1],
+              direction === "r" ? true : false,
+              generatedBoard
+            );
+          }
+        } else {
+          if (isalpha(generatedBoard[x - 1]?.[y])) {
+            guess =
+              getWord(
+                [x - 1, y],
+                direction === "r" ? true : false,
+                generatedBoard
+              ) + guess;
+
+            var i = x;
+            while (i >= 1) {
+              if (!isalpha(generatedBoard[i - 1]?.[y])) {
+                x = i;
+                break;
+              }
+              i -= 1;
+            }
+          } else if (
+            isalpha(generatedBoard[cursor.row - 1]?.[cursor.col - 1])
+          ) {
+            guess += getWord(
+              [cursor.row - 1, cursor.col - 1],
+              direction === "r" ? true : false,
+              generatedBoard
+            );
+          }
         }
+
         const wordScore = validateWord(
           guess,
-          oguessPointer,
+          [x, y],
           generatedBoard,
           generatedHand,
           direction === "r" ? true : false
@@ -243,8 +302,8 @@ const Board = ({
           for (var i = 0; i < g.length; i++) {
             if (
               g[i][0] === guess &&
-              g[i][1][0] === oguessPointer[0] &&
-              g[i][1][1] === oguessPointer[1] &&
+              g[i][1][0] === x &&
+              g[i][1][1] === y &&
               g[i][2] === direction
             ) {
               contains = true;
@@ -253,14 +312,13 @@ const Board = ({
 
           if (!contains) {
             console.log("Sopii");
-            console.log(solutions);
-            g.push([guess, oguessPointer, direction]);
+            g.push([guess, [x, y], direction]);
             var sol = solutions.slice();
             for (var i = 0; i < sol.length; i++) {
               if (
                 sol[i][0] === guess &&
-                sol[i][1][0] === oguessPointer[0] &&
-                sol[i][1][1] === oguessPointer[1] &&
+                sol[i][1][0] === x &&
+                sol[i][1][1] === y &&
                 sol[i][3] === direction
               ) {
                 sol[i][4] = true;
@@ -278,11 +336,11 @@ const Board = ({
             const copy = animationBoard.map((r) => r.slice());
             if (direction === "r") {
               for (var i = 0; i < guess.length; i++) {
-                copy[oguessPointer[0]][oguessPointer[1] + i] = guess[i];
+                copy[x][y + i] = guess[i];
               }
             } else {
               for (var i = 0; i < guess.length; i++) {
-                copy[oguessPointer[0] + i][oguessPointer[1]] = guess[i];
+                copy[x + i][y] = guess[i];
               }
             }
             setAnimationBoard(copy);
@@ -368,6 +426,24 @@ const Board = ({
     ["0", "0", "4", "0", "0", "0", "4", "0", "4", "0", "0", "0", "4", "0", "0"],
     ["1", "0", "0", "4", "0", "0", "0", "5", "0", "0", "0", "4", "0", "0", "1"],
     ["0", "0", "4", "0", "0", "0", "4", "0", "4", "0", "0", "0", "4", "0", "0"],
+    ["0", "3", "0", "0", "0", "3", "0", "0", "0", "3", "0", "0", "0", "3", "0"],
+    ["0", "0", "0", "0", "2", "0", "0", "0", "0", "0", "2", "0", "0", "0", "0"],
+    ["4", "0", "0", "2", "0", "0", "0", "4", "0", "0", "0", "2", "0", "0", "4"],
+    ["0", "0", "2", "0", "0", "0", "4", "0", "4", "0", "0", "0", "2", "0", "0"],
+    ["0", "2", "0", "0", "0", "3", "0", "0", "0", "3", "0", "0", "0", "2", "0"],
+    ["1", "0", "0", "4", "0", "0", "0", "1", "0", "0", "0", "4", "0", "0", "1"],
+  ];
+
+  const test = [
+    ["1", "0", "0", "4", "0", "0", "0", "1", "0", "0", "0", "4", "0", "0", "1"],
+    ["0", "2", "0", "0", "0", "3", "0", "0", "0", "3", "0", "0", "0", "2", "0"],
+    ["0", "0", "2", "0", "0", "0", "4", "0", "4", "0", "0", "0", "2", "0", "0"],
+    ["4", "0", "0", "2", "0", "0", "0", "4", "0", "0", "0", "2", "0", "0", "4"],
+    ["0", "0", "0", "0", "2", "0", "0", "0", "0", "0", "2", "0", "0", "0", "0"],
+    ["0", "3", "0", "0", "0", "3", "0", "0", "0", "3", "0", "0", "0", "3", "0"],
+    ["0", "0", "4", "0", "0", "0", "4", "0", "4", "0", "0", "0", "4", "0", "0"],
+    ["1", "0", "0", "4", "0", "0", "0", "5", "0", "0", "0", "4", "0", "0", "1"],
+    ["0", "0", "4", "0", "0", "0", "e", "r", "o", "0", "0", "0", "4", "0", "0"],
     ["0", "3", "0", "0", "0", "3", "0", "0", "0", "3", "0", "0", "0", "3", "0"],
     ["0", "0", "0", "0", "2", "0", "0", "0", "0", "0", "2", "0", "0", "0", "0"],
     ["4", "0", "0", "2", "0", "0", "0", "4", "0", "0", "0", "2", "0", "0", "4"],
@@ -666,11 +742,11 @@ const Board = ({
 
     //Tarkista mahtuuko sana
     if (isHorizontal) {
-      if (position[1] < 0 || position[1] + word.length > 14) {
+      if (position[1] < 0 || position[1] + word.length - 1 > 14) {
         return 0;
       }
     } else {
-      if (position[0] < 0 || position[0] + word.length > 14) {
+      if (position[0] < 0 || position[0] + word.length - 1 > 14) {
         return 0;
       }
     }
@@ -875,7 +951,7 @@ const Board = ({
         b = copy.map((row) => row.slice());
       }
       //test
-      //b = test;
+      b = test;
       generatedBoard = b.map((r) => r.slice());
       setBoard(b);
 
@@ -920,6 +996,8 @@ const Board = ({
       for (let i = 0; i < 7; i++) {
         handt.push(bag.splice(getRandomInt(0, bag.length - 1), 1)[0]);
       }
+      //test
+      handt = ["a", "i", "k", "a", "t", "a"];
       setHand(handt);
       generatedHand = handt;
       currentHand = handt.slice(); // Initialize currentHand with the new hand
