@@ -51,6 +51,8 @@ body {
   justify-content: center;
 
   overflow-y: hidden;
+
+  user-select: none;
 }
 
 #master-div {
