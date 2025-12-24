@@ -17,7 +17,6 @@ const SolutionRow = ({
   const [word, [i, j], points, dir, isSolved] = sol;
   const rowRef = useRef<HTMLTableRowElement>(null);
 
-  // Determine if content should be visible (either actually solved or currently peeking)
   const show = isSolved || isPeeking;
 
   useEffect(() => {
