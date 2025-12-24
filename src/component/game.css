@@ -49,6 +49,10 @@ body {
 
   display: flex;
   justify-content: center;
+
+  overflow-y: hidden;
+
+  user-select: none;
 }
 
 #master-div {
@@ -118,15 +122,12 @@ body {
 @keyframes highlight-fade {
   0% {
     color: yellow;
-    font-weight: 1000;
   }
   80% {
     color: yellow;
-    font-weight: 1000;
   }
   100% {
     color: white;
-    font-weight: 700;
   }
 }
 
@@ -429,8 +430,9 @@ body {
 }
 
 .progress-bar-bar {
-  min-width: 3vh;
-  max-width: 100%;
+  /*min-width: 3vh;
+  max-width: 100%;*/
+  width: 100% !important;
 
   border-radius: 3vh;
 }
@@ -496,12 +498,33 @@ body {
 .side-panel-button:hover {
   filter: brightness(100%);
 }
+.popup-toast {
+  position: fixed;
+  top: 2vh;
+  left: 50%;
+  transform: translate(-50%, -200%);
+  padding: 1vh 2vh 1vh 2vh;
+
+  background-color: #191f1c;
+  border-radius: 5vh;
+
+  font-size: 2vh;
+  font-weight: 700;
+  color: white;
+  font-family: "Nunito", sans-serif;
+  z-index: 9999;
+
+  transition: transform 0.4s cubic-bezier(0.75, 0, 0.24, 1);
+}
+.popup-toast.show {
+  transform: translate(-50%, 0);
+}
 
 /* right side */
 #side-panel-container {
   position: relative;
   width: 25vh;
-  height: 80vh;
+  height: 82vh;
 
   top: 5vh;
 
@@ -512,14 +535,14 @@ body {
 
   overflow: hidden;
 }
-#side-panel-container span {
+#table-title {
   font-weight: 900;
   font-size: 1.9vh;
   padding-left: 3.5vh;
 }
 
 #table-container {
-  height: 77.4vh;
+  height: 76.8vh;
 
   overflow-y: scroll;
   scrollbar-width: none;
@@ -545,15 +568,34 @@ td {
   font-weight: 700;
 }
 td.points-unsolved {
-  opacity: 0.3;
+  opacity: 0.2;
   font-weight: 400;
 }
 thead tr th img {
   height: 1.5vh;
   opacity: 0.9;
 }
+.location-text-div {
+  height: 100%;
 
-/* The class to apply */
+  padding-left: 0;
+
+  font-weight: 700;
+  font-size: 1.5vh;
+}
+#click-to-reveal {
+  cursor: pointer;
+  opacity: 0.25;
+
+  padding-left: 2vh;
+}
+#click-to-reveal:hover {
+  opacity: 0.5;
+}
+#click-to-reveal:active {
+  opacity: 1;
+}
+
 .row-highlight {
   animation: highlight-fade 3s ease-out;
 }

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./game.css";
 
 type Solution = [string, [number, number], number, "r" | "d", boolean];
@@ -7,9 +7,17 @@ interface Props {
   solutions: Solution[];
 }
 
-const SolutionRow = ({ sol }: { sol: Solution }) => {
+const SolutionRow = ({
+  sol,
+  isPeeking,
+}: {
+  sol: Solution;
+  isPeeking: boolean;
+}) => {
   const [word, [i, j], points, dir, isSolved] = sol;
   const rowRef = useRef<HTMLTableRowElement>(null);
+
+  const show = isSolved || isPeeking;
 
   useEffect(() => {
     if (isSolved) {
@@ -20,13 +28,20 @@ const SolutionRow = ({ sol }: { sol: Solution }) => {
   return (
     <tr ref={rowRef} className={isSolved ? "row-highlight" : ""}>
       {/* 1. Sana Column */}
-      <td>
-        {isSolved ? (
+      <td
+        style={{
+          paddingLeft: `0.75vh`,
+          overflow: "hidden",
+          whiteSpace: "nowrap",
+          width: "12vh",
+        }}
+      >
+        {show ? (
           word.toUpperCase()
         ) : (
           <div
             style={{
-              backgroundColor: "#161917ba",
+              backgroundColor: "#16191780",
               width: "12vh",
               height: "2vh",
               borderRadius: "1vh",
@@ -36,18 +51,29 @@ const SolutionRow = ({ sol }: { sol: Solution }) => {
       </td>
       {/* 2. Location Column */}
       <td>
-        {isSolved ? (
-          `${String.fromCharCode(64 + i + 1)}${j + 1}`
-        ) : (
-          <div
-            style={{
-              backgroundColor: "#161917ba",
-              width: "3.5vh",
-              height: "2vh",
-              borderRadius: "1vh",
-            }}
-          />
-        )}
+        <div
+          style={{
+            display: `flex`,
+            justifyContent: `center`,
+            width: "3.5vh",
+          }}
+        >
+          {show ? (
+            <span className="location-text-div">
+              {String.fromCharCode(64 + i + 1)}
+              {j + 1}
+            </span>
+          ) : (
+            <div
+              style={{
+                backgroundColor: "#16191780",
+                width: "3.5vh",
+                height: "2vh",
+                borderRadius: "1vh",
+              }}
+            />
+          )}
+        </div>
       </td>
       {/* 3. Direction Column */}
       <td
@@ -56,9 +82,10 @@ const SolutionRow = ({ sol }: { sol: Solution }) => {
           justifyContent: "center",
           alignItems: "center",
           height: "100%",
+          width: "2vh",
         }}
       >
-        {isSolved ? (
+        {show ? (
           dir === "r" ? (
             "→"
           ) : (
@@ -67,7 +94,7 @@ const SolutionRow = ({ sol }: { sol: Solution }) => {
         ) : (
           <div
             style={{
-              backgroundColor: "#161917ba",
+              backgroundColor: "#16191780",
               width: "2vh",
               height: "2vh",
               borderRadius: "1vh",
@@ -76,15 +103,18 @@ const SolutionRow = ({ sol }: { sol: Solution }) => {
         )}
       </td>
       {/* 4. Points Column */}
-      <td className={isSolved ? "" : "points-unsolved"}>{points}</td>
+      <td className={show ? "" : "points-unsolved"}>{points}</td>
     </tr>
   );
 };
 
 const PanelR = ({ solutions }: Props) => {
+  const [isPeeking, setIsPeeking] = useState(false);
+
   return (
     <div id="side-panel-container" className="master-appear-animation">
-      <span>- RATKAISUT -</span>
+      <span id="table-title">- RATKAISUT -</span>
+
       <div id="table-container">
         <table id="word-table">
           <thead>
@@ -103,11 +133,20 @@ const PanelR = ({ solutions }: Props) => {
           </thead>
           <tbody>
             {solutions.map((sol, idx) => (
-              <SolutionRow key={idx} sol={sol} />
+              <SolutionRow key={idx} sol={sol} isPeeking={isPeeking} />
             ))}
           </tbody>
         </table>
       </div>
+      <span
+        id="click-to-reveal"
+        onMouseDown={() => setIsPeeking(true)}
+        onMouseUp={() => setIsPeeking(false)}
+        onMouseLeave={() => setIsPeeking(false)}
+        style={{ cursor: "pointer", userSelect: "none" }}
+      >
+        Paljasta (pidä painettuna)
+      </span>
     </div>
   );
 };
