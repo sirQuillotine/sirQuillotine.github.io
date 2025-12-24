@@ -850,7 +850,7 @@ const Board = ({
       guess = "";
       console.log("Generoidaan siemenellä " + seedNumber);
 
-      var count = getRandomInt(2, 4);
+      var count = getRandomInt(3, 8);
       //var count = 1;
 
       var position = [7, 7];
@@ -951,7 +951,7 @@ const Board = ({
         b = copy.map((row) => row.slice());
       }
       //test
-      b = test;
+      //b = test;
       generatedBoard = b.map((r) => r.slice());
       setBoard(b);
 
@@ -997,7 +997,7 @@ const Board = ({
         handt.push(bag.splice(getRandomInt(0, bag.length - 1), 1)[0]);
       }
       //test
-      handt = ["a", "i", "k", "a", "t", "a"];
+      //handt = ["a", "i", "k", "a", "t", "a"];
       setHand(handt);
       generatedHand = handt;
       currentHand = handt.slice(); // Initialize currentHand with the new hand
