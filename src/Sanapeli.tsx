@@ -44,7 +44,7 @@ const Sanapeli = ({ seedProp }: Props) => {
 
   return (
     <div id="app-div">
-      <PanelL stats={stats} onHint={setHint} seed={s} />
+      <PanelL stats={stats} onHint={setHint} seed={s} onReload={setSeed} />
       <Board
         onstatsChange={setStats}
         seed={s}

@@ -4,16 +4,50 @@ import "./game.css";
 interface PanelProps {
   stats?: number[];
   onHint?: (hint: string) => void;
+  onReload?: (hint: string) => void;
   seed?: string;
 }
 
 var seedNumber = "0";
+var startTime = 0;
+var oldTime = 0;
+
 const PanelL = ({
   stats = [1, 100, 1, 100],
   onHint,
+  onReload,
   seed = "0",
 }: PanelProps) => {
   const [showPopup, setShowPopup] = useState(false);
+
+  const setCookie = (name: any, value: any, days: any) => {
+    let expires = "";
+    if (days) {
+      const date = new Date();
+      date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+      expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + value + expires + "; path=/";
+  };
+
+  const getCookie = (name: any) => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) {
+      const popped = parts.pop();
+      return popped?.split(";").shift();
+    }
+    return null;
+  };
+
+  if (startTime === 0) {
+    var o = getCookie("time");
+    if (o) {
+      oldTime = parseFloat(o);
+    }
+    console.log(oldTime);
+    startTime = new Date().getTime();
+  }
 
   const handleShare = () => {
     navigator.clipboard.writeText(window.location.href + seedNumber);
@@ -25,10 +59,35 @@ const PanelL = ({
   function setHint() {
     onHint?.(Math.random().toString());
   }
+  function setReload() {
+    console.log("Refresh...");
+    startTime = new Date().getTime();
+    oldTime = 0;
+    setCookie("time", 0, 7);
 
-  if (seedNumber === "0") {
-    seedNumber = seed;
+    onReload?.(Math.floor(Math.random() * 1000000).toString());
   }
+
+  const [time, setTime] = useState(new Date().getTime() - startTime);
+  setInterval(() => {
+    setTime(new Date().getTime() - startTime);
+    if (time !== null) setCookie("time", time + oldTime, 7);
+  }, 1000);
+
+  //if (seedNumber === "0") {
+  seedNumber = seed;
+  //}
+
+  const getFormattedTime = (milliseconds: number) => {
+    const totalSeconds = Math.floor((milliseconds + oldTime) / 1000);
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+    return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(
+      2,
+      "0"
+    )}:${String(seconds).padStart(2, "0")}`;
+  };
 
   return (
     <div className="master-appear-animation">
@@ -44,11 +103,13 @@ const PanelL = ({
             <div
               className="progress-bar-bar progress-bar-item"
               style={{
-                clipPath: `inset(0 ${100 - (stats[0] / stats[1]) * 100}% 0 0)`,
+                clipPath: `inset(0 ${
+                  stats[1] === 0 ? 100 : 100 - (stats[0] / stats[1]) * 100
+                }% 0 0)`,
               }}
             ></div>
             <span className="progress-bar-text progress-bar-item">
-              {((stats[0] / stats[1]) * 100).toFixed(1)}%
+              {stats[1] === 0 ? 0 : ((stats[0] / stats[1]) * 100).toFixed(1)}%
             </span>
           </div>
         </div>
@@ -60,11 +121,13 @@ const PanelL = ({
             <div
               className="progress-bar-bar progress-bar-item"
               style={{
-                clipPath: `inset(0 ${100 - (stats[2] / stats[3]) * 100}% 0 0)`,
+                clipPath: `inset(0 ${
+                  stats[1] === 0 ? 100 : 100 - (stats[2] / stats[3]) * 100
+                }% 0 0)`,
               }}
             ></div>
             <span className="progress-bar-text progress-bar-item">
-              {((stats[2] / stats[3]) * 100).toFixed(1)}%
+              {stats[3] === 0 ? 0 : ((stats[2] / stats[3]) * 100).toFixed(1)}%
             </span>
           </div>
         </div>
@@ -84,10 +147,9 @@ const PanelL = ({
       <div
         id="side-panel-button-restart"
         className="side-panel-button"
-        onClick={() => {
-          window.location.reload();
-        }}
+        onClick={setReload}
       ></div>
+      <span className="points-header">({getFormattedTime(time)})</span>
     </div>
   );
 };

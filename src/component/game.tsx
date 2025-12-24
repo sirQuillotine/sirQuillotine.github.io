@@ -38,6 +38,8 @@ var currentHand: string[] = []; // Track the current hand state
 var maxScore = 0;
 var maxWord = 0;
 
+var fromCookies = true;
+
 var hintPosition = [
   [7, 4],
   [7, 9],
@@ -80,13 +82,13 @@ const Board = ({
       setShowPopup(false);
     }, 2000);
   };
-  if (seedNumber === 0) {
-    seedNumber = parseFloat(seed);
-  }
+  //if (seedNumber === 0) {
+  seedNumber = parseFloat(seed);
+  //}
 
   const step = 5.36; // laatta (4.96vh) + rako (0.4vh) = 5.36vh
 
-  const setCookieFunction = (name: any, value: any, days: any) => {
+  const setCookie = (name: any, value: any, days: any) => {
     let expires = "";
     if (days) {
       const date = new Date();
@@ -496,7 +498,7 @@ const Board = ({
   const [solutions, setSolutions] = useState<any[]>([]);
   const [totalScore, setTotalScore] = useState<number>(0);
 
-  const [hintVis, setHintVis] = useState<boolean>(false);
+  const [hintVis, setHintVis] = useState<string>("");
 
   const [board, setBoard] = useState<string[][]>(boardTemplate);
   const [animationBoard, setAnimationBoard] =
@@ -521,6 +523,13 @@ const Board = ({
       generateBoard();
     }
   }, [dictionary.length]);
+
+  useEffect(() => {
+    if (dictionary.length > 0) {
+      fromCookies = false;
+      generateBoard();
+    }
+  }, [seed]);
 
   function getRandomInt(min: number, max: number) {
     /*
@@ -728,8 +737,8 @@ const Board = ({
       }
     }
 
-    score += adjacentScore;
     score *= multiplier;
+    score += adjacentScore;
     if (used == 7) {
       score += 50;
     }
@@ -849,17 +858,20 @@ const Board = ({
     if (!generating) {
       generating = true;
 
-      /*if (seedNumber === 0) {
-        seedNumber = Math.floor(Math.random() * 1000000);
-        rand = SeedRandom(seedNumber, 1000);
-      } else {
-        rand = SeedRandom(seedNumber, 1000);
-      }*/
+      var oldSeed = getCookie("seed");
+
+      if (oldSeed && fromCookies) {
+        seedNumber = parseFloat(oldSeed);
+      }
       rand = SeedRandom(seedNumber, 1000);
+
+      setCookie("seed", seedNumber, 7);
+      fromCookies = true;
+
       guess = "";
       console.log("Generoidaan siemenellä " + seedNumber);
 
-      var count = getRandomInt(2, 4);
+      var count = getRandomInt(2, 7);
       //var count = 1;
 
       var position = [7, 7];
@@ -1017,6 +1029,9 @@ const Board = ({
       const processedRows = new Set<string>();
       const processedCols = new Set<string>();
 
+      maxScore = 0;
+      maxWord = 0;
+
       for (let i = 0; i < b.length; i++) {
         const rowStr = rowToString(b, i);
 
@@ -1051,11 +1066,11 @@ const Board = ({
       }
 
       setSolutions(solutiones);
-      setCookieFunction("board", b, 7);
 
       console.log("maxScore: " + maxScore + "  maxWords: " + maxWord);
 
       console.log("Generoitu");
+      generating = false;
     }
   }
 
@@ -1119,12 +1134,10 @@ const Board = ({
       hintPosition = [
         h[1],
         h[3] === "r"
-          ? [h[1][0], h[1][1] + h[0].length]
-          : [h[1][0] + h[0].length, h[1][1]],
+          ? [h[1][0], h[1][1] + h[0].length - 1]
+          : [h[1][0] + h[0].length - 1, h[1][1]],
       ];
-      var c = direction === "r" ? "r" : "d";
-      setDirection(c);
-      setHintVis(true);
+      setHintVis(h[1]);
       removing = h[0];
       removeHint(h[0]);
     }
@@ -1133,7 +1146,7 @@ const Board = ({
   const removeHint = async (word: string) => {
     await delay(10000);
     if (removing === word) {
-      setHintVis(false);
+      setHintVis("");
     }
   };
 
@@ -1300,7 +1313,7 @@ const Board = ({
         <div
           id="cursor"
           className={
-            hintVis
+            hintVis !== ""
               ? "hint-visible tile-appear"
               : "hint-invisible tile-disappear"
           }
@@ -1326,7 +1339,7 @@ const Board = ({
         <div
           id="cursor"
           className={
-            hintVis
+            hintVis !== ""
               ? "hint-visible tile-appear"
               : "hint-invisible tile-disappear"
           }
