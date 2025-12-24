@@ -29,7 +29,14 @@ const SolutionRow = ({
   return (
     <tr ref={rowRef} className={isSolved ? "row-highlight" : ""}>
       {/* 1. Sana Column */}
-      <td style={{ paddingLeft: `0.75vh` }}>
+      <td
+        style={{
+          paddingLeft: `0.75vh`,
+          overflow: "hidden",
+          whiteSpace: "nowrap",
+          width: "12vh",
+        }}
+      >
         {show ? (
           word.toUpperCase()
         ) : (
@@ -39,7 +46,6 @@ const SolutionRow = ({
               width: "12vh",
               height: "2vh",
               borderRadius: "1vh",
-              marginLeft: "-0.75vh",
             }}
           />
         )}
@@ -50,6 +56,7 @@ const SolutionRow = ({
           style={{
             display: `flex`,
             justifyContent: `center`,
+            width: "3.5vh",
           }}
         >
           {show ? (
@@ -76,6 +83,7 @@ const SolutionRow = ({
           justifyContent: "center",
           alignItems: "center",
           height: "100%",
+          width: "2vh",
         }}
       >
         {show ? (
@@ -106,18 +114,7 @@ const PanelR = ({ solutions }: Props) => {
 
   return (
     <div id="side-panel-container" className="master-appear-animation">
-      {/* Holding down on the title triggers the reveal */}
-      <span
-        id="table-title"
-        onMouseDown={() => setIsPeeking(true)}
-        onMouseUp={() => setIsPeeking(false)}
-        onMouseLeave={() => setIsPeeking(false)}
-        onTouchStart={() => setIsPeeking(true)}
-        onTouchEnd={() => setIsPeeking(false)}
-        style={{ cursor: "pointer", userSelect: "none" }}
-      >
-        - RATKAISUT -
-      </span>
+      <span id="table-title">- RATKAISUT -</span>
 
       <div id="table-container">
         <table id="word-table">
@@ -142,6 +139,15 @@ const PanelR = ({ solutions }: Props) => {
           </tbody>
         </table>
       </div>
+      <span
+        id="click-to-reveal"
+        onMouseDown={() => setIsPeeking(true)}
+        onMouseUp={() => setIsPeeking(false)}
+        onMouseLeave={() => setIsPeeking(false)}
+        style={{ cursor: "pointer", userSelect: "none" }}
+      >
+        Paljasta (pidä painettuna)
+      </span>
     </div>
   );
 };

@@ -522,7 +522,7 @@ body {
 #side-panel-container {
   position: relative;
   width: 25vh;
-  height: 80vh;
+  height: 82vh;
 
   top: 5vh;
 
@@ -540,7 +540,7 @@ body {
 }
 
 #table-container {
-  height: 77.4vh;
+  height: 76.8vh;
 
   overflow-y: scroll;
   scrollbar-width: none;
@@ -580,6 +580,18 @@ thead tr th img {
 
   font-weight: 700;
   font-size: 1.5vh;
+}
+#click-to-reveal {
+  cursor: pointer;
+  opacity: 0.25;
+
+  padding-left: 2vh;
+}
+#click-to-reveal:hover {
+  opacity: 0.5;
+}
+#click-to-reveal:active {
+  opacity: 1;
 }
 
 .row-highlight {
