@@ -1,29 +1,11 @@
 import "./App.css";
 import { useState, useEffect } from "react";
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  Link,
-  useParams,
-  useNavigate,
-  useLocation,
-} from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Board from "./component/game";
 import PanelL from "./component/panel_l";
 import PanelR from "./component/panel_r";
 
 const Sanapeli = () => {
-  const setCookie = (name: any, value: any, days: any) => {
-    let expires = "";
-    if (days) {
-      const date = new Date();
-      date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
-      expires = "; expires=" + date.toUTCString();
-    }
-    document.cookie = name + "=" + value + expires + "; path=/";
-  };
-
   const getCookie = (name: any) => {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);

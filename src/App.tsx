@@ -1,15 +1,11 @@
 import "./App.css";
-import { useState } from "react";
 import {
   BrowserRouter,
   Routes,
   Route,
-  Link,
   useParams,
   Navigate,
 } from "react-router-dom";
-import Board from "./component/game";
-import Panel from "./component/panel_l";
 import Sanapeli from "./Sanapeli";
 
 const SeedRedirect = () => {

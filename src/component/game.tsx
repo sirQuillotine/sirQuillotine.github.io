@@ -38,8 +38,6 @@ var currentHand: string[] = []; // Track the current hand state
 var maxScore = 0;
 var maxWord = 0;
 
-var fromCookies = true;
-
 var hintPosition = [
   [7, 4],
   [7, 9],
@@ -71,9 +69,6 @@ const Board = ({
 }: BoardProps) => {
   const [cursor, setCursor] = useState({ col: 8, row: 8 }); // kursori aluksi keskellä
   const [direction, setDirection] = useState("r"); // 'r' = oikealle (default),  'd' = alas
-  const [placedLetters, setPlacedLetters] = useState<Record<string, string>>(
-    {}
-  );
   const [showPopup, setShowPopup] = useState(false);
   const handleUsedWord = () => {
     navigator.clipboard.writeText(window.location.href + seedNumber);
@@ -223,7 +218,7 @@ const Board = ({
 
         guess = guess.slice(0, -1);
 
-        setCursor((prev) => {
+        setCursor(() => {
           let newCol = col;
           let newRow = row;
           if (direction === "r") newCol--;
@@ -321,7 +316,6 @@ const Board = ({
           }
 
           if (!contains) {
-            console.log("Sopii");
             g.push([guess, [x, y], direction]);
             var sol = solutions.slice();
             for (var i = 0; i < sol.length; i++) {
@@ -340,7 +334,6 @@ const Board = ({
             // Total pisteet
             setTotalScore((prev) => {
               const newTotal = prev + wordScore;
-              console.log(`Sanapisteet: ${wordScore}, Yhteensä: ${newTotal}`);
               return newTotal;
             });
 
@@ -358,10 +351,7 @@ const Board = ({
             removeAnimation();
           } else {
             handleUsedWord();
-            console.log("Sana on jo käytetty");
           }
-        } else {
-          console.log("Ei sovi");
         }
         setCursor(() => {
           let newCol = oguessPointer[1] + 1;
@@ -446,24 +436,6 @@ const Board = ({
     ["1", "0", "0", "4", "0", "0", "0", "1", "0", "0", "0", "4", "0", "0", "1"],
   ];
 
-  const test = [
-    ["1", "0", "0", "4", "0", "0", "0", "1", "0", "0", "0", "4", "0", "0", "1"],
-    ["0", "2", "0", "0", "0", "3", "0", "0", "0", "3", "0", "0", "0", "2", "0"],
-    ["0", "0", "2", "0", "0", "0", "4", "0", "4", "0", "0", "0", "2", "0", "0"],
-    ["4", "0", "0", "2", "0", "0", "0", "4", "0", "0", "0", "2", "0", "0", "4"],
-    ["0", "0", "0", "0", "2", "0", "0", "0", "0", "0", "2", "0", "0", "0", "0"],
-    ["0", "3", "0", "0", "0", "3", "0", "0", "0", "3", "0", "0", "0", "3", "0"],
-    ["0", "0", "4", "0", "0", "0", "4", "0", "4", "0", "0", "0", "4", "0", "0"],
-    ["1", "0", "0", "4", "0", "0", "0", "5", "0", "0", "0", "4", "0", "0", "1"],
-    ["0", "0", "4", "0", "0", "0", "e", "r", "o", "0", "0", "0", "4", "0", "0"],
-    ["0", "3", "0", "0", "0", "3", "0", "0", "0", "3", "0", "0", "0", "3", "0"],
-    ["0", "0", "0", "0", "2", "0", "0", "0", "0", "0", "2", "0", "0", "0", "0"],
-    ["4", "0", "0", "2", "0", "0", "0", "4", "0", "0", "0", "2", "0", "0", "4"],
-    ["0", "0", "2", "0", "0", "0", "4", "0", "4", "0", "0", "0", "2", "0", "0"],
-    ["0", "2", "0", "0", "0", "3", "0", "0", "0", "3", "0", "0", "0", "2", "0"],
-    ["1", "0", "0", "4", "0", "0", "0", "1", "0", "0", "0", "4", "0", "0", "1"],
-  ];
-
   const LETTER_SCORES: Record<string, number> = {
     a: 1,
     b: 8,
@@ -528,7 +500,6 @@ const Board = ({
 
   useEffect(() => {
     if (dictionary.length > 0) {
-      fromCookies = false;
       // defer generation to allow DOM paint (so panel can hide immediately)
       setTimeout(() => generateBoard(), 0);
     }
@@ -865,14 +836,12 @@ const Board = ({
 
       if (seed !== getCookie("seed")) {
         //Lauta on uusi
-        console.log("UUsi");
         setCookie("solutions", "", 7);
       }
 
       var cookieGuess = getCookie("solutions")?.split(",");
 
       setCookie("seed", seedNumber, 7);
-      fromCookies = true;
 
       guess = "";
       console.log("Generoidaan siemenellä " + seedNumber);
@@ -1032,8 +1001,6 @@ const Board = ({
       // Find possible words - optimized
       const solutiones: any[] = [];
       const handStr = handt.join("");
-      const processedRows = new Set<string>();
-      const processedCols = new Set<string>();
 
       maxScore = 0;
       maxWord = 0;
@@ -1044,7 +1011,6 @@ const Board = ({
       for (let i = 0; i < b.length; i++) {
         const rowStr = rowToString(b, i);
 
-        processedRows.add(rowStr);
         const combinedRow = rowStr + handStr;
 
         wordsFromLetters(combinedRow).forEach((word) => {
@@ -1070,7 +1036,6 @@ const Board = ({
         });
 
         const colStr = columnToString(b, i);
-        processedCols.add(colStr);
         const combinedCol = colStr + handStr;
         wordsFromLetters(combinedCol).forEach((word) => {
           for (let j = 0; j < b.length; j++) {
@@ -1097,8 +1062,6 @@ const Board = ({
       setTotalScore(oldScore);
 
       setSolutions(solutiones);
-
-      console.log("maxScore: " + maxScore + "  maxWords: " + maxWord);
 
       console.log("Generoitu");
       generating = false;
@@ -1225,15 +1188,13 @@ const Board = ({
             const colNum = c + 1;
             const coordKey = `${rowNum}-${colNum}`;
 
-            const userLetter = placedLetters[coordKey];
             const generatedLetter = board[r][c];
             const outLetter = animationBoard[r][c];
 
             const isAlpha = /[a-z|ä|ö]/i.test(generatedLetter as string);
             const isAlpha2 = /[a-z|ä|ö]/i.test(outLetter as string);
 
-            const finalLetter =
-              userLetter || (isAlpha ? (generatedLetter as string) : null);
+            const finalLetter = isAlpha ? (generatedLetter as string) : null;
             const finalout = isAlpha2 ? (outLetter as string) : null;
             return (
               <div
