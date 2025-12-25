@@ -471,6 +471,17 @@ body {
   height: 3vh;
 }
 
+#timer {
+  padding-bottom: 2vh;
+}
+#timer img {
+  height: 2vh;
+  padding-top: 1vh;
+}
+#timer span {
+  padding-left: 0.75vh;
+}
+
 /* side-panel buttons */
 .side-panel-button {
   width: 15vh;

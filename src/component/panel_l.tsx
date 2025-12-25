@@ -95,6 +95,10 @@ const PanelL = ({
         Linkki kopioitu leikepöydälle!
       </div>
       <div id="points-and-bar-container">
+        <div id="timer">
+          <img src="/graphics/timer_icon.svg" />
+          <span className="points-header">{getFormattedTime(time)}</span>
+        </div>
         <div className="display-container">
           <span className="points-points">{stats[0]}</span>
           <span className="points-header"> PISTETTÄ ({stats[1]})</span>
@@ -149,7 +153,6 @@ const PanelL = ({
         className="side-panel-button"
         onClick={setReload}
       ></div>
-      <span className="points-header">({getFormattedTime(time)})</span>
     </div>
   );
 };
