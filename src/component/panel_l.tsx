@@ -50,7 +50,7 @@ const PanelL = ({
   }
 
   const handleShare = () => {
-    navigator.clipboard.writeText(window.location.href + seedNumber);
+    navigator.clipboard.writeText(window.location.href + "#/" + seedNumber);
     setShowPopup(true);
     setTimeout(() => {
       setShowPopup(false);
