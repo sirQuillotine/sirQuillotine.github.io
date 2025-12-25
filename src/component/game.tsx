@@ -331,6 +331,7 @@ const Board = ({
                 sol[i][1][1] === y &&
                 sol[i][3] === direction
               ) {
+                setCookie("solutions", getCookie("solutions") + "," + i, 7);
                 sol[i][4] = true;
               }
             }
@@ -862,6 +863,14 @@ const Board = ({
 
       rand = SeedRandom(seedNumber, 1000);
 
+      if (seed !== getCookie("seed")) {
+        //Lauta on uusi
+        console.log("UUsi");
+        setCookie("solutions", "", 7);
+      }
+
+      var cookieGuess = getCookie("solutions")?.split(",");
+
       setCookie("seed", seedNumber, 7);
       fromCookies = true;
 
@@ -1029,6 +1038,9 @@ const Board = ({
       maxScore = 0;
       maxWord = 0;
 
+      var oldGuessed: any = [];
+      var oldScore = 0;
+
       for (let i = 0; i < b.length; i++) {
         const rowStr = rowToString(b, i);
 
@@ -1040,7 +1052,17 @@ const Board = ({
             const r = validateWord(word, [i, j], b, handt, true);
 
             if (r !== 0) {
-              solutiones.push([word, [i, j], r, "r", false]);
+              solutiones.push([
+                word,
+                [i, j],
+                r,
+                "r",
+                cookieGuess?.includes(maxWord.toString()) ? true : false,
+              ]);
+              if (cookieGuess?.includes(maxWord.toString())) {
+                oldGuessed.push([word, [i, j], direction]);
+                oldScore += r;
+              }
               maxScore += r;
               maxWord += 1;
             }
@@ -1054,13 +1076,25 @@ const Board = ({
           for (let j = 0; j < b.length; j++) {
             const r = validateWord(word, [j, i], b, handt, false);
             if (r !== 0) {
-              solutiones.push([word, [j, i], r, "d", false]);
+              solutiones.push([
+                word,
+                [j, i],
+                r,
+                "d",
+                cookieGuess?.includes(maxWord.toString()) ? true : false,
+              ]);
+              if (cookieGuess?.includes(maxWord.toString())) {
+                oldGuessed.push([word, [i, j], direction]);
+                oldScore += r;
+              }
               maxScore += r;
               maxWord += 1;
             }
           }
         });
       }
+      setGuessed(oldGuessed);
+      setTotalScore(oldScore);
 
       setSolutions(solutiones);
 
