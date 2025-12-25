@@ -399,6 +399,10 @@ body {
   padding-bottom: 5vh;
 }
 
+#panel-l-parent {
+  position: relative;
+}
+
 .display-container {
   padding-bottom: 6vh;
   display: flex;
@@ -542,7 +546,7 @@ body {
   width: 30vh;
 
   top: 37.5vh;
-  left: 14%;
+  margin-left: 20vh;
   padding: 1vh 2vh 1vh 2vh;
   opacity: 0;
 

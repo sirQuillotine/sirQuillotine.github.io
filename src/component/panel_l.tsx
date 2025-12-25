@@ -101,14 +101,17 @@ const PanelL = ({
   };
 
   return (
-    <div className={stats[1] > 0 ? "master-appear-animation" : "master"}>
+    <div
+      id="panel-l-parent"
+      className={stats[1] > 0 ? "master-appear-animation" : "master"}
+    >
       <div className={`popup-toast ${showPopup ? "show" : ""}`}>
         Linkki kopioitu leikepöydälle!
       </div>
       <div className={`popup-info ${showInfo ? "show" : ""}`}>
         <span>
           Etsi kaikki Scrabble-sääntöjen mukaiset ratkaisut laudalta. Arvatut ja
-          arvaamatta olevat ratkaisut ja niiden pistemäärät näet oikeasta
+          arvaamatta olevat ratkaisut sekä niiden pistemäärät näet oikeasta
           sivupalkista.
         </span>
       </div>
