@@ -1144,7 +1144,7 @@ const Board = ({
   }, [hint]);
 
   const removeHint = async (word: string) => {
-    await delay(10000);
+    await delay(60000);
     if (removing === word) {
       setHintVis("");
     }
