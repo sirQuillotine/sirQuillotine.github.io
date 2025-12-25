@@ -537,6 +537,28 @@ body {
   transform: translate(-50%, 0);
 }
 
+.popup-info {
+  position: fixed;
+  width: 30vh;
+
+  top: 37.5vh;
+  left: 14%;
+  padding: 1vh 2vh 1vh 2vh;
+  opacity: 0;
+
+  background-color: #191f1c;
+  border-radius: 2vh;
+
+  font-size: 1.5vh;
+  font-weight: 700;
+  color: white;
+  font-family: "Nunito", sans-serif;
+  z-index: 9999;
+}
+.popup-info.show {
+  opacity: 1;
+}
+
 /* right side */
 #side-panel-container {
   position: relative;
