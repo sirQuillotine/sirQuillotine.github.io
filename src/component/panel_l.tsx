@@ -50,7 +50,9 @@ const PanelL = ({
   }
 
   const handleShare = () => {
-    navigator.clipboard.writeText(window.location.href + "#/" + seedNumber);
+    navigator.clipboard.writeText(
+      "https://sirquillotine.github.io/#/" + seedNumber
+    );
     setShowPopup(true);
     setTimeout(() => {
       setShowPopup(false);
