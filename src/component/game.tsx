@@ -858,11 +858,6 @@ const Board = ({
     if (!generating) {
       generating = true;
 
-      var oldSeed = getCookie("seed");
-
-      if (oldSeed && fromCookies) {
-        seedNumber = parseFloat(oldSeed);
-      }
       rand = SeedRandom(seedNumber, 1000);
 
       setCookie("seed", seedNumber, 7);
@@ -1362,7 +1357,10 @@ const Board = ({
         </div>
       </div>
 
-      <div id="hand-container" className="master-appear-animation">
+      <div
+        id="hand-container"
+        className={hand.length > 0 ? "master-appear-animation" : "master"}
+      >
         {hand.map((tile, i) => (
           <div
             key={i}
