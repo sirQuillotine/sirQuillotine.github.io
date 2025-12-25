@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./game.css";
 
 interface PanelProps {
@@ -45,7 +45,6 @@ const PanelL = ({
     if (o) {
       oldTime = parseFloat(o);
     }
-    console.log(oldTime);
     startTime = new Date().getTime();
   }
 
@@ -69,10 +68,16 @@ const PanelL = ({
   }
 
   const [time, setTime] = useState(new Date().getTime() - startTime);
-  setInterval(() => {
-    setTime(new Date().getTime() - startTime);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTime(new Date().getTime() - startTime);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
     if (time !== null) setCookie("time", time + oldTime, 7);
-  }, 1000);
+  }, [time]);
 
   //if (seedNumber === "0") {
   seedNumber = seed;
@@ -88,9 +93,8 @@ const PanelL = ({
       "0"
     )}:${String(seconds).padStart(2, "0")}`;
   };
-
   return (
-    <div className="master-appear-animation">
+    <div className={stats[1] > 0 ? "master-appear-animation" : "master"}>
       <div className={`popup-toast ${showPopup ? "show" : ""}`}>
         Linkki kopioitu leikepöydälle!
       </div>

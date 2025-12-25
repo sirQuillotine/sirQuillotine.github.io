@@ -112,7 +112,10 @@ const PanelR = ({ solutions }: Props) => {
   const [isPeeking, setIsPeeking] = useState(false);
 
   return (
-    <div id="side-panel-container" className="master-appear-animation">
+    <div
+      id="side-panel-container"
+      className={solutions.length > 0 ? "master-appear-animation" : "master"}
+    >
       <span id="table-title">- RATKAISUT -</span>
 
       <div id="table-container">
