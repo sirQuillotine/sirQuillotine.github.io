@@ -19,6 +19,7 @@ const PanelL = ({
   seed = "0",
 }: PanelProps) => {
   const [showPopup, setShowPopup] = useState(false);
+  const [showInfo, setShowInfo] = useState(false);
 
   const setCookie = (name: any, value: any, days: any) => {
     let expires = "";
@@ -55,6 +56,11 @@ const PanelL = ({
       setShowPopup(false);
     }, 2000);
   };
+
+  const handleInfo = () => {
+    setShowInfo((prev) => !prev);
+  };
+
   function setHint() {
     onHint?.(Math.random().toString());
   }
@@ -97,6 +103,13 @@ const PanelL = ({
     <div className={stats[1] > 0 ? "master-appear-animation" : "master"}>
       <div className={`popup-toast ${showPopup ? "show" : ""}`}>
         Linkki kopioitu leikepöydälle!
+      </div>
+      <div className={`popup-info ${showInfo ? "show" : ""}`}>
+        <span>
+          Etsi kaikki Scrabble-sääntöjen mukaiset ratkaisut laudalta. Arvatut ja
+          arvaamatta olevat ratkaisut ja niiden pistemäärät näet oikeasta
+          sivupalkista.
+        </span>
       </div>
       <div id="points-and-bar-container">
         <div id="timer">
@@ -143,7 +156,8 @@ const PanelL = ({
       <div
         id="side-panel-button-info"
         className="side-panel-button"
-        onClick={setHint}
+        onMouseEnter={handleInfo}
+        onMouseLeave={handleInfo}
       ></div>
       <div
         id="side-panel-button-hint"
