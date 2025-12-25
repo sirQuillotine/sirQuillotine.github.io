@@ -500,6 +500,9 @@ body {
   cursor: pointer;
   filter: brightness(90%);
 }
+#side-panel-button-info {
+  background-image: url("/graphics/info_button.png");
+}
 #side-panel-button-hint {
   background-image: url("/graphics/hint_button.png");
 }

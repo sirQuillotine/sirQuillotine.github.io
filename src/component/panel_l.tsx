@@ -143,6 +143,11 @@ const PanelL = ({
         </div>
       </div>
       <div
+        id="side-panel-button-info"
+        className="side-panel-button"
+        onClick={setHint}
+      ></div>
+      <div
         id="side-panel-button-hint"
         className="side-panel-button"
         onClick={setHint}
