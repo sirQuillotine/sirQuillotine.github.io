@@ -1063,7 +1063,7 @@ const Board = ({
 
       setSolutions(solutiones);
 
-      console.log("Generoitu");
+      console.log("Generoitu!");
       generating = false;
     }
   }
