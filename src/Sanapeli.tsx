@@ -13,11 +13,27 @@ import Board from "./component/game";
 import PanelL from "./component/panel_l";
 import PanelR from "./component/panel_r";
 
-interface Props {
-  seedProp?: string;
-}
+const Sanapeli = () => {
+  const setCookie = (name: any, value: any, days: any) => {
+    let expires = "";
+    if (days) {
+      const date = new Date();
+      date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+      expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + value + expires + "; path=/";
+  };
 
-const Sanapeli = ({ seedProp }: Props) => {
+  const getCookie = (name: any) => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) {
+      const popped = parts.pop();
+      return popped?.split(";").shift();
+    }
+    return null;
+  };
+
   const [stats, setStats] = useState<number[]>([]);
   const [hint, setHint] = useState<string>();
   const location = useLocation();
@@ -29,8 +45,8 @@ const Sanapeli = ({ seedProp }: Props) => {
 
   const [seed, setSeed] = useState<string>(
     () =>
-      seedProp ??
       seedFromState ??
+      getCookie("seed") ??
       Math.floor(Math.random() * 1000000).toString()
   );
 
@@ -42,9 +58,16 @@ const Sanapeli = ({ seedProp }: Props) => {
 
   const s = seed;
 
+  function OnSeed(seed: string) {
+    setStats([0, 0, 0, 0]);
+    setSolutions([]);
+    console.log("juu");
+    setSeed(seed);
+  }
+
   return (
     <div id="app-div">
-      <PanelL stats={stats} onHint={setHint} seed={s} onReload={setSeed} />
+      <PanelL stats={stats} onHint={setHint} seed={s} onReload={OnSeed} />
       <Board
         onstatsChange={setStats}
         seed={s}
