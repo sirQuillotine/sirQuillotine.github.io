@@ -396,6 +396,7 @@ body {
   top: 5vh;
 
   margin-left: 2vh;
+  padding-bottom: 5vh;
 }
 
 .display-container {
@@ -469,6 +470,19 @@ body {
 .progress-bar-item {
   position: absolute;
   height: 3vh;
+}
+
+#timer {
+  padding-bottom: 3vh;
+}
+#timer img {
+  height: 2vh;
+  padding-top: 1vh;
+  position: relative;
+  top: 0.3vh;
+}
+#timer span {
+  padding-left: 0.75vh;
 }
 
 /* side-panel buttons */
