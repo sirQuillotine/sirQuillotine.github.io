@@ -1214,11 +1214,15 @@ const Board = ({
                 onClick={() => moveCursorTo(colNum, rowNum)}
                 style={{
                   backgroundImage: finalLetter
-                    ? `url(/graphics/tiles/letters/${finalLetter.toUpperCase()}.png)`
+                    ? `url(/graphics/tiles/letters/${encodeURIComponent(
+                        finalLetter.toUpperCase()
+                      )}.png)`
                     : finalout
-                    ? `url(/graphics/tiles/letters/${finalout.toUpperCase()}.png)`
+                    ? `url(/graphics/tiles/letters/${encodeURIComponent(
+                        finalout.toUpperCase()
+                      )}.png)`
                     : undefined,
-                  backgroundSize: "cover",
+                  backgroundSize: "contain",
                 }}
               >
                 {/* Visual letters are handled by the backgroundImage style above */}
@@ -1371,7 +1375,9 @@ const Board = ({
             }`}
             style={{
               backgroundImage: tile.toUpperCase()
-                ? `url(/graphics/tiles/letters/${tile.toUpperCase()}.png)`
+                ? `url(/graphics/tiles/letters/${encodeURIComponent(
+                    tile.toUpperCase()
+                  )}.png)`
                 : undefined,
               backgroundSize: "contain",
               filter: "none",
