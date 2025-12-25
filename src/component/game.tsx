@@ -520,14 +520,16 @@ const Board = ({
 
   useEffect(() => {
     if (dictionary.length > 0) {
-      generateBoard();
+      // run asynchronously so UI can update (hide side panel) before heavy compute
+      setTimeout(() => generateBoard(), 0);
     }
   }, [dictionary.length]);
 
   useEffect(() => {
     if (dictionary.length > 0) {
       fromCookies = false;
-      generateBoard();
+      // defer generation to allow DOM paint (so panel can hide immediately)
+      setTimeout(() => generateBoard(), 0);
     }
   }, [seed]);
 
@@ -1139,7 +1141,7 @@ const Board = ({
   }, [hint]);
 
   const removeHint = async (word: string) => {
-    await delay(60000);
+    await delay(10000);
     if (removing === word) {
       setHintVis("");
     }

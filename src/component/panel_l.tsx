@@ -94,7 +94,6 @@ const PanelL = ({
     )}:${String(seconds).padStart(2, "0")}`;
   };
 
-  console.log(stats[1] > 0 ? "master-appear-animation" : "master");
   return (
     <div className={stats[1] > 0 ? "master-appear-animation" : "master"}>
       <div className={`popup-toast ${showPopup ? "show" : ""}`}>
