@@ -61,7 +61,6 @@ const Sanapeli = () => {
   function OnSeed(seed: string) {
     setStats([0, 0, 0, 0]);
     setSolutions([]);
-    console.log("juu");
     setSeed(seed);
   }
 

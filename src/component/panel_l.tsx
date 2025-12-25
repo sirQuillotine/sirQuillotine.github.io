@@ -43,7 +43,7 @@ const PanelL = ({
 
   if (startTime === 0) {
     var o = getCookie("time");
-    if (o) {
+    if (o && seed === getCookie("seed")) {
       oldTime = parseFloat(o);
     }
     startTime = new Date().getTime();
