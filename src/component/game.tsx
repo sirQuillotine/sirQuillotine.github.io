@@ -242,6 +242,11 @@ const Board = ({
         var x = oguessPointer[0];
         var y = oguessPointer[1];
 
+        var ox = oguessPointer[0];
+        var oy = oguessPointer[1];
+
+        var totScore = 0;
+
         if (direction === "r") {
           if (isalpha(generatedBoard[x]?.[y - 1])) {
             guess =
@@ -296,6 +301,10 @@ const Board = ({
           }
         }
 
+        const copy = animationBoard.map((r) => r.slice());
+        var g = guessed.slice();
+        var sol = solutions.slice();
+
         const wordScore = validateWord(
           guess,
           [x, y],
@@ -304,8 +313,6 @@ const Board = ({
           direction === "r" ? true : false
         );
         if (wordScore > 0) {
-          var g = guessed.slice();
-
           var contains = false;
           for (var i = 0; i < g.length; i++) {
             if (
@@ -320,7 +327,7 @@ const Board = ({
 
           if (!contains) {
             g.push([guess, [x, y], direction]);
-            var sol = solutions.slice();
+
             for (var i = 0; i < sol.length; i++) {
               if (
                 sol[i][0] === guess &&
@@ -328,34 +335,122 @@ const Board = ({
                 sol[i][1][1] === y &&
                 sol[i][3] === direction
               ) {
+                totScore += wordScore;
+
+                //Sana on ratkaisuissa
+
                 setCookie("solutions", getCookie("solutions") + "," + i, 7);
                 sol[i][4] = true;
-              }
-            }
-            setGuessed(g);
-            setSolutions(sol);
-            // Total pisteet
-            setTotalScore((prev) => {
-              const newTotal = prev + wordScore;
-              return newTotal;
-            });
 
-            const copy = animationBoard.map((r) => r.slice());
-            if (direction === "r") {
-              for (var i = 0; i < guess.length; i++) {
-                copy[x][y + i] = guess[i];
-              }
-            } else {
-              for (var i = 0; i < guess.length; i++) {
-                copy[x + i][y] = guess[i];
+                // Total pisteet
+
+                if (direction === "r") {
+                  for (var i = 0; i < guess.length; i++) {
+                    copy[x][y + i] = guess[i];
+                  }
+                } else {
+                  for (var i = 0; i < guess.length; i++) {
+                    copy[x + i][y] = guess[i];
+                  }
+                }
+
+                break;
               }
             }
-            setAnimationBoard(copy);
-            removeAnimation();
           } else {
             handleUsedWord();
           }
         }
+
+        var aword = getWord([ox, oy], direction === "r" ? false : true, board);
+        var odirection = direction === "r" ? "d" : "r";
+
+        if (odirection === "r") {
+          if (isalpha(generatedBoard[ox]?.[oy - 1])) {
+            var i = oy;
+            while (i >= 1) {
+              if (!isalpha(generatedBoard[ox]?.[i - 1])) {
+                oy = i;
+                break;
+              }
+              i -= 1;
+            }
+          }
+        } else {
+          if (isalpha(generatedBoard[ox - 1]?.[oy])) {
+            var i = ox;
+            while (i >= 1) {
+              if (!isalpha(generatedBoard[i - 1]?.[oy])) {
+                ox = i;
+                break;
+              }
+              i -= 1;
+            }
+          }
+        }
+
+        const awordScore = validateWord(
+          aword,
+          [ox, oy],
+          generatedBoard,
+          generatedHand,
+          odirection === "r" ? true : false
+        );
+        if (awordScore > 0) {
+          var contains = false;
+          for (var i = 0; i < g.length; i++) {
+            if (
+              g[i][0] === aword &&
+              g[i][1][0] === ox &&
+              g[i][1][1] === oy &&
+              g[i][2] === odirection
+            ) {
+              contains = true;
+            }
+          }
+
+          if (!contains) {
+            g.push([aword, [ox, oy], odirection]);
+
+            for (var i = 0; i < sol.length; i++) {
+              if (
+                sol[i][0] === aword &&
+                sol[i][1][0] === ox &&
+                sol[i][1][1] === oy &&
+                sol[i][3] === odirection
+              ) {
+                //Sana on ratkaisuissa
+                totScore += awordScore;
+
+                setCookie("solutions", getCookie("solutions") + "," + i, 7);
+                sol[i][4] = true;
+
+                if (odirection === "r") {
+                  for (var i = 0; i < aword.length; i++) {
+                    copy[ox][oy + i] = aword[i];
+                  }
+                } else {
+                  for (var i = 0; i < aword.length; i++) {
+                    copy[ox + i][oy] = aword[i];
+                  }
+                }
+
+                break;
+              }
+            }
+          }
+        }
+
+        setAnimationBoard(copy);
+        setGuessed(g);
+        setSolutions(sol);
+
+        setTotalScore((prev) => {
+          const newTotal = prev + totScore;
+          return newTotal;
+        });
+        removeAnimation();
+
         setCursor(() => {
           let newCol = oguessPointer[1] + 1;
           let newRow = oguessPointer[0] + 1;
@@ -1136,7 +1231,6 @@ const Board = ({
           isalpha(board[row - 1][col - 2]) &&
           !isalpha(generatedBoard[row - 1][col - 2])
         ) {
-          console.log("Annettava käteen");
           //Lisätään käteen kirjain
           var handcopy = hand.slice();
           for (var i = generatedHand.length - 1; i >= 0; i--) {

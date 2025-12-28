@@ -536,9 +536,11 @@ body {
   z-index: 9999;
 
   transition: transform 0.4s cubic-bezier(0.75, 0, 0.24, 1);
+  
 }
 .popup-toast.show {
   transform: translate(-50%, 0);
+  
 }
 
 .popup-info {
@@ -558,9 +560,11 @@ body {
   color: white;
   font-family: "Nunito", sans-serif;
   z-index: 9999;
+  display: none;
 }
 .popup-info.show {
   opacity: 1;
+  display: block;
 }
 
 /* right side */

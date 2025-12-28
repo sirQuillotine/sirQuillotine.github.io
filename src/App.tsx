@@ -1,6 +1,6 @@
 import "./App.css";
 import {
-  HashRouter as BrowserRouter,
+  BrowserRouter,
   Routes,
   Route,
   useParams,
