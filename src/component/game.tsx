@@ -182,7 +182,10 @@ const Board = ({
         }
 
         if (direction === "r") {
-          if (isalpha(board[row - 1][col - 2])) {
+          if (
+            isalpha(board[row - 1][col - 2]) &&
+            !isalpha(generatedBoard[row - 1][col - 2])
+          ) {
             //Lisätään käteen kirjain
             var handcopy = hand.slice();
             for (var i = generatedHand.length - 1; i >= 0; i--) {
@@ -1113,6 +1116,116 @@ const Board = ({
     return word;
   }
 
+  function handleBackspace() {
+    // Backspace
+    if (guess.length > 0) {
+      const copy = board.map((r) => r.slice());
+
+      var col = cursor.col;
+      if (col === 15 && isalpha(board[cursor.row - 1][col - 1])) {
+        col += 1;
+      }
+
+      var row = cursor.row;
+      if (row === 15 && isalpha(board[cursor.row - 1][col - 1])) {
+        row += 1;
+      }
+
+      if (direction === "r") {
+        if (
+          isalpha(board[row - 1][col - 2]) &&
+          !isalpha(generatedBoard[row - 1][col - 2])
+        ) {
+          console.log("Annettava käteen");
+          //Lisätään käteen kirjain
+          var handcopy = hand.slice();
+          for (var i = generatedHand.length - 1; i >= 0; i--) {
+            if (
+              handcopy[i] == "0" &&
+              generatedHand[i] == guess[guess.length - 1]
+            ) {
+              handcopy[i] = guess[guess.length - 1];
+              break;
+            }
+          }
+          setHand(handcopy);
+        }
+
+        copy[row - 1][col - 2] = generatedBoard[row - 1][col - 2];
+      } else {
+        if (isalpha(board[row - 2][col - 1])) {
+          //Lisätään käteen kirjain
+          var handcopy = hand.slice();
+          for (var i = generatedHand.length - 1; i >= 0; i--) {
+            if (
+              handcopy[i] == "0" &&
+              generatedHand[i] == guess[guess.length - 1]
+            ) {
+              handcopy[i] = guess[guess.length - 1];
+            }
+          }
+          setHand(handcopy);
+        }
+
+        copy[row - 2][col - 1] = generatedBoard[row - 2][col - 1];
+      }
+
+      guess = guess.slice(0, -1);
+
+      setCursor(() => {
+        let newCol = col;
+        let newRow = row;
+        if (direction === "r") newCol--;
+        if (direction === "d") newRow--;
+        return { col: newCol, row: newRow };
+      });
+
+      setBoard(copy);
+    }
+  }
+
+  function handleHandClick(tile: string, index: number) {
+    // kirjoitus
+    if (tile !== "0") {
+      if (guess.length === 0) {
+        oguessPointer = [cursor.row - 1, cursor.col - 1];
+      }
+      if (isalpha(board[cursor.row - 1][cursor.col - 1])) {
+        if (isalpha(generatedBoard[cursor.row - 1][cursor.col - 1])) {
+          guess += board[cursor.row - 1][cursor.col - 1];
+          const copy = board.map((r) => r.slice());
+          setBoard(copy);
+          // liikuta cursoria kirjiamen jälkeen
+          setCursor((prev) => {
+            let newCol = prev.col;
+            let newRow = prev.row;
+            if (direction === "r" && newCol < 15) newCol++;
+            if (direction === "d" && newRow < 15) newRow++;
+            return { col: newCol, row: newRow };
+          });
+        }
+      } else if (hand.includes(tile)) {
+        //Poistetaan kädestä kirjotettu kirjain
+        var handcopy = hand.slice();
+        handcopy[index] = "0";
+        setHand(handcopy);
+
+        guess += tile;
+        const copy = board.map((r) => r.slice());
+        copy[cursor.row - 1][cursor.col - 1] = tile;
+        setBoard(copy);
+        // liikuta cursoria kirjiamen jälkeen
+        setCursor((prev) => {
+          let newCol = prev.col;
+          let newRow = prev.row;
+          if (direction === "r" && newCol < 15) newCol++;
+          if (direction === "d" && newRow < 15) newRow++;
+          return { col: newCol, row: newRow };
+        });
+      }
+    }
+  }
+
   useEffect(() => {
     onScoreChange?.(totalScore);
   }, [totalScore, onScoreChange]);
@@ -1362,6 +1475,7 @@ const Board = ({
         id="hand-container"
         className={hand.length > 0 ? "master-appear-animation" : "master"}
       >
+        <div id="shuffle-button" onClick={handleBackspace}></div>
         {hand.map((tile, i) => (
           <div
             key={i}
@@ -1376,6 +1490,9 @@ const Board = ({
                 : undefined,
               backgroundSize: "contain",
               filter: "none",
+            }}
+            onClick={() => {
+              handleHandClick(tile, i);
             }}
           >
             {/* Visual letters are handled by the backgroundImage style above */}
