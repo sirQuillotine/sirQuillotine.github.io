@@ -301,7 +301,8 @@ const Board = ({
           }
         }
 
-        const copy = animationBoard.map((r) => r.slice());
+        const correct = correctAnimation.map((r) => r.slice());
+        const remove = removeAnimation.map((r) => r.slice());
         var g = guessed.slice();
         var sol = solutions.slice();
 
@@ -346,11 +347,11 @@ const Board = ({
 
                 if (direction === "r") {
                   for (var i = 0; i < guess.length; i++) {
-                    copy[x][y + i] = guess[i];
+                    correct[x][y + i] = guess[i];
                   }
                 } else {
                   for (var i = 0; i < guess.length; i++) {
-                    copy[x + i][y] = guess[i];
+                    correct[x + i][y] = guess[i];
                   }
                 }
 
@@ -359,6 +360,30 @@ const Board = ({
             }
           } else {
             handleUsedWord();
+
+            if (direction === "r") {
+              for (var i = 0; i < guess.length; i++) {
+                if (!isalpha(generatedBoard[x][y + i]))
+                  remove[x][y + i] = guess[i];
+              }
+            } else {
+              for (var i = 0; i < guess.length; i++) {
+                if (!isalpha(generatedBoard[x + i][y]))
+                  remove[x + i][y] = guess[i];
+              }
+            }
+          }
+        } else {
+          if (direction === "r") {
+            for (var i = 0; i < guess.length; i++) {
+              if (!isalpha(generatedBoard[x][y + i]))
+                remove[x][y + i] = guess[i];
+            }
+          } else {
+            for (var i = 0; i < guess.length; i++) {
+              if (!isalpha(generatedBoard[x + i][y]))
+                remove[x + i][y] = guess[i];
+            }
           }
         }
 
@@ -427,11 +452,11 @@ const Board = ({
 
                 if (odirection === "r") {
                   for (var i = 0; i < aword.length; i++) {
-                    copy[ox][oy + i] = aword[i];
+                    correct[ox][oy + i] = aword[i];
                   }
                 } else {
                   for (var i = 0; i < aword.length; i++) {
-                    copy[ox + i][oy] = aword[i];
+                    correct[ox + i][oy] = aword[i];
                   }
                 }
 
@@ -441,7 +466,8 @@ const Board = ({
           }
         }
 
-        setAnimationBoard(copy);
+        setCorrect(correct);
+        setRemove(remove);
         setGuessed(g);
         setSolutions(sol);
 
@@ -449,7 +475,8 @@ const Board = ({
           const newTotal = prev + totScore;
           return newTotal;
         });
-        removeAnimation();
+        resetCorrect();
+        resetRemove();
 
         setCursor(() => {
           let newCol = oguessPointer[1] + 1;
@@ -509,9 +536,14 @@ const Board = ({
 
   const delay = (ms: number | undefined) =>
     new Promise((res) => setTimeout(res, ms));
-  const removeAnimation = async () => {
+  const resetCorrect = async () => {
     await delay(1500);
-    setAnimationBoard(boardTemplate);
+    setCorrect(boardTemplate);
+  };
+
+  const resetRemove = async () => {
+    await delay(1500);
+    setRemove(boardTemplate);
   };
 
   //MEIKÄMANDARIININ KOODIMOODI
@@ -572,8 +604,9 @@ const Board = ({
   const [hintVis, setHintVis] = useState<string>("");
 
   const [board, setBoard] = useState<string[][]>(boardTemplate);
-  const [animationBoard, setAnimationBoard] =
-    useState<string[][]>(boardTemplate);
+  const [correctAnimation, setCorrect] = useState<string[][]>(boardTemplate);
+  const [removeAnimation, setRemove] = useState<string[][]>(boardTemplate);
+
   useEffect(() => {
     fetch("/sanalista.txt")
       .then((res) => res.text())
@@ -1396,18 +1429,27 @@ const Board = ({
             const coordKey = `${rowNum}-${colNum}`;
 
             const generatedLetter = board[r][c];
-            const outLetter = animationBoard[r][c];
+            const correctLetter = correctAnimation[r][c];
+            const removeLetter = removeAnimation[r][c];
 
-            const isAlpha = /[a-z|ä|ö]/i.test(generatedLetter as string);
-            const isAlpha2 = /[a-z|ä|ö]/i.test(outLetter as string);
+            const isLetterAlpha = /[a-z|ä|ö]/i.test(generatedLetter as string);
+            const isCorrectAlpha = /[a-z|ä|ö]/i.test(correctLetter as string);
+            const isRemoveAlpha = /[a-z|ä|ö]/i.test(removeLetter as string);
 
-            const finalLetter = isAlpha ? (generatedLetter as string) : null;
-            const finalout = isAlpha2 ? (outLetter as string) : null;
+            const finalLetter = isLetterAlpha
+              ? (generatedLetter as string)
+              : null;
+            const finalCorrect = isCorrectAlpha
+              ? (correctLetter as string)
+              : null;
+            const finalRemove = isRemoveAlpha ? (removeLetter as string) : null;
             return (
               <div
                 key={coordKey + finalLetter}
                 className={`base-tile ${STYLE_MAP[cellValue]} ${
-                  finalout
+                  finalRemove
+                    ? "has-letter letter-remove-animation"
+                    : finalCorrect
                     ? "has-letter letter-disappears-animation"
                     : finalLetter
                     ? "has-letter letter-appears-animation"
@@ -1419,9 +1461,13 @@ const Board = ({
                     ? `url(/graphics/tiles/letters/${encodeURIComponent(
                         finalLetter.toUpperCase()
                       )}.png)`
-                    : finalout
+                    : finalCorrect
                     ? `url(/graphics/tiles/letters/${encodeURIComponent(
-                        finalout.toUpperCase()
+                        finalCorrect.toUpperCase()
+                      )}.png)`
+                    : finalRemove
+                    ? `url(/graphics/tiles/letters/${encodeURIComponent(
+                        finalRemove.toUpperCase()
                       )}.png)`
                     : undefined,
                   backgroundSize: "contain",

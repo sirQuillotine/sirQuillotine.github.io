@@ -119,6 +119,28 @@ body {
   animation: letter-disappears 1.5s ease-out;
 }
 
+
+
+
+@keyframes letter-remove {
+  0% {
+    transform: scale(1);
+    filter: brightness(85%);
+  }
+
+  80% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(0.9);
+    filter: brightness(80%);
+  }
+}
+.letter-remove-animation {
+  animation: letter-remove 1.5s ease-out;
+}
+
 @keyframes highlight-fade {
   0% {
     color: yellow;
