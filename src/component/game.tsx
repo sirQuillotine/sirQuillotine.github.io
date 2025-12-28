@@ -113,7 +113,7 @@ const Board = ({
 
   const handleCursorClick = () => {
     // This toggles 'r' to 'd' and 'd' back to 'r'
-    setDirection((prev) => (prev === "r" ? "d" : "r"));
+    if (guess.length === 0) setDirection((prev) => (prev === "r" ? "d" : "r"));
   };
 
   const handleShuffle = () => {
@@ -161,8 +161,8 @@ const Board = ({
 
       // TAB
       if (e.key === "Tab") {
+        e.preventDefault();
         if (guess.length === 0) {
-          e.preventDefault();
           setDirection((prev) => (prev === "r" ? "d" : "r"));
         }
       }
