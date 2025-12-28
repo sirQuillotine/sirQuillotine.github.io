@@ -238,6 +238,7 @@ const Board = ({
         if (isalpha(generatedBoard[cursor.row - 1][cursor.col - 1])) {
           guess += generatedBoard[cursor.row - 1][cursor.col - 1];
         }*/
+        var oguess = guess;
 
         var x = oguessPointer[0];
         var y = oguessPointer[1];
@@ -362,27 +363,27 @@ const Board = ({
             handleUsedWord();
 
             if (direction === "r") {
-              for (var i = 0; i < guess.length; i++) {
+              for (var i = 0; i < oguess.length; i++) {
                 if (!isalpha(generatedBoard[x][y + i]))
-                  remove[x][y + i] = guess[i];
+                  remove[x][y + i] = oguess[i];
               }
             } else {
-              for (var i = 0; i < guess.length; i++) {
+              for (var i = 0; i < oguess.length; i++) {
                 if (!isalpha(generatedBoard[x + i][y]))
-                  remove[x + i][y] = guess[i];
+                  remove[x + i][y] = oguess[i];
               }
             }
           }
         } else {
           if (direction === "r") {
-            for (var i = 0; i < guess.length; i++) {
+            for (var i = 0; i < oguess.length; i++) {
               if (!isalpha(generatedBoard[x][y + i]))
-                remove[x][y + i] = guess[i];
+                remove[x][y + i] = oguess[i];
             }
           } else {
-            for (var i = 0; i < guess.length; i++) {
+            for (var i = 0; i < oguess.length; i++) {
               if (!isalpha(generatedBoard[x + i][y]))
-                remove[x + i][y] = guess[i];
+                remove[x + i][y] = oguess[i];
             }
           }
         }
@@ -1194,7 +1195,7 @@ const Board = ({
 
       setSolutions(solutiones);
 
-      console.log("Generoitu!!");
+      console.log("Generoitu");
       generating = false;
     }
   }
