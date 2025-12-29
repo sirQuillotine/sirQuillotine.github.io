@@ -14,17 +14,14 @@ const SeedRedirect = () => {
   return <Navigate to="/" state={{ seed }} replace />;
 };
 
-function isMobile() {
-  return window.innerWidth <= 800 && window.innerHeight <= 600;
-}
-
 function App() {
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
   return (
     <BrowserRouter>
       <Routes>
         <Route
           path="/"
-          element={isMobile() ? <SanapeliMobile /> : <Sanapeli />}
+          element={isMobile ? <SanapeliMobile /> : <Sanapeli />}
         />
         <Route path="/:seed" element={<SeedRedirect />} />
       </Routes>
