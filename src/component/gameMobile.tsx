@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import "./game.css";
+import "./gameMobile.css";
 
 // (0) = tyhjä, (1) = 2x kirjain, (2) = 3x kirjain,
 // (3) = 2x sana, (4) = 3x sana, (5) = keskikohta (tyhjä mutta eri design)

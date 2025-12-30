@@ -1364,7 +1364,8 @@ const Board = ({
 
   useEffect(() => {
     if (solutions.length > 0) {
-      var h = solutions[getRandomInt(0, solutions.length)];
+      var s = solutions.filter((sol) => sol[4] === false);
+      var h = s[getRandomInt(0, s.length)];
       hintDirection = h[3];
       hintPosition = [
         h[1],
