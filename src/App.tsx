@@ -1,14 +1,31 @@
 import "./App.css";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  useParams,
+  Navigate,
+} from "react-router-dom";
+import Sanapeli from "./Sanapeli";
+import SanapeliMobile from "./SanaPeliMobile";
 
-// Valitse yksi:
-//import Board from "./component/Board"; // ORIGINAALI
-import Board from "./component/front"; // LEEVIN
+const SeedRedirect = () => {
+  const { seed } = useParams();
+  return <Navigate to="/" state={{ seed }} replace />;
+};
 
 function App() {
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
   return (
-    <div>
-      <Board />
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route
+          path="/"
+          element={isMobile ? <SanapeliMobile /> : <Sanapeli />}
+        />
+        <Route path="/:seed" element={<SeedRedirect />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
