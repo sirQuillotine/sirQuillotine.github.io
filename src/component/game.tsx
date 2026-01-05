@@ -21,6 +21,70 @@ const TILE_STYLES = [
   [4, 0, 0, 1, 0, 0, 0, 4, 0, 0, 0, 1, 0, 0, 4],
 ];
 
+const boardTemplate = [
+  ["1", "0", "0", "4", "0", "0", "0", "1", "0", "0", "0", "4", "0", "0", "1"],
+  ["0", "2", "0", "0", "0", "3", "0", "0", "0", "3", "0", "0", "0", "2", "0"],
+  ["0", "0", "2", "0", "0", "0", "4", "0", "4", "0", "0", "0", "2", "0", "0"],
+  ["4", "0", "0", "2", "0", "0", "0", "4", "0", "0", "0", "2", "0", "0", "4"],
+  ["0", "0", "0", "0", "2", "0", "0", "0", "0", "0", "2", "0", "0", "0", "0"],
+  ["0", "3", "0", "0", "0", "3", "0", "0", "0", "3", "0", "0", "0", "3", "0"],
+  ["0", "0", "4", "0", "0", "0", "4", "0", "4", "0", "0", "0", "4", "0", "0"],
+  ["1", "0", "0", "4", "0", "0", "0", "5", "0", "0", "0", "4", "0", "0", "1"],
+  ["0", "0", "4", "0", "0", "0", "4", "0", "4", "0", "0", "0", "4", "0", "0"],
+  ["0", "3", "0", "0", "0", "3", "0", "0", "0", "3", "0", "0", "0", "3", "0"],
+  ["0", "0", "0", "0", "2", "0", "0", "0", "0", "0", "2", "0", "0", "0", "0"],
+  ["4", "0", "0", "2", "0", "0", "0", "4", "0", "0", "0", "2", "0", "0", "4"],
+  ["0", "0", "2", "0", "0", "0", "4", "0", "4", "0", "0", "0", "2", "0", "0"],
+  ["0", "2", "0", "0", "0", "3", "0", "0", "0", "3", "0", "0", "0", "2", "0"],
+  ["1", "0", "0", "4", "0", "0", "0", "1", "0", "0", "0", "4", "0", "0", "1"],
+];
+/*
+const test = [
+  ["1", "0", "0", "4", "0", "0", "0", "1", "0", "0", "0", "4", "0", "0", "1"],
+  ["0", "2", "0", "0", "0", "3", "0", "0", "0", "3", "0", "0", "0", "2", "0"],
+  ["0", "0", "2", "0", "0", "0", "4", "0", "4", "0", "0", "0", "2", "0", "0"],
+  ["4", "0", "0", "2", "0", "0", "0", "4", "0", "0", "0", "2", "0", "0", "4"],
+  ["0", "0", "0", "0", "2", "0", "0", "0", "0", "0", "2", "0", "0", "0", "0"],
+  ["0", "3", "0", "0", "0", "3", "0", "0", "0", "3", "0", "0", "0", "3", "0"],
+  ["0", "0", "4", "0", "l", "0", "4", "0", "4", "0", "0", "0", "4", "0", "0"],
+  ["1", "0", "0", "4", "a", "0", "0", "5", "0", "0", "0", "4", "0", "0", "1"],
+  ["0", "0", "4", "0", "i", "0", "4", "0", "4", "0", "0", "0", "4", "0", "0"],
+  ["0", "3", "0", "0", "n", "3", "0", "0", "0", "3", "0", "0", "0", "3", "0"],
+  ["0", "0", "0", "0", "2", "0", "0", "0", "0", "0", "2", "0", "0", "0", "0"],
+  ["4", "0", "0", "2", "0", "0", "0", "4", "0", "0", "0", "2", "0", "0", "4"],
+  ["0", "0", "2", "0", "0", "0", "4", "0", "4", "0", "0", "0", "2", "0", "0"],
+  ["0", "2", "0", "0", "0", "3", "0", "0", "0", "3", "0", "0", "0", "2", "0"],
+  ["1", "0", "0", "4", "0", "0", "0", "1", "0", "0", "0", "4", "0", "0", "1"],
+];*/
+
+const LETTER_SCORES: Record<string, number> = {
+  a: 1,
+  b: 8,
+  c: 10,
+  d: 7,
+  e: 1,
+  f: 8,
+  g: 8,
+  h: 4,
+  i: 1,
+  j: 4,
+  k: 2,
+  l: 2,
+  m: 3,
+  n: 1,
+  o: 2,
+  p: 4,
+  r: 4,
+  s: 1,
+  t: 1,
+  u: 3,
+  v: 4,
+  w: 8,
+  y: 4,
+  ä: 2,
+  ö: 7,
+};
+
 const STYLE_MAP: any = {
   0: "base-tile-empty",
   1: "base-tile-2x-letter",
@@ -34,7 +98,6 @@ var guess = "";
 var oguessPointer: number[] = [];
 var generatedBoard: string[][] = [];
 var generatedHand: string[] = [];
-var currentHand: string[] = []; // Track the current hand state
 var maxScore = 0;
 var maxWord = 0;
 
@@ -70,6 +133,20 @@ const Board = ({
   const [cursor, setCursor] = useState({ col: 8, row: 8 }); // kursori aluksi keskellä
   const [direction, setDirection] = useState("r"); // 'r' = oikealle (default),  'd' = alas
   const [showPopup, setShowPopup] = useState(false);
+
+  const [dictionary, setWords] = useState<string[]>([]);
+  const dictionarySet = useMemo(() => new Set(dictionary), [dictionary]);
+  const [hand, setHand] = useState<string[]>([]);
+  const [guessed, setGuessed] = useState<any[]>([]);
+  const [solutions, setSolutions] = useState<any[]>([]);
+  const [totalScore, setTotalScore] = useState<number>(0);
+
+  const [hintVis, setHintVis] = useState<string>("");
+
+  const [board, setBoard] = useState<string[][]>(boardTemplate);
+  const [correctAnimation, setCorrect] = useState<string[][]>(boardTemplate);
+  const [removeAnimation, setRemove] = useState<string[][]>(boardTemplate);
+
   const handleUsedWord = () => {
     navigator.clipboard.writeText(window.location.href + seedNumber);
     setShowPopup(true);
@@ -108,7 +185,7 @@ const Board = ({
     setCursor({ col: c, row: r });
     guess = "";
     setBoard(generatedBoard);
-    setHand(currentHand);
+    setHand(generatedHand);
   };
 
   const handleCursorClick = () => {
@@ -118,12 +195,13 @@ const Board = ({
 
   const handleShuffle = () => {
     if (guess.length === 0) {
-      const shuffled = currentHand.slice();
+      const shuffled = generatedHand.slice();
       for (let i = shuffled.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
       }
-      currentHand = shuffled;
+      generatedHand = shuffled;
+
       setHand(shuffled);
     }
   };
@@ -138,25 +216,25 @@ const Board = ({
         setCursor((prev) => ({ ...prev, row: Math.max(1, prev.row - 1) }));
         guess = "";
         setBoard(generatedBoard);
-        setHand(currentHand);
+        setHand(generatedHand);
       }
       if (e.key === "ArrowDown") {
         setCursor((prev) => ({ ...prev, row: Math.min(15, prev.row + 1) }));
         guess = "";
         setBoard(generatedBoard);
-        setHand(currentHand);
+        setHand(generatedHand);
       }
       if (e.key === "ArrowLeft") {
         setCursor((prev) => ({ ...prev, col: Math.max(1, prev.col - 1) }));
         guess = "";
         setBoard(generatedBoard);
-        setHand(currentHand);
+        setHand(generatedHand);
       }
       if (e.key === "ArrowRight") {
         setCursor((prev) => ({ ...prev, col: Math.min(15, prev.col + 1) }));
         guess = "";
         setBoard(generatedBoard);
-        setHand(currentHand);
+        setHand(generatedHand);
       }
 
       // TAB
@@ -202,7 +280,10 @@ const Board = ({
 
           copy[row - 1][col - 2] = generatedBoard[row - 1][col - 2];
         } else {
-          if (isalpha(board[row - 2][col - 1])) {
+          if (
+            isalpha(board[row - 2][col - 1]) &&
+            !isalpha(generatedBoard[row - 2][col - 1])
+          ) {
             //Lisätään käteen kirjain
             var handcopy = hand.slice();
             for (var i = generatedHand.length - 1; i >= 0; i--) {
@@ -211,6 +292,7 @@ const Board = ({
                 generatedHand[i] == guess[guess.length - 1]
               ) {
                 handcopy[i] = guess[guess.length - 1];
+                break;
               }
             }
             setHand(handcopy);
@@ -314,6 +396,8 @@ const Board = ({
           generatedHand,
           direction === "r" ? true : false
         );
+
+        //Käydään läpi sana
         if (wordScore > 0) {
           var contains = false;
           for (var i = 0; i < g.length; i++) {
@@ -328,8 +412,6 @@ const Board = ({
           }
 
           if (!contains) {
-            g.push([guess, [x, y], direction]);
-
             for (var i = 0; i < sol.length; i++) {
               if (
                 sol[i][0] === guess &&
@@ -337,10 +419,12 @@ const Board = ({
                 sol[i][1][1] === y &&
                 sol[i][3] === direction
               ) {
-                totScore += wordScore;
-
                 //Sana on ratkaisuissa
 
+                totScore += wordScore;
+
+                //Pusketaan guessediin
+                g.push([guess, [x, y], direction]);
                 setCookie("solutions", getCookie("solutions") + "," + i, 7);
                 sol[i][4] = true;
 
@@ -388,6 +472,7 @@ const Board = ({
           }
         }
 
+        //Käydään läpi implisiittinen viereinen sana
         var aword = getWord([ox, oy], direction === "r" ? false : true, board);
         var odirection = direction === "r" ? "d" : "r";
 
@@ -436,8 +521,6 @@ const Board = ({
           }
 
           if (!contains) {
-            g.push([aword, [ox, oy], odirection]);
-
             for (var i = 0; i < sol.length; i++) {
               if (
                 sol[i][0] === aword &&
@@ -447,7 +530,7 @@ const Board = ({
               ) {
                 //Sana on ratkaisuissa
                 totScore += awordScore;
-
+                g.push([aword, [ox, oy], odirection]);
                 setCookie("solutions", getCookie("solutions") + "," + i, 7);
                 sol[i][4] = true;
 
@@ -485,7 +568,7 @@ const Board = ({
           return { col: newCol, row: newRow };
         });
         setBoard(generatedBoard);
-        setHand(currentHand);
+        setHand(generatedHand);
         guess = "";
       }
 
@@ -510,6 +593,7 @@ const Board = ({
           }
         } else if (hand.includes(key)) {
           //Poistetaan kädestä kirjotettu kirjain
+
           var handcopy = hand.slice();
           handcopy[handcopy.indexOf(key)] = "0";
           setHand(handcopy);
@@ -533,7 +617,7 @@ const Board = ({
     window.addEventListener("keydown", handleKeyDown);
 
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [cursor, direction]); // IMPORTANT: Added cursor and direction here
+  }, [cursor, direction, hand]); // IMPORTANT: Added cursor and direction here
 
   const delay = (ms: number | undefined) =>
     new Promise((res) => setTimeout(res, ms));
@@ -548,65 +632,6 @@ const Board = ({
   };
 
   //MEIKÄMANDARIININ KOODIMOODI
-
-  const boardTemplate = [
-    ["1", "0", "0", "4", "0", "0", "0", "1", "0", "0", "0", "4", "0", "0", "1"],
-    ["0", "2", "0", "0", "0", "3", "0", "0", "0", "3", "0", "0", "0", "2", "0"],
-    ["0", "0", "2", "0", "0", "0", "4", "0", "4", "0", "0", "0", "2", "0", "0"],
-    ["4", "0", "0", "2", "0", "0", "0", "4", "0", "0", "0", "2", "0", "0", "4"],
-    ["0", "0", "0", "0", "2", "0", "0", "0", "0", "0", "2", "0", "0", "0", "0"],
-    ["0", "3", "0", "0", "0", "3", "0", "0", "0", "3", "0", "0", "0", "3", "0"],
-    ["0", "0", "4", "0", "0", "0", "4", "0", "4", "0", "0", "0", "4", "0", "0"],
-    ["1", "0", "0", "4", "0", "0", "0", "5", "0", "0", "0", "4", "0", "0", "1"],
-    ["0", "0", "4", "0", "0", "0", "4", "0", "4", "0", "0", "0", "4", "0", "0"],
-    ["0", "3", "0", "0", "0", "3", "0", "0", "0", "3", "0", "0", "0", "3", "0"],
-    ["0", "0", "0", "0", "2", "0", "0", "0", "0", "0", "2", "0", "0", "0", "0"],
-    ["4", "0", "0", "2", "0", "0", "0", "4", "0", "0", "0", "2", "0", "0", "4"],
-    ["0", "0", "2", "0", "0", "0", "4", "0", "4", "0", "0", "0", "2", "0", "0"],
-    ["0", "2", "0", "0", "0", "3", "0", "0", "0", "3", "0", "0", "0", "2", "0"],
-    ["1", "0", "0", "4", "0", "0", "0", "1", "0", "0", "0", "4", "0", "0", "1"],
-  ];
-
-  const LETTER_SCORES: Record<string, number> = {
-    a: 1,
-    b: 8,
-    c: 10,
-    d: 7,
-    e: 1,
-    f: 8,
-    g: 8,
-    h: 4,
-    i: 1,
-    j: 4,
-    k: 2,
-    l: 2,
-    m: 3,
-    n: 1,
-    o: 2,
-    p: 4,
-    r: 4,
-    s: 1,
-    t: 1,
-    u: 3,
-    v: 4,
-    w: 8,
-    y: 4,
-    ä: 2,
-    ö: 7,
-  };
-
-  const [dictionary, setWords] = useState<string[]>([]);
-  const dictionarySet = useMemo(() => new Set(dictionary), [dictionary]);
-  const [hand, setHand] = useState<string[]>([]);
-  const [guessed, setGuessed] = useState<any[]>([]);
-  const [solutions, setSolutions] = useState<any[]>([]);
-  const [totalScore, setTotalScore] = useState<number>(0);
-
-  const [hintVis, setHintVis] = useState<string>("");
-
-  const [board, setBoard] = useState<string[][]>(boardTemplate);
-  const [correctAnimation, setCorrect] = useState<string[][]>(boardTemplate);
-  const [removeAnimation, setRemove] = useState<string[][]>(boardTemplate);
 
   useEffect(() => {
     fetch("/sanalista.txt")
@@ -756,6 +781,7 @@ const Board = ({
     isHorizontal: boolean
   ) {
     var score = 0;
+    var joinScore = 0;
     var adjacentScore = 0;
     var multiplier = 1;
     var used = 0;
@@ -782,10 +808,29 @@ const Board = ({
             isalpha(boardCopy[x + 1]?.[y])
           ) {
             var existing = getWord([x, y], !isHorizontal, boardCopy);
+
+            //Käydään sivuava sana läpi
+            var singleAdjacent = 0;
+            var mult = 1;
             for (let k = 0; k < existing.length; k++) {
               const letter = existing[k];
-              score += LETTER_SCORES[letter] || 0;
+              // Use original board's tile modifier values
+              const tile = generatedBoard[x]?.[y + k];
+              if (tile === "1") {
+                mult *= 3;
+                singleAdjacent += LETTER_SCORES[letter] || 0;
+              } else if (tile === "2") {
+                mult *= 2;
+                singleAdjacent += LETTER_SCORES[letter] || 0;
+              } else if (tile === "3") {
+                singleAdjacent += (LETTER_SCORES[letter] || 0) * 3;
+              } else if (tile === "4") {
+                singleAdjacent += (LETTER_SCORES[letter] || 0) * 2;
+              } else {
+                singleAdjacent += LETTER_SCORES[letter] || 0;
+              }
             }
+            adjacentScore += singleAdjacent * mult;
           }
         } else {
           if (
@@ -793,10 +838,28 @@ const Board = ({
             isalpha(boardCopy[x]?.[y + 1])
           ) {
             var existing = getWord([x, y], !isHorizontal, boardCopy);
+
+            //Käydään sivuava sana läpi
+            var singleAdjacent = 0;
+            var mult = 1;
             for (let k = 0; k < existing.length; k++) {
               const letter = existing[k];
-              score += LETTER_SCORES[letter] || 0;
+              const tile = generatedBoard[x + k]?.[y];
+              if (tile === "1") {
+                mult *= 3;
+                singleAdjacent += LETTER_SCORES[letter] || 0;
+              } else if (tile === "2") {
+                mult *= 2;
+                singleAdjacent += LETTER_SCORES[letter] || 0;
+              } else if (tile === "3") {
+                singleAdjacent += (LETTER_SCORES[letter] || 0) * 3;
+              } else if (tile === "4") {
+                singleAdjacent += (LETTER_SCORES[letter] || 0) * 2;
+              } else {
+                singleAdjacent += LETTER_SCORES[letter] || 0;
+              }
             }
+            adjacentScore += singleAdjacent * mult;
           }
         }
       }
@@ -827,7 +890,7 @@ const Board = ({
           generatedBoard
         );
         for (let k = 0; k < existing.length; k++) {
-          adjacentScore += LETTER_SCORES[existing[k]] || 0;
+          joinScore += LETTER_SCORES[existing[k]] || 0;
         }
       }
     } else if (!isHorizontal && position[0] - 1 >= 0) {
@@ -838,11 +901,11 @@ const Board = ({
           generatedBoard
         );
         for (let k = 0; k < existing.length; k++) {
-          adjacentScore += LETTER_SCORES[existing[k]] || 0;
+          joinScore += LETTER_SCORES[existing[k]] || 0;
         }
       }
     }
-
+    score += joinScore;
     score *= multiplier;
     score += adjacentScore;
     if (used == 7) {
@@ -934,6 +997,11 @@ const Board = ({
       return 0;
     }
 
+    //Ei hyväksyt jos sana jatkaa olemassa olevaa sanaa väärin
+    if (getWord(position, isHorizontal, boardCopy) !== word) {
+      return 0;
+    }
+
     return getScore(word, position, board, isHorizontal);
   }
 
@@ -976,6 +1044,8 @@ const Board = ({
       setCookie("seed", seedNumber, 7);
 
       guess = "";
+      setHintVis("");
+
       console.log("Generoidaan siemenellä " + seedNumber);
 
       var count = getRandomInt(2, 7);
@@ -1125,10 +1195,9 @@ const Board = ({
         handt.push(bag.splice(getRandomInt(0, bag.length - 1), 1)[0]);
       }
       //test
-      //handt = ["a", "i", "k", "a", "t", "a"];
+      //handt = ["ö", "ö", "ö", "e", "t", "u"];
       setHand(handt);
       generatedHand = handt;
-      currentHand = handt.slice(); // Initialize currentHand with the new hand
 
       // Find possible words - optimized
       const solutiones: any[] = [];
@@ -1147,21 +1216,21 @@ const Board = ({
 
         wordsFromLetters(combinedRow).forEach((word) => {
           for (let j = 0; j < b[i].length; j++) {
-            const r = validateWord(word, [i, j], b, handt, true);
+            const candScore = validateWord(word, [i, j], b, handt, true);
 
-            if (r !== 0) {
+            if (candScore !== 0) {
               solutiones.push([
                 word,
                 [i, j],
-                r,
+                candScore,
                 "r",
                 cookieGuess?.includes(maxWord.toString()) ? true : false,
               ]);
               if (cookieGuess?.includes(maxWord.toString())) {
-                oldGuessed.push([word, [i, j], direction]);
-                oldScore += r;
+                oldGuessed.push([word, [i, j], "r"]);
+                oldScore += candScore;
               }
-              maxScore += r;
+              maxScore += candScore;
               maxWord += 1;
             }
           }
@@ -1171,20 +1240,20 @@ const Board = ({
         const combinedCol = colStr + handStr;
         wordsFromLetters(combinedCol).forEach((word) => {
           for (let j = 0; j < b.length; j++) {
-            const r = validateWord(word, [j, i], b, handt, false);
-            if (r !== 0) {
+            const candScore = validateWord(word, [j, i], b, handt, false);
+            if (candScore !== 0) {
               solutiones.push([
                 word,
                 [j, i],
-                r,
+                candScore,
                 "d",
                 cookieGuess?.includes(maxWord.toString()) ? true : false,
               ]);
               if (cookieGuess?.includes(maxWord.toString())) {
-                oldGuessed.push([word, [i, j], direction]);
-                oldScore += r;
+                oldGuessed.push([word, [j, i], "d"]);
+                oldScore += candScore;
               }
-              maxScore += r;
+              maxScore += candScore;
               maxWord += 1;
             }
           }
@@ -1351,6 +1420,18 @@ const Board = ({
           return { col: newCol, row: newRow };
         });
       }
+    } else if (isalpha(board[cursor.row - 1][cursor.col - 1])) {
+      guess += board[cursor.row - 1][cursor.col - 1];
+      const copy = board.map((r) => r.slice());
+      setBoard(copy);
+      // liikuta cursoria kirjiamen jälkeen
+      setCursor((prev) => {
+        let newCol = prev.col;
+        let newRow = prev.row;
+        if (direction === "r" && newCol < 15) newCol++;
+        if (direction === "d" && newRow < 15) newRow++;
+        return { col: newCol, row: newRow };
+      });
     }
   }
 
@@ -1359,6 +1440,7 @@ const Board = ({
   }, [totalScore, onScoreChange]);
 
   useEffect(() => {
+    console.log(maxScore);
     onstatsChange?.([totalScore, maxScore, guessed.length, maxWord]);
   }, [totalScore, maxScore, maxWord, guessed.length, onstatsChange]);
 
@@ -1449,10 +1531,10 @@ const Board = ({
               <div
                 key={coordKey + finalLetter}
                 className={`base-tile ${STYLE_MAP[cellValue]} ${
-                  finalRemove
-                    ? "has-letter letter-remove-animation"
-                    : finalCorrect
+                  finalCorrect
                     ? "has-letter letter-disappears-animation"
+                    : finalRemove
+                    ? "has-letter letter-remove-animation"
                     : finalLetter
                     ? "has-letter letter-appears-animation"
                     : ""

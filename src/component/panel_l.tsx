@@ -9,8 +9,7 @@ interface PanelProps {
 }
 
 var seedNumber = "0";
-var startTime = 0;
-var oldTime = 0;
+var getCookieTime = true;
 
 const PanelL = ({
   stats = [1, 100, 1, 100],
@@ -41,17 +40,23 @@ const PanelL = ({
     return null;
   };
 
-  if (startTime === 0) {
-    var o = getCookie("time");
-    if (o && seed === getCookie("seed")) {
-      oldTime = parseFloat(o);
+  const [time, setTime] = useState(0);
+
+  if (getCookieTime) {
+    var cookieTime = getCookie("time");
+    if (cookieTime) {
+      console.log(cookieTime);
+      getCookieTime = false;
+      setTime(parseFloat(cookieTime));
     }
-    startTime = new Date().getTime();
   }
 
   const handleShare = () => {
     console.log(seedNumber);
-    navigator.clipboard.writeText(window.location.href + seedNumber);
+    navigator.clipboard.writeText(
+      "https://sirquillotine.github.io/#/" + seedNumber
+    );
+    //https://sirquillotine.github.io/#/
     //window.location.href
 
     setShowPopup(true);
@@ -69,31 +74,33 @@ const PanelL = ({
   }
   function setReload() {
     console.log("Refresh...");
-    startTime = new Date().getTime();
-    oldTime = 0;
+
     setCookie("time", 0, 7);
+    setTime(0);
 
     onReload?.(Math.floor(Math.random() * 1000000).toString());
   }
 
-  const [time, setTime] = useState(new Date().getTime() - startTime);
   useEffect(() => {
     const interval = setInterval(() => {
-      setTime(new Date().getTime() - startTime);
+      setTime((prev) => {
+        setCookie("time", prev + 1000, 7);
+        return prev + 1000;
+      });
     }, 1000);
     return () => clearInterval(interval);
   }, []);
-
+  /*
   useEffect(() => {
     if (time !== null) setCookie("time", time + oldTime, 7);
-  }, [time]);
+  }, [time]);*/
 
   //if (seedNumber === "0") {
   seedNumber = seed;
   //}
 
   const getFormattedTime = (milliseconds: number) => {
-    const totalSeconds = Math.floor((milliseconds + oldTime) / 1000);
+    const totalSeconds = Math.floor(milliseconds / 1000);
     const hours = Math.floor(totalSeconds / 3600);
     const minutes = Math.floor((totalSeconds % 3600) / 60);
     const seconds = totalSeconds % 60;
@@ -102,7 +109,6 @@ const PanelL = ({
       "0"
     )}:${String(seconds).padStart(2, "0")}`;
   };
-
   return (
     <div
       id="panel-l-parent"
