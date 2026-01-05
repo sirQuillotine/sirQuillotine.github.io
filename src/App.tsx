@@ -7,7 +7,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import Sanapeli from "./Sanapeli";
-import SanapeliMobile from "./SanaPeliMobile";
+//import SanapeliMobile from "./SanaPeliMobile";
 
 const SeedRedirect = () => {
   const { seed } = useParams();
@@ -15,14 +15,11 @@ const SeedRedirect = () => {
 };
 
 function App() {
-  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  //const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
   return (
     <BrowserRouter>
       <Routes>
-        <Route
-          path="/"
-          element={isMobile ? <SanapeliMobile /> : <Sanapeli />}
-        />
+        <Route path="/" element={<Sanapeli />} />
         <Route path="/:seed" element={<SeedRedirect />} />
       </Routes>
     </BrowserRouter>

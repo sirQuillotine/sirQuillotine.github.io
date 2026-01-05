@@ -1,7 +1,8 @@
-import "./App.css";
+/*import "./App.css";
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import BoardMobile from "./component/gameMobile";
+
 import PanelL from "./component/panel_l";
 import PanelR from "./component/panel_r";
 
@@ -58,4 +59,4 @@ const SanapeliMobile = () => {
   );
 };
 
-export default SanapeliMobile;
+export default SanapeliMobile;*/
