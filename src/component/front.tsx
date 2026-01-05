@@ -246,6 +246,7 @@ const LBoard = () => {
 
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [cursor, direction]); // IMPORTANT: Added cursor and direction here
+
   const delay = (ms: number | undefined) =>
     new Promise((res) => setTimeout(res, ms));
   const removeAnimation = async () => {
@@ -330,6 +331,10 @@ const LBoard = () => {
       generateBoard();
     }
   }, [dictionary.length]);
+
+  useEffect(() => {
+    removeAnimation();
+  }, [animationBoard]);
 
   function getRandomInt(min: number, max: number) {
     min = Math.ceil(min);
