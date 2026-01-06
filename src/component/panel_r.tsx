@@ -10,9 +10,11 @@ interface Props {
 const SolutionRow = ({
   sol,
   isPeeking,
+  fullySolved,
 }: {
   sol: Solution;
   isPeeking: boolean;
+  fullySolved: boolean;
 }) => {
   const [word, [i, j], points, dir, isSolved] = sol;
   const rowRef = useRef<HTMLTableRowElement>(null);
@@ -26,7 +28,12 @@ const SolutionRow = ({
   }, [isSolved]);
 
   return (
-    <tr ref={rowRef} className={isSolved ? "row-highlight" : ""}>
+    <tr
+      ref={rowRef}
+      className={
+        fullySolved ? "row-fullsolve" : isSolved ? "row-highlight" : ""
+      }
+    >
       {/* 1. Sana Column */}
       <td
         style={{
@@ -136,7 +143,14 @@ const PanelR = ({ solutions }: Props) => {
           </thead>
           <tbody>
             {solutions.map((sol, idx) => (
-              <SolutionRow key={idx} sol={sol} isPeeking={isPeeking} />
+              <SolutionRow
+                key={idx}
+                sol={sol}
+                isPeeking={isPeeking}
+                fullySolved={solutions
+                  .filter((solution) => solution[0] === sol[0])
+                  .every((solution) => solution[4] === true)}
+              />
             ))}
           </tbody>
         </table>

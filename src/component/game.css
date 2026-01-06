@@ -119,9 +119,6 @@ body {
   animation: letter-disappears 1.5s ease-out;
 }
 
-
-
-
 @keyframes letter-remove {
   0% {
     transform: scale(1);
@@ -150,6 +147,18 @@ body {
   }
   100% {
     color: white;
+  }
+}
+
+@keyframes solvehighlight-fade {
+  0% {
+    color: yellow;
+  }
+  80% {
+    color: yellow;
+  }
+  100% {
+    color: rgb(102, 255, 0);
   }
 }
 
@@ -558,11 +567,9 @@ body {
   z-index: 9999;
 
   transition: transform 0.4s cubic-bezier(0.75, 0, 0.24, 1);
-  
 }
 .popup-toast.show {
   transform: translate(-50%, 0);
-  
 }
 
 .popup-info {
@@ -667,4 +674,9 @@ thead tr th img {
 
 .row-highlight {
   animation: highlight-fade 3s ease-out;
+}
+
+.row-fullsolve {
+  animation: solvehighlight-fade 3s ease-out;
+  color: rgb(102, 255, 0);
 }

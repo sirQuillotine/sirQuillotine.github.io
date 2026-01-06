@@ -1313,7 +1313,7 @@ const Board = ({
     }
     return word;
   }
-
+  /*
   function handleBackspace() {
     // Backspace
     if (guess.length > 0) {
@@ -1379,7 +1379,7 @@ const Board = ({
 
       setBoard(copy);
     }
-  }
+  }*/
 
   function handleHandClick(tile: string, index: number) {
     // kirjoitus
@@ -1699,7 +1699,8 @@ const Board = ({
         id="hand-container"
         className={hand.length > 0 ? "master-appear-animation" : "master"}
       >
-        <div id="shuffle-button" onClick={handleBackspace}></div>
+        {/* Backspace nappi <div id="shuffle-button" onClick={handleBackspace}></div>*/}
+
         {hand.map((tile, i) => (
           <div
             key={i}
