@@ -38,18 +38,18 @@ const boardTemplate = [
   ["0", "2", "0", "0", "0", "3", "0", "0", "0", "3", "0", "0", "0", "2", "0"],
   ["1", "0", "0", "4", "0", "0", "0", "1", "0", "0", "0", "4", "0", "0", "1"],
 ];
-/*
-const test = [
+
+/*const test = [
   ["1", "0", "0", "4", "0", "0", "0", "1", "0", "0", "0", "4", "0", "0", "1"],
   ["0", "2", "0", "0", "0", "3", "0", "0", "0", "3", "0", "0", "0", "2", "0"],
   ["0", "0", "2", "0", "0", "0", "4", "0", "4", "0", "0", "0", "2", "0", "0"],
   ["4", "0", "0", "2", "0", "0", "0", "4", "0", "0", "0", "2", "0", "0", "4"],
   ["0", "0", "0", "0", "2", "0", "0", "0", "0", "0", "2", "0", "0", "0", "0"],
   ["0", "3", "0", "0", "0", "3", "0", "0", "0", "3", "0", "0", "0", "3", "0"],
-  ["0", "0", "4", "0", "l", "0", "4", "0", "4", "0", "0", "0", "4", "0", "0"],
-  ["1", "0", "0", "4", "a", "0", "0", "5", "0", "0", "0", "4", "0", "0", "1"],
-  ["0", "0", "4", "0", "i", "0", "4", "0", "4", "0", "0", "0", "4", "0", "0"],
-  ["0", "3", "0", "0", "n", "3", "0", "0", "0", "3", "0", "0", "0", "3", "0"],
+  ["0", "0", "4", "0", "0", "0", "4", "0", "4", "0", "0", "0", "4", "0", "0"],
+  ["1", "0", "0", "4", "0", "t", "i", "e", "0", "e", "s", "s", "u", "0", "1"],
+  ["0", "0", "4", "0", "0", "0", "4", "0", "4", "0", "0", "0", "4", "0", "0"],
+  ["0", "3", "0", "0", "0", "3", "0", "0", "0", "3", "0", "0", "0", "3", "0"],
   ["0", "0", "0", "0", "2", "0", "0", "0", "0", "0", "2", "0", "0", "0", "0"],
   ["4", "0", "0", "2", "0", "0", "0", "4", "0", "0", "0", "2", "0", "0", "4"],
   ["0", "0", "2", "0", "0", "0", "4", "0", "4", "0", "0", "0", "2", "0", "0"],
@@ -105,7 +105,7 @@ var hintPosition = [
   [7, 4],
   [7, 9],
 ];
-var hintDirection = "r";
+var hintDirection = true;
 var removing: any;
 
 var generating = false;
@@ -113,7 +113,7 @@ var rand: (arg0: number, arg1: number) => any;
 
 var seedNumber = 0;
 
-export type Solutions = [string, [number, number], number, "r" | "d", boolean];
+export type Solutions = [string, [number, number], number, boolean, boolean];
 
 interface BoardProps {
   onScoreChange?: (score: number) => void;
@@ -131,7 +131,7 @@ const Board = ({
   onSolutionsChange,
 }: BoardProps) => {
   const [cursor, setCursor] = useState({ col: 8, row: 8 }); // kursori aluksi keskellä
-  const [direction, setDirection] = useState("r"); // 'r' = oikealle (default),  'd' = alas
+  const [cursorDirection, setCursorDirection] = useState(true); // true = oikealle (default),  false = alas
   const [showPopup, setShowPopup] = useState(false);
 
   const [dictionary, setWords] = useState<string[]>([]);
@@ -190,7 +190,8 @@ const Board = ({
 
   const handleCursorClick = () => {
     // This toggles 'r' to 'd' and 'd' back to 'r'
-    if (guess.length === 0) setDirection((prev) => (prev === "r" ? "d" : "r"));
+    if (guess.length === 0)
+      setCursorDirection((prev) => (prev === true ? false : true));
   };
 
   const handleShuffle = () => {
@@ -205,6 +206,49 @@ const Board = ({
       setHand(shuffled);
     }
   };
+
+  function handleWriting(key: string) {
+    setCorrect(boardTemplate);
+    setRemove(boardTemplate);
+
+    if (guess.length === 0) {
+      oguessPointer = [cursor.row - 1, cursor.col - 1];
+    }
+    if (isalpha(board[cursor.row - 1][cursor.col - 1])) {
+      if (isalpha(generatedBoard[cursor.row - 1][cursor.col - 1])) {
+        guess += board[cursor.row - 1][cursor.col - 1];
+        const copy = board.map((r) => r.slice());
+        setBoard(copy);
+        // liikuta cursoria kirjiamen jälkeen
+        setCursor((prev) => {
+          let newCol = prev.col;
+          let newRow = prev.row;
+          if (cursorDirection && newCol < 15) newCol++;
+          if (!cursorDirection && newRow < 15) newRow++;
+          return { col: newCol, row: newRow };
+        });
+      }
+    } else if (hand.includes(key)) {
+      //Poistetaan kädestä kirjotettu kirjain
+
+      var handcopy = hand.slice();
+      handcopy[handcopy.indexOf(key)] = "0";
+      setHand(handcopy);
+
+      guess += key;
+      const copy = board.map((r) => r.slice());
+      copy[cursor.row - 1][cursor.col - 1] = key;
+      setBoard(copy);
+      // liikuta cursoria kirjiamen jälkeen
+      setCursor((prev) => {
+        let newCol = prev.col;
+        let newRow = prev.row;
+        if (cursorDirection && newCol < 15) newCol++;
+        if (!cursorDirection && newRow < 15) newRow++;
+        return { col: newCol, row: newRow };
+      });
+    }
+  }
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -241,7 +285,7 @@ const Board = ({
       if (e.key === "Tab") {
         e.preventDefault();
         if (guess.length === 0) {
-          setDirection((prev) => (prev === "r" ? "d" : "r"));
+          setCursorDirection((prev) => !prev);
         }
       }
 
@@ -259,7 +303,7 @@ const Board = ({
           row += 1;
         }
 
-        if (direction === "r") {
+        if (cursorDirection === true) {
           if (
             isalpha(board[row - 1][col - 2]) &&
             !isalpha(generatedBoard[row - 1][col - 2])
@@ -306,8 +350,8 @@ const Board = ({
         setCursor(() => {
           let newCol = col;
           let newRow = row;
-          if (direction === "r") newCol--;
-          if (direction === "d") newRow--;
+          if (cursorDirection === true) newCol--;
+          if (cursorDirection === false) newRow--;
           return { col: newCol, row: newRow };
         });
 
@@ -316,308 +360,19 @@ const Board = ({
 
       // ENTER
       if (key === "enter" && guess.length > 0) {
-        /*
-        if (isalpha(generatedBoard[cursor.row - 1][cursor.col - 1])) {
-          guess += generatedBoard[cursor.row - 1][cursor.col - 1];
-        }*/
-        var oguess = guess;
-
-        var x = oguessPointer[0];
-        var y = oguessPointer[1];
-
-        var ox = oguessPointer[0];
-        var oy = oguessPointer[1];
-
-        var totScore = 0;
-
-        if (direction === "r") {
-          if (isalpha(generatedBoard[x]?.[y - 1])) {
-            guess =
-              getWord(
-                [x, y - 1],
-                direction === "r" ? true : false,
-                generatedBoard
-              ) + guess;
-
-            var i = y;
-            while (i >= 1) {
-              if (!isalpha(generatedBoard[x]?.[i - 1])) {
-                y = i;
-                break;
-              }
-              i -= 1;
-            }
-          } else if (
-            isalpha(generatedBoard[cursor.row - 1]?.[cursor.col - 1])
-          ) {
-            guess += getWord(
-              [cursor.row - 1, cursor.col - 1],
-              direction === "r" ? true : false,
-              generatedBoard
-            );
-          }
-        } else {
-          if (isalpha(generatedBoard[x - 1]?.[y])) {
-            guess =
-              getWord(
-                [x - 1, y],
-                direction === "r" ? true : false,
-                generatedBoard
-              ) + guess;
-
-            var i = x;
-            while (i >= 1) {
-              if (!isalpha(generatedBoard[i - 1]?.[y])) {
-                x = i;
-                break;
-              }
-              i -= 1;
-            }
-          } else if (
-            isalpha(generatedBoard[cursor.row - 1]?.[cursor.col - 1])
-          ) {
-            guess += getWord(
-              [cursor.row - 1, cursor.col - 1],
-              direction === "r" ? true : false,
-              generatedBoard
-            );
-          }
-        }
-
-        const correct = correctAnimation.map((r) => r.slice());
-        const remove = removeAnimation.map((r) => r.slice());
-        var g = guessed.slice();
-        var sol = solutions.slice();
-
-        const wordScore = validateWord(
-          guess,
-          [x, y],
-          generatedBoard,
-          generatedHand,
-          direction === "r" ? true : false
-        );
-
-        //Käydään läpi sana
-        if (wordScore > 0) {
-          var contains = false;
-          for (var i = 0; i < g.length; i++) {
-            if (
-              g[i][0] === guess &&
-              g[i][1][0] === x &&
-              g[i][1][1] === y &&
-              g[i][2] === direction
-            ) {
-              contains = true;
-            }
-          }
-
-          if (!contains) {
-            for (var i = 0; i < sol.length; i++) {
-              if (
-                sol[i][0] === guess &&
-                sol[i][1][0] === x &&
-                sol[i][1][1] === y &&
-                sol[i][3] === direction
-              ) {
-                //Sana on ratkaisuissa
-
-                totScore += wordScore;
-
-                //Pusketaan guessediin
-                g.push([guess, [x, y], direction]);
-                setCookie("solutions", getCookie("solutions") + "," + i, 7);
-                sol[i][4] = true;
-
-                // Total pisteet
-
-                if (direction === "r") {
-                  for (var i = 0; i < guess.length; i++) {
-                    correct[x][y + i] = guess[i];
-                  }
-                } else {
-                  for (var i = 0; i < guess.length; i++) {
-                    correct[x + i][y] = guess[i];
-                  }
-                }
-
-                break;
-              }
-            }
-          } else {
-            handleUsedWord();
-
-            if (direction === "r") {
-              for (var i = 0; i < oguess.length; i++) {
-                if (!isalpha(generatedBoard[x][y + i]))
-                  remove[x][y + i] = oguess[i];
-              }
-            } else {
-              for (var i = 0; i < oguess.length; i++) {
-                if (!isalpha(generatedBoard[x + i][y]))
-                  remove[x + i][y] = oguess[i];
-              }
-            }
-          }
-        } else {
-          if (direction === "r") {
-            for (var i = 0; i < oguess.length; i++) {
-              if (!isalpha(generatedBoard[x][y + i]))
-                remove[x][y + i] = oguess[i];
-            }
-          } else {
-            for (var i = 0; i < oguess.length; i++) {
-              if (!isalpha(generatedBoard[x + i][y]))
-                remove[x + i][y] = oguess[i];
-            }
-          }
-        }
-
-        //Käydään läpi implisiittinen viereinen sana
-        var aword = getWord([ox, oy], direction === "r" ? false : true, board);
-        var odirection = direction === "r" ? "d" : "r";
-
-        if (odirection === "r") {
-          if (isalpha(generatedBoard[ox]?.[oy - 1])) {
-            var i = oy;
-            while (i >= 1) {
-              if (!isalpha(generatedBoard[ox]?.[i - 1])) {
-                oy = i;
-                break;
-              }
-              i -= 1;
-            }
-          }
-        } else {
-          if (isalpha(generatedBoard[ox - 1]?.[oy])) {
-            var i = ox;
-            while (i >= 1) {
-              if (!isalpha(generatedBoard[i - 1]?.[oy])) {
-                ox = i;
-                break;
-              }
-              i -= 1;
-            }
-          }
-        }
-
-        const awordScore = validateWord(
-          aword,
-          [ox, oy],
-          generatedBoard,
-          generatedHand,
-          odirection === "r" ? true : false
-        );
-        if (awordScore > 0) {
-          var contains = false;
-          for (var i = 0; i < g.length; i++) {
-            if (
-              g[i][0] === aword &&
-              g[i][1][0] === ox &&
-              g[i][1][1] === oy &&
-              g[i][2] === odirection
-            ) {
-              contains = true;
-            }
-          }
-
-          if (!contains) {
-            for (var i = 0; i < sol.length; i++) {
-              if (
-                sol[i][0] === aword &&
-                sol[i][1][0] === ox &&
-                sol[i][1][1] === oy &&
-                sol[i][3] === odirection
-              ) {
-                //Sana on ratkaisuissa
-                totScore += awordScore;
-                g.push([aword, [ox, oy], odirection]);
-                setCookie("solutions", getCookie("solutions") + "," + i, 7);
-                sol[i][4] = true;
-
-                if (odirection === "r") {
-                  for (var i = 0; i < aword.length; i++) {
-                    correct[ox][oy + i] = aword[i];
-                  }
-                } else {
-                  for (var i = 0; i < aword.length; i++) {
-                    correct[ox + i][oy] = aword[i];
-                  }
-                }
-
-                break;
-              }
-            }
-          }
-        }
-
-        setCorrect(correct);
-        setRemove(remove);
-        setGuessed(g);
-        setSolutions(sol);
-
-        setTotalScore((prev) => {
-          const newTotal = prev + totScore;
-          return newTotal;
-        });
-        resetCorrect();
-        resetRemove();
-
-        setCursor(() => {
-          let newCol = oguessPointer[1] + 1;
-          let newRow = oguessPointer[0] + 1;
-          return { col: newCol, row: newRow };
-        });
-        setBoard(generatedBoard);
-        setHand(generatedHand);
-        guess = "";
+        handleEnter();
       }
 
       // kirjoitus
       if (allowedLetters.includes(key)) {
-        if (guess.length === 0) {
-          oguessPointer = [cursor.row - 1, cursor.col - 1];
-        }
-        if (isalpha(board[cursor.row - 1][cursor.col - 1])) {
-          if (isalpha(generatedBoard[cursor.row - 1][cursor.col - 1])) {
-            guess += board[cursor.row - 1][cursor.col - 1];
-            const copy = board.map((r) => r.slice());
-            setBoard(copy);
-            // liikuta cursoria kirjiamen jälkeen
-            setCursor((prev) => {
-              let newCol = prev.col;
-              let newRow = prev.row;
-              if (direction === "r" && newCol < 15) newCol++;
-              if (direction === "d" && newRow < 15) newRow++;
-              return { col: newCol, row: newRow };
-            });
-          }
-        } else if (hand.includes(key)) {
-          //Poistetaan kädestä kirjotettu kirjain
-
-          var handcopy = hand.slice();
-          handcopy[handcopy.indexOf(key)] = "0";
-          setHand(handcopy);
-
-          guess += key;
-          const copy = board.map((r) => r.slice());
-          copy[cursor.row - 1][cursor.col - 1] = key;
-          setBoard(copy);
-          // liikuta cursoria kirjiamen jälkeen
-          setCursor((prev) => {
-            let newCol = prev.col;
-            let newRow = prev.row;
-            if (direction === "r" && newCol < 15) newCol++;
-            if (direction === "d" && newRow < 15) newRow++;
-            return { col: newCol, row: newRow };
-          });
-        }
+        handleWriting(key);
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
 
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [cursor, direction, hand]); // IMPORTANT: Added cursor and direction here
+  }, [cursor, cursorDirection, hand]); // IMPORTANT: Added cursor and direction here
 
   const delay = (ms: number | undefined) =>
     new Promise((res) => setTimeout(res, ms));
@@ -803,19 +558,21 @@ const Board = ({
         boardCopy[x][y] = word[i];
 
         if (isHorizontal) {
+          //Sana sivuaa toinen sana
           if (
             isalpha(boardCopy[x - 1]?.[y]) ||
             isalpha(boardCopy[x + 1]?.[y])
           ) {
-            var existing = getWord([x, y], !isHorizontal, boardCopy);
+            var adjacentWord = getWord([x, y], !isHorizontal, boardCopy);
+            var [ax, ay] = getWordStartPos([x, y], !isHorizontal, boardCopy);
 
             //Käydään sivuava sana läpi
             var singleAdjacent = 0;
             var mult = 1;
-            for (let k = 0; k < existing.length; k++) {
-              const letter = existing[k];
+            for (let k = 0; k < adjacentWord.length; k++) {
+              const letter = adjacentWord[k];
               // Use original board's tile modifier values
-              const tile = generatedBoard[x]?.[y + k];
+              const tile = generatedBoard[ax + k]?.[ay];
               if (tile === "1") {
                 mult *= 3;
                 singleAdjacent += LETTER_SCORES[letter] || 0;
@@ -830,6 +587,7 @@ const Board = ({
                 singleAdjacent += LETTER_SCORES[letter] || 0;
               }
             }
+
             adjacentScore += singleAdjacent * mult;
           }
         } else {
@@ -837,14 +595,15 @@ const Board = ({
             isalpha(boardCopy[x]?.[y - 1]) ||
             isalpha(boardCopy[x]?.[y + 1])
           ) {
-            var existing = getWord([x, y], !isHorizontal, boardCopy);
+            var adjacentWord = getWord([x, y], !isHorizontal, boardCopy);
+            var [ax, ay] = getWordStartPos([x, y], !isHorizontal, boardCopy);
 
             //Käydään sivuava sana läpi
             var singleAdjacent = 0;
             var mult = 1;
-            for (let k = 0; k < existing.length; k++) {
-              const letter = existing[k];
-              const tile = generatedBoard[x + k]?.[y];
+            for (let k = 0; k < adjacentWord.length; k++) {
+              const letter = adjacentWord[k];
+              const tile = generatedBoard[ax]?.[ay + k];
               if (tile === "1") {
                 mult *= 3;
                 singleAdjacent += LETTER_SCORES[letter] || 0;
@@ -884,24 +643,24 @@ const Board = ({
     //Pistelaskua varten katsotaan alku ja loppupää
     if (isHorizontal && position[1] - 1 >= 0) {
       if (isalpha(board[position[0]][position[1] - 1])) {
-        var existing = getWord(
+        var adjacentWord = getWord(
           [position[0], position[1] - 1],
           isHorizontal,
           generatedBoard
         );
-        for (let k = 0; k < existing.length; k++) {
-          joinScore += LETTER_SCORES[existing[k]] || 0;
+        for (let k = 0; k < adjacentWord.length; k++) {
+          joinScore += LETTER_SCORES[adjacentWord[k]] || 0;
         }
       }
     } else if (!isHorizontal && position[0] - 1 >= 0) {
       if (isalpha(board[position[0] - 1][position[1]])) {
-        var existing = getWord(
+        var adjacentWord = getWord(
           [position[0] - 1, position[1]],
           isHorizontal,
           generatedBoard
         );
-        for (let k = 0; k < existing.length; k++) {
-          joinScore += LETTER_SCORES[existing[k]] || 0;
+        for (let k = 0; k < adjacentWord.length; k++) {
+          joinScore += LETTER_SCORES[adjacentWord[k]] || 0;
         }
       }
     }
@@ -1048,7 +807,7 @@ const Board = ({
 
       console.log("Generoidaan siemenellä " + seedNumber);
 
-      var count = getRandomInt(2, 7);
+      var count = getRandomInt(3, 8);
       //var count = 1;
 
       var position = [7, 7];
@@ -1195,7 +954,7 @@ const Board = ({
         handt.push(bag.splice(getRandomInt(0, bag.length - 1), 1)[0]);
       }
       //test
-      //handt = ["ö", "ö", "ö", "e", "t", "u"];
+      //handt = ["ö", "s", "ö", "n", "e", "ö"];
       setHand(handt);
       generatedHand = handt;
 
@@ -1223,11 +982,11 @@ const Board = ({
                 word,
                 [i, j],
                 candScore,
-                "r",
+                true,
                 cookieGuess?.includes(maxWord.toString()) ? true : false,
               ]);
               if (cookieGuess?.includes(maxWord.toString())) {
-                oldGuessed.push([word, [i, j], "r"]);
+                oldGuessed.push([word, [i, j], true]);
                 oldScore += candScore;
               }
               maxScore += candScore;
@@ -1246,11 +1005,11 @@ const Board = ({
                 word,
                 [j, i],
                 candScore,
-                "d",
+                false,
                 cookieGuess?.includes(maxWord.toString()) ? true : false,
               ]);
               if (cookieGuess?.includes(maxWord.toString())) {
-                oldGuessed.push([word, [j, i], "d"]);
+                oldGuessed.push([word, [j, i], false]);
                 oldScore += candScore;
               }
               maxScore += candScore;
@@ -1313,6 +1072,31 @@ const Board = ({
     }
     return word;
   }
+
+  function getWordStartPos(
+    startPos: number[],
+    isHorizonal: boolean,
+    board: string[][]
+  ) {
+    var x = startPos[0];
+    var y = startPos[1];
+    if (!isalpha(board[x]?.[y])) {
+      return [-1, -1];
+    }
+
+    if (isHorizonal) {
+      while (isalpha(board[x]?.[y - 1])) {
+        y -= 1;
+      }
+    } else {
+      while (isalpha(board[x - 1]?.[y])) {
+        x -= 1;
+      }
+    }
+
+    return [x, y];
+  }
+
   /*
   function handleBackspace() {
     // Backspace
@@ -1381,6 +1165,307 @@ const Board = ({
     }
   }*/
 
+  function handleEnter() {
+    const originalGuess = guess;
+    let startX = oguessPointer[0];
+    let startY = oguessPointer[1];
+    const originalX = startX;
+    const originalY = startY;
+    let totalScore = 0;
+
+    // Expand guess to include adjacent letters and find start position
+    const expandedGuess = expandGuessWithAdjacentLetters(
+      guess,
+      startX,
+      startY,
+      cursorDirection,
+      generatedBoard
+    );
+
+    guess = expandedGuess.word;
+    startX = expandedGuess.x;
+    startY = expandedGuess.y;
+
+    // Initialize animation states
+    const correctCells = correctAnimation.map((row) => row.slice());
+    const removeCells = removeAnimation.map((row) => row.slice());
+    const guessedWords = guessed.slice();
+    const solutionList = solutions.slice();
+
+    // Validate the main word
+    const mainWordScore = validateWord(
+      guess,
+      [startX, startY],
+      generatedBoard,
+      generatedHand,
+      cursorDirection
+    );
+
+    // Process the main word if valid
+    if (mainWordScore > 0) {
+      const wordResult = processWord(
+        guess,
+        startX,
+        startY,
+        cursorDirection,
+        mainWordScore,
+        guessedWords,
+        solutionList,
+        correctCells,
+        removeCells,
+        originalGuess,
+        generatedBoard
+      );
+
+      totalScore += wordResult.score;
+
+      // Process perpendicular words formed at each position in the original guess
+      const perpendicularDirection = !cursorDirection;
+
+      for (let i = 0; i < originalGuess.length; i++) {
+        const checkX = cursorDirection ? originalX : originalX + i;
+        const checkY = cursorDirection ? originalY + i : originalY;
+
+        // Check if there's a perpendicular word at this position
+        const perpendicularWord = getWord(
+          [checkX, checkY],
+          !cursorDirection,
+          board
+        );
+
+        // Only process if the perpendicular word is longer than 1 letter
+        if (perpendicularWord.length > 1) {
+          const perpendicularResult = findWordStart(
+            checkX,
+            checkY,
+            perpendicularDirection,
+            generatedBoard
+          );
+
+          const perpendicularScore = validateWord(
+            perpendicularWord,
+            [perpendicularResult.x, perpendicularResult.y],
+            generatedBoard,
+            generatedHand,
+            !cursorDirection
+          );
+
+          if (perpendicularScore > 0) {
+            const wordResult = processWord(
+              perpendicularWord,
+              perpendicularResult.x,
+              perpendicularResult.y,
+              perpendicularDirection,
+              perpendicularScore,
+              guessedWords,
+              solutionList,
+              correctCells,
+              removeCells,
+              "",
+              generatedBoard
+            );
+
+            totalScore += wordResult.score;
+          }
+        }
+      }
+    } else {
+      // Main word is invalid - mark for removal animation and skip perpendicular word
+      markInvalidWord(
+        originalGuess,
+        startX,
+        startY,
+        cursorDirection,
+        removeCells,
+        generatedBoard
+      );
+    }
+
+    // Update state
+    setCorrect(correctCells);
+    setRemove(removeCells);
+    setGuessed(guessedWords);
+    setSolutions(solutionList);
+    setTotalScore((prev) => prev + totalScore);
+
+    resetCorrect();
+    resetRemove();
+
+    setCursor({
+      col: oguessPointer[1] + 1,
+      row: oguessPointer[0] + 1,
+    });
+
+    setBoard(generatedBoard);
+    setHand(generatedHand);
+    guess = "";
+  }
+
+  // Helper function: Expand guess with adjacent letters
+  function expandGuessWithAdjacentLetters(
+    guess: string,
+    x: number,
+    y: number,
+    direction: boolean,
+    board: string[][]
+  ) {
+    let word = guess;
+    let startX = x;
+    let startY = y;
+
+    if (direction) {
+      // Check for letters before
+      if (isalpha(board[x]?.[y - 1])) {
+        word = getWord([x, y - 1], true, board) + word;
+        startY = findStartColumn(x, y, board);
+      }
+      // Check for letters after
+      else if (isalpha(board[cursor.row - 1]?.[cursor.col - 1])) {
+        word += getWord([cursor.row - 1, cursor.col - 1], true, board);
+      }
+    } else {
+      // Check for letters above
+      if (isalpha(board[x - 1]?.[y])) {
+        word = getWord([x - 1, y], false, board) + word;
+        startX = findStartRow(x, y, board);
+      }
+      // Check for letters below
+      else if (isalpha(board[cursor.row - 1]?.[cursor.col - 1])) {
+        word += getWord([cursor.row - 1, cursor.col - 1], false, board);
+      }
+    }
+
+    return { word, x: startX, y: startY };
+  }
+
+  // Helper function: Find start column for horizontal word
+  function findStartColumn(x: number, y: number, board: string[][]) {
+    let col = y;
+    while (col >= 1 && isalpha(board[x]?.[col - 1])) {
+      col--;
+    }
+    return col;
+  }
+
+  // Helper function: Find start row for vertical word
+  function findStartRow(x: number, y: number, board: string[][]) {
+    let row = x;
+    while (row >= 1 && isalpha(board[row - 1]?.[y])) {
+      row--;
+    }
+    return row;
+  }
+
+  // Helper function: Find word start position
+  function findWordStart(
+    x: number,
+    y: number,
+    direction: boolean,
+    board: string[][]
+  ) {
+    if (direction) {
+      if (isalpha(board[x]?.[y - 1])) {
+        return { x, y: findStartColumn(x, y, board) };
+      }
+    } else {
+      if (isalpha(board[x - 1]?.[y])) {
+        return { x: findStartRow(x, y, board), y };
+      }
+    }
+    return { x, y };
+  }
+
+  // Helper function: Check if word was already guessed
+  function isWordAlreadyGuessed(
+    word: string,
+    x: number,
+    y: number,
+    direction: boolean,
+    guessedWords: any
+  ) {
+    return guessedWords.some(
+      (g: any) =>
+        g[0] === word && g[1][0] === x && g[1][1] === y && g[2] === direction
+    );
+  }
+
+  // Helper function: Process valid word
+  function processWord(
+    word: string,
+    x: number,
+    y: number,
+    direction: boolean,
+    score: number,
+    guessedWords: any,
+    solutionList: any,
+    correctCells: string[][],
+    removeCells: string[][],
+    originalGuess: string,
+    board: string[][]
+  ) {
+    let earnedScore = 0;
+
+    if (isWordAlreadyGuessed(word, x, y, direction, guessedWords)) {
+      handleUsedWord();
+      if (originalGuess !== "") {
+        markInvalidWord(originalGuess, x, y, direction, removeCells, board);
+      }
+      return { score: 0 };
+    }
+
+    // Check if word is in solutions
+    const solutionIndex = solutionList.findIndex(
+      (sol: any) =>
+        sol[0] === word &&
+        sol[1][0] === x &&
+        sol[1][1] === y &&
+        sol[3] === direction
+    );
+
+    if (solutionIndex !== -1) {
+      earnedScore = score;
+      guessedWords.push([word, [x, y], direction]);
+      setCookie("solutions", getCookie("solutions") + "," + solutionIndex, 7);
+      solutionList[solutionIndex][4] = true;
+
+      // Mark correct cells
+      const isHorizontal = direction;
+      for (let i = 0; i < word.length; i++) {
+        if (isHorizontal) {
+          correctCells[x][y + i] = word[i];
+        } else {
+          correctCells[x + i][y] = word[i];
+        }
+      }
+    }
+
+    return { score: earnedScore };
+  }
+
+  // Helper function: Mark invalid word for removal animation
+  function markInvalidWord(
+    word: string,
+    x: number,
+    y: number,
+    direction: boolean,
+    removeCells: string[][],
+    board: string[][]
+  ) {
+    const isHorizontal = direction;
+
+    for (let i = 0; i < word.length; i++) {
+      if (isHorizontal) {
+        if (!isalpha(board[x][y + i])) {
+          removeCells[x][y + i] = word[i];
+        }
+      } else {
+        if (!isalpha(board[x + i][y])) {
+          removeCells[x + i][y] = word[i];
+        }
+      }
+    }
+  }
+
   function handleHandClick(tile: string, index: number) {
     // kirjoitus
     if (tile !== "0") {
@@ -1396,8 +1481,8 @@ const Board = ({
           setCursor((prev) => {
             let newCol = prev.col;
             let newRow = prev.row;
-            if (direction === "r" && newCol < 15) newCol++;
-            if (direction === "d" && newRow < 15) newRow++;
+            if (cursorDirection && newCol < 15) newCol++;
+            if (!cursorDirection && newRow < 15) newRow++;
             return { col: newCol, row: newRow };
           });
         }
@@ -1415,8 +1500,8 @@ const Board = ({
         setCursor((prev) => {
           let newCol = prev.col;
           let newRow = prev.row;
-          if (direction === "r" && newCol < 15) newCol++;
-          if (direction === "d" && newRow < 15) newRow++;
+          if (cursorDirection && newCol < 15) newCol++;
+          if (!cursorDirection && newRow < 15) newRow++;
           return { col: newCol, row: newRow };
         });
       }
@@ -1428,8 +1513,8 @@ const Board = ({
       setCursor((prev) => {
         let newCol = prev.col;
         let newRow = prev.row;
-        if (direction === "r" && newCol < 15) newCol++;
-        if (direction === "d" && newRow < 15) newRow++;
+        if (cursorDirection && newCol < 15) newCol++;
+        if (!cursorDirection && newRow < 15) newRow++;
         return { col: newCol, row: newRow };
       });
     }
@@ -1440,7 +1525,6 @@ const Board = ({
   }, [totalScore, onScoreChange]);
 
   useEffect(() => {
-    console.log(maxScore);
     onstatsChange?.([totalScore, maxScore, guessed.length, maxWord]);
   }, [totalScore, maxScore, maxWord, guessed.length, onstatsChange]);
 
@@ -1451,7 +1535,7 @@ const Board = ({
       hintDirection = h[3];
       hintPosition = [
         h[1],
-        h[3] === "r"
+        h[3] === true
           ? [h[1][0], h[1][1] + h[0].length - 1]
           : [h[1][0] + h[0].length - 1, h[1][1]],
       ];
@@ -1533,27 +1617,23 @@ const Board = ({
                 className={`base-tile ${STYLE_MAP[cellValue]} ${
                   finalCorrect
                     ? "has-letter letter-disappears-animation"
-                    : finalRemove
-                    ? "has-letter letter-remove-animation"
                     : finalLetter
                     ? "has-letter letter-appears-animation"
+                    : finalRemove
+                    ? "has-letter letter-remove-animation"
                     : ""
                 }`}
                 onClick={() => moveCursorTo(colNum, rowNum)}
                 style={{
-                  backgroundImage: finalLetter
-                    ? `url(/graphics/tiles/letters/${encodeURIComponent(
-                        finalLetter.toUpperCase()
-                      )}.png)`
-                    : finalCorrect
-                    ? `url(/graphics/tiles/letters/${encodeURIComponent(
-                        finalCorrect.toUpperCase()
-                      )}.png)`
-                    : finalRemove
-                    ? `url(/graphics/tiles/letters/${encodeURIComponent(
-                        finalRemove.toUpperCase()
-                      )}.png)`
-                    : undefined,
+                  backgroundImage:
+                    finalLetter || finalCorrect || finalRemove
+                      ? `url(/graphics/tiles/letters/${encodeURIComponent(
+                          (finalLetter?.toUpperCase() ??
+                            finalCorrect?.toUpperCase() ??
+                            finalRemove?.toUpperCase()) ||
+                            ""
+                        )}.png)`
+                      : undefined,
                   backgroundSize: "contain",
                 }}
               >
@@ -1580,7 +1660,7 @@ const Board = ({
             src="/graphics/cursor_half.png"
             id="cursor-border"
             className={`cursor-inner ${
-              direction === "r" ? "cursor-right" : "cursor-down"
+              cursorDirection ? "cursor-right" : "cursor-down"
             }`}
             alt=""
           />
@@ -1609,7 +1689,7 @@ const Board = ({
             alt=""
             style={{
               top: `${
-                guess.length > 0 && direction == "d" ? "5.75vh" : "-2.5vh"
+                guess.length > 0 && cursorDirection ? "5.75vh" : "-2.5vh"
               }`,
             }}
           />
@@ -1617,7 +1697,7 @@ const Board = ({
             src="/graphics/cursor_half_caretside.png"
             id="cursor-border"
             className={`cursor-inner ${
-              direction === "r" ? "cursor-right" : "cursor-down"
+              cursorDirection ? "cursor-right" : "cursor-down"
             }`}
             alt=""
           />
@@ -1631,7 +1711,7 @@ const Board = ({
             src="/graphics/cursor_arrow.svg"
             id="cursor-arrow"
             className={`cursor-inner ${
-              guess.length == 0 && direction == "r"
+              guess.length == 0 && cursorDirection
                 ? "cursor-arrow-right"
                 : "cursor-arrow-down"
             }`}
@@ -1662,7 +1742,7 @@ const Board = ({
             src="/graphics/cursor_half.png"
             id="cursor-border"
             className={`cursor-inner ${
-              hintDirection === "r" ? "cursor-right" : "cursor-down"
+              hintDirection ? "cursor-right" : "cursor-down"
             }`}
             alt=""
           />
@@ -1688,7 +1768,7 @@ const Board = ({
             src="/graphics/cursor_half_caretside.png"
             id="cursor-border"
             className={`cursor-inner ${
-              hintDirection === "r" ? "cursor-right" : "cursor-down"
+              hintDirection ? "cursor-right" : "cursor-down"
             }`}
             alt=""
           />

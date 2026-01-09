@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import "./game.css";
 
-type Solution = [string, [number, number], number, "r" | "d", boolean];
+type Solution = [string, [number, number], number, boolean, boolean];
 
 interface Props {
   solutions: Solution[];
@@ -93,7 +93,7 @@ const SolutionRow = ({
         }}
       >
         {show ? (
-          dir === "r" ? (
+          dir ? (
             "→"
           ) : (
             "↓"

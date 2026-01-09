@@ -45,14 +45,13 @@ const PanelL = ({
   if (getCookieTime) {
     var cookieTime = getCookie("time");
     if (cookieTime) {
-      console.log(cookieTime);
       getCookieTime = false;
       setTime(parseFloat(cookieTime));
     }
   }
 
   const handleShare = () => {
-    console.log(seedNumber);
+    console.log("Kopitoitu siemen", seedNumber);
     navigator.clipboard.writeText(
       "https://sirquillotine.github.io/#/" + seedNumber
     );

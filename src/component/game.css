@@ -122,16 +122,28 @@ body {
 @keyframes letter-remove {
   0% {
     transform: scale(1);
+    opacity: 1;
+    filter: brightness(1);
+  }
+  15% {
+    transform: scale(1.08);
+    opacity: 1;
     filter: brightness(85%);
   }
-
-  80% {
+  30% {
     transform: scale(1);
+    opacity: 1;
+    filter: brightness(85%);
   }
-
+  95% {
+    transform: scale(1);
+    opacity: 1;
+    filter: brightness(85%);
+  }
   100% {
     transform: scale(0.9);
-    filter: brightness(80%);
+    opacity: 0;
+    filter: brightness(50%);
   }
 }
 .letter-remove-animation {
@@ -158,7 +170,7 @@ body {
     color: yellow;
   }
   100% {
-    color: rgb(102, 255, 0);
+    color: rgb(65, 160, 1);
   }
 }
 
@@ -677,6 +689,6 @@ thead tr th img {
 }
 
 .row-fullsolve {
-  animation: solvehighlight-fade 3s ease-out;
-  color: rgb(102, 255, 0);
+  animation: solvehighlight-fade 2s ease-out;
+  color: rgb(65, 160, 1);
 }
