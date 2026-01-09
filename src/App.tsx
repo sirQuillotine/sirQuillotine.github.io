@@ -20,7 +20,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Sanapeli />} />
-        <Route path="/#/:seed" element={<SeedRedirect />} />
+        <Route path="/:seed" element={<SeedRedirect />} />
       </Routes>
     </BrowserRouter>
   );
