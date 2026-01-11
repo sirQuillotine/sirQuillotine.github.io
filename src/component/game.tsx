@@ -158,7 +158,9 @@ const Board = ({
   seedNumber = parseFloat(seed);
   //}
 
-  const step = 5.36; // laatta (4.96vh) + rako (0.4vh) = 5.36vh
+  const screenWidth = window.screen.width;
+  const step = screenWidth > 500 ? 5.36 : 6.0266; // laatta (4.96vh) + rako (0.4vh) = 5.36vh
+  const stepunit = screenWidth > 500 ? "vh" : "vw";
 
   const setCookie = (name: any, value: any, days: any) => {
     let expires = "";
@@ -1648,10 +1650,12 @@ const Board = ({
           id="cursor"
           style={{
             transform: `translate(${
-              (guess.length > 0 ? oguessPointer[1] : cursor.col - 1) * step
-            }vh, ${
-              (guess.length > 0 ? oguessPointer[0] : cursor.row - 1) * step
-            }vh)`,
+              (guess.length > 0 ? oguessPointer[1] : cursor.col - 1) * step +
+              stepunit
+            }, ${
+              (guess.length > 0 ? oguessPointer[0] : cursor.row - 1) * step +
+              stepunit
+            })`,
             transition: "transform 0.02s ease-out",
             zIndex: 10,
           }}
@@ -1671,9 +1675,9 @@ const Board = ({
           id="cursor"
           onClick={handleCursorClick}
           style={{
-            transform: `translate(${(cursor.col - 1) * step}vh, ${
-              (cursor.row - 1) * step
-            }vh)`,
+            transform: `translate(${(cursor.col - 1) * step + stepunit}, ${
+              (cursor.row - 1) * step + stepunit
+            })`,
             transition: "transform 0.02s ease-out",
             zIndex: 10,
           }}
@@ -1689,7 +1693,9 @@ const Board = ({
             alt=""
             style={{
               top: `${
-                guess.length > 0 && cursorDirection ? "5.75vh" : "-2.5vh"
+                guess.length > 0 && !cursorDirection
+                  ? "5.75" + stepunit
+                  : "-2.5" + stepunit
               }`,
             }}
           />
@@ -1731,9 +1737,9 @@ const Board = ({
               : "hint-invisible tile-disappear"
           }
           style={{
-            transform: `translate(${hintPosition[0][1] * step}vh, ${
-              hintPosition[0][0] * step
-            }vh)`,
+            transform: `translate(${hintPosition[0][1] * step + stepunit}, ${
+              hintPosition[0][0] * step + stepunit
+            })`,
             transition: "transform 0.02s ease-out",
             zIndex: 10,
           }}
@@ -1757,9 +1763,9 @@ const Board = ({
               : "hint-invisible tile-disappear"
           }
           style={{
-            transform: `translate(${hintPosition[1][1] * step}vh, ${
-              hintPosition[1][0] * step
-            }vh)`,
+            transform: `translate(${hintPosition[1][1] * step + stepunit}, ${
+              hintPosition[1][0] * step + stepunit
+            })`,
             transition: "transform 0.02s ease-out",
             zIndex: 10,
           }}
@@ -1777,7 +1783,7 @@ const Board = ({
 
       <div
         id="hand-container"
-        className={hand.length > 0 ? "master-appear-animation" : "master"}
+        className={hand.length > 0 ? "hand-appear-animation" : "master"}
       >
         {/* Backspace nappi <div id="shuffle-button" onClick={handleBackspace}></div>*/}
 

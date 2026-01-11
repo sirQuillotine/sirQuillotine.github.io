@@ -692,3 +692,419 @@ thead tr th img {
   animation: solvehighlight-fade 2s ease-out;
   color: rgb(65, 160, 1);
 }
+
+@media only screen and (max-width: 500px) {
+  body {
+    width: fit-content;
+    min-width: 100vw;
+    height: 100vh;
+    min-height: 100vh;
+
+    background: var(--gradient-main-background);
+
+    margin: 0;
+    padding: 0;
+
+    display: flex;
+    justify-content: center;
+
+    overflow-y: hidden;
+
+    user-select: none;
+  }
+
+  #master-div {
+    height: fit-content;
+
+    padding-left: 0;
+    padding-right: 0; /* 21.5vh about center jos isdepnalei aei muuta */
+  }
+
+  #coords-x {
+    position: absolute;
+    top: 0;
+
+    width: 90vw;
+    height: 50vw;
+
+    display: grid;
+    grid-template-columns: repeat(15, 1fr);
+    gap: 0.4vh;
+  }
+  .coord-character-x {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 1.2vw;
+    font-weight: 500;
+    font-family: "Nunito", sans-serif;
+    color: var(--color-coords-normal);
+    transition: color 0.1s ease-out;
+  }
+
+  #coords-y {
+    position: absolute;
+    top: 12.5vh;
+
+    width: 95.75vw;
+    height: 90vw;
+
+    display: grid;
+    grid-template-rows: repeat(15, 1fr);
+    gap: 0.4vh;
+  }
+  .coord-character-y {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+
+    font-size: 1.2vw;
+    font-weight: 500;
+    font-family: "Nunito", sans-serif;
+    color: var(--color-coords-normal);
+    transition: color 0.1s ease-out;
+  }
+  .coord-highlighted {
+    font-size: 1.5vw;
+    font-weight: 700;
+    color: var(--color-coords-highlight);
+  }
+
+  /* board */
+  #base-grid-container {
+    width: 90vw;
+    height: 90vw;
+    display: grid;
+    grid-template-columns: repeat(15, 1fr);
+    gap: 0.4vw;
+    padding-top: 5vw;
+  }
+
+  /* ------------------------------------------------ CURSOR */
+  #cursor {
+    width: 5.62666vw;
+    height: 5.62666vw;
+
+    position: absolute;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    top: 5vw;
+
+    transform: translate(37.52vh, 37.52vh);
+
+    cursor: pointer;
+
+    user-select: none;
+  }
+
+  #cursor-tag {
+    height: 1.75vw;
+    top: -2.5vw;
+
+    filter: var(--dropshadow-transparent);
+  }
+
+  #cursor-arrow {
+    height: 1.3vw;
+    filter: var(--dropshadow-opaque);
+  }
+  .cursor-arrow-right {
+    left: 5.9vw;
+  }
+  .cursor-arrow-down {
+    top: 5.9vw;
+    transform: rotate(90deg);
+  }
+
+  #cursor-border {
+    width: 6.42vw;
+    height: 6.42vw;
+
+    filter: var(--dropshadow-opaque);
+
+    z-index: 999;
+  }
+
+  #cursor-key {
+    width: 2.81333vw;
+    height: 2.81333vw;
+
+    filter: var(--dropshadow-opaque);
+
+    object-fit: contain;
+
+    animation: blinker 1.5s linear infinite;
+  }
+
+  /* ------------------------------------------------ HAND */
+  #hand-container {
+    height: 8vw;
+    width: 70vw;
+
+    margin-top: 2vw;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    padding-left: 7.8vw;
+  }
+
+  .hand-tile {
+    width: 8vw;
+  }
+
+  #shuffle-button {
+    position: relative;
+    height: 8vw;
+    width: 7vw;
+
+    cursor: pointer;
+
+    background-image: url("/graphics/shuffle_icon.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+
+    scale: 0.4;
+    opacity: 0.7;
+  }
+
+  #shuffle-button:hover {
+    opacity: 1;
+    scale: 0.45;
+    transition: all 0.1s ease-in-out;
+  }
+
+  #points-and-bar-container {
+    width: 90vw;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    top: 0;
+    margin-top: 5vw;
+    margin-bottom: 5vw;
+    margin-left: 0;
+    padding-bottom: 0;
+    min-height: 0;
+  }
+
+  #panel-t-parent {
+    position: relative;
+    height: 22vw;
+  }
+
+  .display-container {
+    width: 40vw;
+    padding-bottom: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .display-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .points-header {
+    font-size: 1.5vw;
+    font-weight: 800;
+    color: rgba(255, 255, 255, 0.75);
+    font-family: "Nunito", sans-serif;
+  }
+
+  .points-points {
+    margin-top: -1.6vw;
+    margin-bottom: -1.6vw;
+
+    font-size: 5vw;
+    font-weight: 1000;
+    color: white;
+    font-family: "Nunito", sans-serif;
+  }
+
+  .progress-bar-background {
+    width: 40vw;
+
+    border-radius: 2vw;
+
+    background-color: var(--color-progress-bar-background);
+  }
+
+  .progress-bar-bar {
+    /*min-width: 3vh;
+  max-width: 100%;*/
+    width: 40vw !important;
+
+    border-radius: 3vw;
+  }
+
+  #progress-bar-points .progress-bar-bar {
+    width: 0; /* PLACEHOLDER */
+    background-color: var(--color-3xletter-opaque);
+  }
+
+  #progress-bar-words .progress-bar-bar {
+    width: 0; /* PLACEHOLDER */
+    background-color: var(--color-3xword-opaque);
+  }
+
+  .progress-bar {
+    margin-top: 0.25vw;
+  }
+
+  .progress-bar span {
+    margin-left: 0.75vw;
+  }
+
+  .progress-bar-text {
+    margin-top: 0.2vw;
+
+    font-size: 1.8vw;
+    font-weight: 800;
+    color: white;
+    font-family: "Nunito", sans-serif;
+
+    filter: drop-shadow(0 0 0.25vw rgba(0, 0, 0, 0.5));
+  }
+
+  .progress-bar-item {
+    position: absolute;
+    height: 3vw;
+  }
+
+  #timer {
+    padding-bottom: 3vw;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+  #timer img {
+    height: 2vw;
+    padding-top: 0;
+    position: relative;
+    top: 0;
+  }
+  #timer span {
+    padding-left: 0.75vw;
+  }
+
+  .solutioncontainer {
+    flex-grow: 1;
+  }
+
+  .buttoncontainer {
+    height: 10vw;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-left: 5vw;
+    margin-right: 5vw;
+  }
+
+  .side-panel-button {
+    width: 15vw;
+    height: 3.6vw;
+
+    margin: 0;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+
+    cursor: pointer;
+    filter: brightness(90%);
+  }
+
+  #bottom-panel-container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  #side-panel-container {
+    position: relative;
+    width: 90vw;
+    height: 60vw;
+
+    top: 5vh;
+
+    font-size: 1.5vw;
+    font-weight: 500;
+    color: white;
+    font-family: "Nunito", sans-serif;
+
+    overflow: hidden;
+  }
+  #table-title {
+    font-weight: 900;
+    font-size: 1.9vw;
+    padding-left: 3.5vh;
+  }
+
+  #table-container {
+    height: 50vw;
+
+    overflow-y: scroll;
+    scrollbar-width: none;
+
+    column-count: 3;
+    column-gap: 50vw;
+  }
+  .header-icon {
+    top: 0.3vw;
+    position: relative;
+  }
+  #table {
+    -webkit-column-count: 3; /* Chrome, Safari, Opera */
+    -moz-column-count: 3; /* Firefox */
+    column-count: 3;
+    position: relative;
+    /*top: 7vh;*/
+
+    height: 80vh;
+
+    overflow-x: hidden;
+    overflow-y: scroll;
+    scrollbar-width: none;
+  }
+  #word-table {
+    -webkit-column-count: 3;
+    -moz-column-count: 3;
+    column-count: 3;
+    position: relative;
+    height: 80vh;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    scrollbar-width: none;
+  }
+  td {
+    padding-left: 0.2vw;
+    max-width: 12vh;
+    overflow: clip;
+    font-weight: 700;
+  }
+  td.points-unsolved {
+    opacity: 0.2;
+    font-weight: 400;
+  }
+  thead tr th img {
+    height: 1.5vw;
+    opacity: 0.9;
+  }
+  .location-text-div {
+    height: 100%;
+
+    padding-left: 0;
+
+    font-weight: 700;
+    font-size: 1.5vw;
+  }
+}

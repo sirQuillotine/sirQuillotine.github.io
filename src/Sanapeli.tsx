@@ -4,6 +4,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 import Board from "./component/game";
 import PanelL from "./component/panel_l";
 import PanelR from "./component/panel_r";
+import PanelT from "./component/panel_t";
+import PanelB from "./component/panel_b";
 
 const Sanapeli = () => {
   const getCookie = (name: any) => {
@@ -48,6 +50,7 @@ const Sanapeli = () => {
 
   return (
     <div id="app-div">
+      <PanelT stats={stats} onHint={setHint} seed={s} onReload={OnSeed} />
       <PanelL stats={stats} onHint={setHint} seed={s} onReload={OnSeed} />
       <Board
         onstatsChange={setStats}
@@ -55,6 +58,7 @@ const Sanapeli = () => {
         onSolutionsChange={setSolutions}
         hint={hint}
       />
+      <PanelB solutions={solutions} />
       <PanelR solutions={solutions} />
     </div>
   );
