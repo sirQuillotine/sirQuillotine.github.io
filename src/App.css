@@ -36,7 +36,7 @@
 
 #panel-t-parent {
   visibility: hidden;
-  display: block;
+  display: none;
 }
 
 #bottom-panel-container {

@@ -1,56 +1,11 @@
-import { useState, useEffect } from "react";
 import "./game.css";
 
 interface PanelProps {
-  stats?: number[];
-  onHint?: (hint: string) => void;
-  onReload?: (hint: string) => void;
-  seed?: string;
+  stats: number[];
+  time: number;
 }
 
-var getCookieTime = true;
-
-const PanelT = ({ stats = [1, 100, 1, 100] }: PanelProps) => {
-  const setCookie = (name: any, value: any, days: any) => {
-    let expires = "";
-    if (days) {
-      const date = new Date();
-      date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
-      expires = "; expires=" + date.toUTCString();
-    }
-    document.cookie = name + "=" + value + expires + "; path=/";
-  };
-
-  const getCookie = (name: any) => {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) {
-      const popped = parts.pop();
-      return popped?.split(";").shift();
-    }
-    return null;
-  };
-
-  const [time, setTime] = useState(0);
-
-  if (getCookieTime) {
-    var cookieTime = getCookie("time");
-    if (cookieTime) {
-      getCookieTime = false;
-      setTime(parseFloat(cookieTime));
-    }
-  }
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTime((prev) => {
-        setCookie("time", prev + 1000, 7);
-        return prev + 1000;
-      });
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
-
+const PanelT = ({ stats = [1, 100, 1, 100], time }: PanelProps) => {
   const getFormattedTime = (milliseconds: number) => {
     const totalSeconds = Math.floor(milliseconds / 1000);
     const hours = Math.floor(totalSeconds / 3600);

@@ -1,54 +1,25 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import "./game.css";
 
 interface PanelProps {
-  stats?: number[];
-  onHint?: (hint: string) => void;
-  onReload?: (hint: string) => void;
-  seed?: string;
+  stats: number[];
+  onHint: (hint: string) => void;
+  onReload: (hint: string) => void;
+  seed: string;
+  time: number;
 }
 
 var seedNumber = "0";
-var getCookieTime = true;
 
 const PanelL = ({
   stats = [1, 100, 1, 100],
   onHint,
   onReload,
   seed = "0",
+  time,
 }: PanelProps) => {
   const [showPopup, setShowPopup] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
-
-  const setCookie = (name: any, value: any, days: any) => {
-    let expires = "";
-    if (days) {
-      const date = new Date();
-      date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
-      expires = "; expires=" + date.toUTCString();
-    }
-    document.cookie = name + "=" + value + expires + "; path=/";
-  };
-
-  const getCookie = (name: any) => {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) {
-      const popped = parts.pop();
-      return popped?.split(";").shift();
-    }
-    return null;
-  };
-
-  const [time, setTime] = useState(0);
-
-  if (getCookieTime) {
-    var cookieTime = getCookie("time");
-    if (cookieTime) {
-      getCookieTime = false;
-      setTime(parseFloat(cookieTime));
-    }
-  }
 
   const handleShare = () => {
     console.log("Kopitoitu siemen", seedNumber);
@@ -73,30 +44,10 @@ const PanelL = ({
   }
   function setReload() {
     console.log("Refresh...");
-
-    setCookie("time", 0, 7);
-    setTime(0);
-
     onReload?.(Math.floor(Math.random() * 1000000).toString());
   }
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTime((prev) => {
-        setCookie("time", prev + 1000, 7);
-        return prev + 1000;
-      });
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
-  /*
-  useEffect(() => {
-    if (time !== null) setCookie("time", time + oldTime, 7);
-  }, [time]);*/
-
-  //if (seedNumber === "0") {
   seedNumber = seed;
-  //}
 
   const getFormattedTime = (milliseconds: number) => {
     const totalSeconds = Math.floor(milliseconds / 1000);

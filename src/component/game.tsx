@@ -159,7 +159,21 @@ const Board = ({
   //}
 
   const screenWidth = window.screen.width;
-  const step = screenWidth > 500 ? 5.36 : 6.0266; // laatta (4.96vh) + rako (0.4vh) = 5.36vh
+  const [step, setStep] = useState(screenWidth > 500 ? 5.36 : 6.0266); // laatta (4.96vh) + rako (0.4vh) = 5.36vh
+
+  useEffect(() => {
+    const handleResize = () => {
+      setStep(window.screen.width > 500 ? 5.36 : 6.0266);
+    };
+    // Set initial value
+    handleResize();
+    // Add event listener
+    window.addEventListener("resize", handleResize);
+
+    // Cleanup
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const stepunit = screenWidth > 500 ? "vh" : "vw";
 
   const setCookie = (name: any, value: any, days: any) => {
@@ -296,13 +310,15 @@ const Board = ({
         const copy = board.map((r) => r.slice());
 
         var col = cursor.col;
-        if (col === 15 && isalpha(board[cursor.row - 1][col - 1])) {
-          col += 1;
-        }
-
         var row = cursor.row;
-        if (row === 15 && isalpha(board[cursor.row - 1][col - 1])) {
-          row += 1;
+        if (cursorDirection) {
+          if (col === 15 && isalpha(board[cursor.row - 1][col - 1])) {
+            col += 1;
+          }
+        } else {
+          if (row === 15 && isalpha(board[cursor.row - 1][col - 1])) {
+            row += 1;
+          }
         }
 
         if (cursorDirection === true) {
@@ -788,7 +804,7 @@ const Board = ({
   function wordsFromLetters(letters: string) {
     return dictionary.filter((word) => contains(word, letters));
   }
-
+  /*
   function generateBoard() {
     if (!generating) {
       generating = true;
@@ -823,6 +839,52 @@ const Board = ({
       var r = 0;
 
       var placedWords: any[] = [];
+      const letter_counts = {
+        a: 10,
+        b: 1,
+        c: 1,
+        d: 1,
+        e: 8,
+        f: 1,
+        g: 1,
+        h: 2,
+        i: 10,
+        j: 2,
+        k: 5,
+        l: 5,
+        m: 3,
+        n: 9,
+        o: 5,
+        p: 2,
+        r: 2,
+        s: 7,
+        t: 9,
+        u: 4,
+        v: 2,
+        w: 1,
+        y: 2,
+        ä: 5,
+        ö: 1,
+      } as const;
+      type Letter = keyof typeof letter_counts;
+
+      var bag: string[] = [];
+      for (const letter in letter_counts) {
+        for (let i = 0; i < letter_counts[letter as Letter]; i++) {
+          bag.push(letter);
+        }
+      }
+      var handt: string[] = [];
+      for (let i = 0; i < 7; i++) {
+        handt.push(bag.splice(getRandomInt(0, bag.length - 1), 1)[0]);
+      }
+
+      //test
+      //handt = ["ö", "s", "ö", "n", "e", "ö"];
+      setHand(handt);
+      generatedHand = handt;
+
+      console.log("Alku: " + bag.join(""));
 
       while (count > 0 && t-- > 0) {
         var copy = b.map((row) => row.slice());
@@ -835,14 +897,24 @@ const Board = ({
 
         //Valitse sana
         if (first) {
-          var s = dictionary.filter((w) => w.length <= 8);
+          var s = dictionary.filter(
+            (w) => w.length <= 8 && contains(w, bag.join(""))
+          );
+          if (s.length === 0) {
+            break;
+          }
           word = s[rand(0, s.length)];
           offset = getRandomInt(0, word.length - 1);
         } else {
           try {
             var s = dictionary.filter(
-              (w) => w.length <= 8 && w.includes(letter)
+              (w) => w.length <= 8 && contains(w, bag.join(""))
             );
+            if (s.length === 0) {
+              console.log("Pussista ei voi keksiä sanoja", bag.join(""));
+              break;
+            }
+            s = s.filter((w) => w.includes(letter));
             word = s[rand(0, s.length)];
             offset = getRandomIndex(word, letter);
           } catch (e) {
@@ -905,60 +977,18 @@ const Board = ({
         var x = isHorizonal ? position[0] : position[0] - offset;
         var y = isHorizonal ? position[1] - offset : position[1];
         placedWords.push([word, [x, y]]);
+        for (var i = 0; i < word.length; i++) {
+          bag.splice(bag.indexOf(word[i]), 1);
+        }
         count--;
-        t = 10000;
+        t -= 1;
         b = copy.map((row) => row.slice());
       }
+
       //test
       //b = test;
       generatedBoard = b.map((r) => r.slice());
       setBoard(b);
-
-      const letter_counts = {
-        a: 10,
-        b: 1,
-        c: 1,
-        d: 1,
-        e: 8,
-        f: 1,
-        g: 1,
-        h: 2,
-        i: 10,
-        j: 2,
-        k: 5,
-        l: 5,
-        m: 3,
-        n: 9,
-        o: 5,
-        p: 2,
-        r: 2,
-        s: 7,
-        t: 9,
-        u: 4,
-        v: 2,
-        w: 1,
-        y: 2,
-        ä: 5,
-        ö: 1,
-      } as const;
-
-      type Letter = keyof typeof letter_counts;
-
-      const bag: string[] = [];
-      for (const letter in letter_counts) {
-        for (let i = 0; i < letter_counts[letter as Letter]; i++) {
-          bag.push(letter);
-        }
-      }
-
-      var handt: string[] = [];
-      for (let i = 0; i < 7; i++) {
-        handt.push(bag.splice(getRandomInt(0, bag.length - 1), 1)[0]);
-      }
-      //test
-      //handt = ["ö", "s", "ö", "n", "e", "ö"];
-      setHand(handt);
-      generatedHand = handt;
 
       // Find possible words - optimized
       const solutiones: any[] = [];
@@ -1028,6 +1058,393 @@ const Board = ({
       console.log("Generoitu");
       generating = false;
     }
+  }*/
+  function generateBoard() {
+    if (generating) return;
+
+    generating = true;
+    rand = SeedRandom(seedNumber, 1000);
+
+    // Handle cookies
+    if (seed !== getCookie("seed")) {
+      setCookie("solutions", "", 7);
+    }
+    const cookieGuess = getCookie("solutions")?.split(",") || [];
+    setCookie("seed", seedNumber, 7);
+
+    guess = "";
+    setHintVis("");
+
+    console.log("Generoidaan siemenellä " + seedNumber);
+
+    // Initialize letter bag
+    const letter_counts = {
+      a: 10,
+      b: 1,
+      c: 1,
+      d: 1,
+      e: 8,
+      f: 1,
+      g: 1,
+      h: 2,
+      i: 10,
+      j: 2,
+      k: 5,
+      l: 5,
+      m: 3,
+      n: 9,
+      o: 5,
+      p: 2,
+      r: 2,
+      s: 7,
+      t: 9,
+      u: 4,
+      v: 2,
+      w: 1,
+      y: 2,
+      ä: 5,
+      ö: 1,
+    } as const;
+    type Letter = keyof typeof letter_counts;
+
+    const bag: string[] = [];
+    for (const letter in letter_counts) {
+      for (let i = 0; i < letter_counts[letter as Letter]; i++) {
+        bag.push(letter);
+      }
+    }
+
+    // Draw hand
+    const handt: string[] = [];
+    for (let i = 0; i < 7; i++) {
+      handt.push(bag.splice(getRandomInt(0, bag.length - 1), 1)[0]);
+    }
+    setHand(handt);
+    generatedHand = handt;
+
+    // Pre-filter and sort dictionary
+    const bagStr = bag.join("");
+    const availableWords = dictionary
+      .filter((w) => w.length >= 2 && w.length <= 8 && contains(w, bagStr))
+      .sort((a, b) => b.length - a.length); // Prefer longer words
+
+    if (availableWords.length === 0) {
+      console.log("Ei sanoja käytettävissä");
+      generating = false;
+      return;
+    }
+
+    // NEW ALGORITHM: Constraint-based placement
+    let b = boardTemplate.map((row) => row.slice());
+    const targetWords = getRandomInt(3, 8);
+    const placedWords: Array<[string, [number, number], boolean]> = [];
+    const bagLetters = [...bag];
+
+    // Helper: Find all valid placements for a word
+    function findValidPlacements(
+      word: string,
+      board: string[][]
+    ): Array<{ pos: [number, number]; horizontal: boolean; anchor?: string }> {
+      const placements: Array<{
+        pos: [number, number];
+        horizontal: boolean;
+        anchor?: string;
+      }> = [];
+
+      // If board is empty, place first word in center
+      if (placedWords.length === 0) {
+        const centerStart = Math.floor((15 - word.length) / 2);
+        placements.push({ pos: [7, centerStart], horizontal: true });
+        placements.push({ pos: [centerStart, 7], horizontal: false });
+        return placements;
+      }
+
+      // Find positions where word can connect to existing letters
+      for (let i = 0; i < 15; i++) {
+        for (let j = 0; j < 15; j++) {
+          const cell = board[i][j];
+          if (!isalpha(cell)) continue;
+
+          // Try each position in word that matches this cell
+          for (let k = 0; k < word.length; k++) {
+            if (word[k] !== cell) continue;
+
+            // Try horizontal placement
+            const hStart = j - k;
+            if (hStart >= 0 && hStart + word.length <= 15) {
+              if (canPlaceWord(word, [i, hStart], true, board)) {
+                placements.push({
+                  pos: [i, hStart],
+                  horizontal: true,
+                  anchor: cell,
+                });
+              }
+            }
+
+            // Try vertical placement
+            const vStart = i - k;
+            if (vStart >= 0 && vStart + word.length <= 15) {
+              if (canPlaceWord(word, [vStart, j], false, board)) {
+                placements.push({
+                  pos: [vStart, j],
+                  horizontal: false,
+                  anchor: cell,
+                });
+              }
+            }
+          }
+        }
+      }
+
+      return placements;
+    }
+
+    // Helper: Check if word can be placed
+    function canPlaceWord(
+      word: string,
+      pos: [number, number],
+      horizontal: boolean,
+      board: string[][]
+    ): boolean {
+      const [startX, startY] = pos;
+      let hasConnection = placedWords.length === 0;
+
+      for (let i = 0; i < word.length; i++) {
+        const x = horizontal ? startX : startX + i;
+        const y = horizontal ? startY + i : startY;
+        const cell = board[x][y];
+
+        // Check if cell conflicts
+        if (isalpha(cell)) {
+          if (cell !== word[i]) return false;
+          hasConnection = true;
+        } else {
+          // Check adjacent cells for invalid crossings
+          const adjacents = horizontal
+            ? [
+                [x - 1, y],
+                [x + 1, y],
+              ]
+            : [
+                [x, y - 1],
+                [x, y + 1],
+              ];
+
+          for (const [ax, ay] of adjacents) {
+            if (ax >= 0 && ax < 15 && ay >= 0 && ay < 15) {
+              if (isalpha(board[ax][ay])) {
+                // This would create an unintended crossing
+                return false;
+              }
+            }
+          }
+        }
+      }
+
+      // Check before/after positions are clear
+      if (horizontal) {
+        if (startY > 0 && isalpha(board[startX][startY - 1])) return false;
+        if (
+          startY + word.length < 15 &&
+          isalpha(board[startX][startY + word.length])
+        )
+          return false;
+      } else {
+        if (startX > 0 && isalpha(board[startX - 1][startY])) return false;
+        if (
+          startX + word.length < 15 &&
+          isalpha(board[startX + word.length][startY])
+        )
+          return false;
+      }
+
+      return hasConnection;
+    }
+
+    function shuffle(array: any) {
+      let currentIndex = array.length;
+
+      // While there remain elements to shuffle...
+      while (currentIndex != 0) {
+        // Pick a remaining element...
+        let randomIndex = getRandomInt(0, currentIndex);
+        currentIndex--;
+
+        // And swap it with the current element.
+        [array[currentIndex], array[randomIndex]] = [
+          array[randomIndex],
+          array[currentIndex],
+        ];
+      }
+    }
+
+    // Helper: Count letters needed from bag
+    function lettersFromBag(
+      word: string,
+      pos: [number, number],
+      horizontal: boolean,
+      board: string[][]
+    ): string[] {
+      const needed: string[] = [];
+      const [startX, startY] = pos;
+
+      for (let i = 0; i < word.length; i++) {
+        const x = horizontal ? startX : startX + i;
+        const y = horizontal ? startY + i : startY;
+
+        if (!isalpha(board[x][y])) {
+          needed.push(word[i]);
+        }
+      }
+      return needed;
+    }
+
+    // Main placement loop
+    let attempts = 0;
+    const maxAttempts = 200;
+
+    while (placedWords.length < targetWords && attempts < maxAttempts) {
+      attempts++;
+
+      // Filter words by available letters
+      const currentBagStr = bagLetters.join("");
+      const candidates = availableWords.filter((w) =>
+        contains(w, currentBagStr)
+      );
+
+      if (candidates.length === 0) break;
+
+      // Try words in order (longest first)
+      let placed = false;
+      shuffle(candidates);
+      for (const word of candidates) {
+        const placements = findValidPlacements(word, b);
+
+        if (placements.length === 0) continue;
+
+        // Pick random valid placement
+        const placement = placements[rand(0, placements.length)];
+        const needed = lettersFromBag(
+          word,
+          placement.pos,
+          placement.horizontal,
+          b
+        );
+
+        // Check if we have the letters
+        const tempBag = [...bagLetters];
+        let canAfford = true;
+        for (const letter of needed) {
+          const idx = tempBag.indexOf(letter);
+          if (idx === -1) {
+            canAfford = false;
+            break;
+          }
+          tempBag.splice(idx, 1);
+        }
+
+        if (!canAfford) continue;
+
+        // Place the word
+        const [startX, startY] = placement.pos;
+        for (let i = 0; i < word.length; i++) {
+          const x = placement.horizontal ? startX : startX + i;
+          const y = placement.horizontal ? startY + i : startY;
+          b[x][y] = word[i];
+        }
+
+        // Remove letters from bag
+        for (const letter of needed) {
+          const idx = bagLetters.indexOf(letter);
+          bagLetters.splice(idx, 1);
+        }
+
+        placedWords.push([word, placement.pos, placement.horizontal]);
+        placed = true;
+        break;
+      }
+
+      if (!placed) {
+        // No word could be placed, try backing off
+        attempts += 10;
+      }
+    }
+
+    generatedBoard = b.map((r) => r.slice());
+    setBoard(b);
+
+    // Find solutions - optimized
+    const solutionSet = new Set<string>();
+    const solutions: Array<
+      [string, [number, number], number, boolean, boolean]
+    > = [];
+    const handStr = handt.join("");
+
+    maxScore = 0;
+    maxWord = 0;
+    const oldGuessed: Array<[string, [number, number], boolean]> = [];
+    let oldScore = 0;
+
+    for (let i = 0; i < b.length; i++) {
+      // Process row
+      const rowStr = rowToString(b, i);
+      const rowWords = wordsFromLetters(rowStr + handStr);
+
+      for (const word of rowWords) {
+        for (let j = 0; j < b[i].length; j++) {
+          const key = `${word}-${i}-${j}-h`;
+          if (solutionSet.has(key)) continue;
+
+          const score = validateWord(word, [i, j], b, handt, true);
+          if (score !== 0) {
+            solutionSet.add(key);
+            const isGuessed = cookieGuess.includes(maxWord.toString());
+            solutions.push([word, [i, j], score, true, isGuessed]);
+
+            if (isGuessed) {
+              oldGuessed.push([word, [i, j], true]);
+              oldScore += score;
+            }
+
+            maxScore += score;
+            maxWord++;
+          }
+        }
+      }
+
+      // Process column
+      const colStr = columnToString(b, i);
+      const colWords = wordsFromLetters(colStr + handStr);
+
+      for (const word of colWords) {
+        for (let j = 0; j < b.length; j++) {
+          const key = `${word}-${j}-${i}-v`;
+          if (solutionSet.has(key)) continue;
+
+          const score = validateWord(word, [j, i], b, handt, false);
+          if (score !== 0) {
+            solutionSet.add(key);
+            const isGuessed = cookieGuess.includes(maxWord.toString());
+            solutions.push([word, [j, i], score, false, isGuessed]);
+
+            if (isGuessed) {
+              oldGuessed.push([word, [j, i], false]);
+              oldScore += score;
+            }
+
+            maxScore += score;
+            maxWord++;
+          }
+        }
+      }
+    }
+
+    setGuessed(oldGuessed);
+    setTotalScore(oldScore);
+    setSolutions(solutions);
+
+    console.log(`Generoitu: ${placedWords.length} sanaa, ${attempts} yritystä`);
+    generating = false;
   }
 
   function getWord(pos: number[], isHorizontal: boolean, board: string[][]) {
@@ -1106,13 +1523,15 @@ const Board = ({
       const copy = board.map((r) => r.slice());
 
       var col = cursor.col;
-      if (col === 15 && isalpha(board[cursor.row - 1][col - 1])) {
-        col += 1;
-      }
-
       var row = cursor.row;
-      if (row === 15 && isalpha(board[cursor.row - 1][col - 1])) {
-        row += 1;
+      if (cursorDirection) {
+        if (col === 15 && isalpha(board[cursor.row - 1][col - 1])) {
+          col += 1;
+        }
+      } else {
+        if (row === 15 && isalpha(board[cursor.row - 1][col - 1])) {
+          row += 1;
+        }
       }
 
       if (direction === "r") {
