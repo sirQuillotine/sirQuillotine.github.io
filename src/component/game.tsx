@@ -416,7 +416,7 @@ const Board = ({
           text
             .split("\n")
             .map((w) => w.trim())
-            .filter(Boolean)
+            .filter(Boolean),
         );
       });
   }, []);
@@ -474,27 +474,6 @@ const Board = ({
     return random;
   }
 
-  function getLetter(b: string[][] = board, position: number[]) {
-    return b[position[0]][position[1]];
-  }
-  function getRandomIndex(word: string, letter: string) {
-    var indices = word
-      .split("")
-      .map((c, i) => (c === letter ? i : -1))
-      .filter((i) => i !== -1);
-    return indices[getRandomInt(0, indices.length)];
-  }
-  function getRandomPos(b: string[][]) {
-    var tiles = b
-      .map((row, i) => row.map((tile, j) => ({ tile, i, j })))
-      .flat()
-      .filter((t) => isalpha(t.tile));
-    if (tiles.length > 0) {
-      var tile = tiles[getRandomInt(0, tiles.length - 1)];
-      return [tile["i"], tile["j"]];
-    }
-    return [-1, -1];
-  }
   function isalpha(str: string) {
     if (!(str == null)) {
       return str.length == 1 ? /[a-z|ä|ö]/.test(str) : false;
@@ -551,7 +530,7 @@ const Board = ({
     word: string,
     position: number[],
     board: string[][],
-    isHorizontal: boolean
+    isHorizontal: boolean,
   ) {
     var score = 0;
     var joinScore = 0;
@@ -664,7 +643,7 @@ const Board = ({
         var adjacentWord = getWord(
           [position[0], position[1] - 1],
           isHorizontal,
-          generatedBoard
+          generatedBoard,
         );
         for (let k = 0; k < adjacentWord.length; k++) {
           joinScore += LETTER_SCORES[adjacentWord[k]] || 0;
@@ -675,7 +654,7 @@ const Board = ({
         var adjacentWord = getWord(
           [position[0] - 1, position[1]],
           isHorizontal,
-          generatedBoard
+          generatedBoard,
         );
         for (let k = 0; k < adjacentWord.length; k++) {
           joinScore += LETTER_SCORES[adjacentWord[k]] || 0;
@@ -700,7 +679,7 @@ const Board = ({
     position: number[],
     board: string[][],
     handt: string[],
-    isHorizontal: boolean
+    isHorizontal: boolean,
   ) {
     var boardCopy = board.map((row) => row.slice());
 
@@ -797,7 +776,7 @@ const Board = ({
     return [...word].every(
       (l) =>
         letters.includes(l) &&
-        word.split(l).length - 1 <= letters.split(l).length - 1
+        word.split(l).length - 1 <= letters.split(l).length - 1,
     );
   }
 
@@ -1143,7 +1122,7 @@ const Board = ({
     // Helper: Find all valid placements for a word
     function findValidPlacements(
       word: string,
-      board: string[][]
+      board: string[][],
     ): Array<{ pos: [number, number]; horizontal: boolean; anchor?: string }> {
       const placements: Array<{
         pos: [number, number];
@@ -1204,7 +1183,7 @@ const Board = ({
       word: string,
       pos: [number, number],
       horizontal: boolean,
-      board: string[][]
+      board: string[][],
     ): boolean {
       const [startX, startY] = pos;
       let hasConnection = placedWords.length === 0;
@@ -1283,7 +1262,7 @@ const Board = ({
       word: string,
       pos: [number, number],
       horizontal: boolean,
-      board: string[][]
+      board: string[][],
     ): string[] {
       const needed: string[] = [];
       const [startX, startY] = pos;
@@ -1309,7 +1288,7 @@ const Board = ({
       // Filter words by available letters
       const currentBagStr = bagLetters.join("");
       const candidates = availableWords.filter((w) =>
-        contains(w, currentBagStr)
+        contains(w, currentBagStr),
       );
 
       if (candidates.length === 0) break;
@@ -1328,7 +1307,7 @@ const Board = ({
           word,
           placement.pos,
           placement.horizontal,
-          b
+          b,
         );
 
         // Check if we have the letters
@@ -1495,7 +1474,7 @@ const Board = ({
   function getWordStartPos(
     startPos: number[],
     isHorizonal: boolean,
-    board: string[][]
+    board: string[][],
   ) {
     var x = startPos[0];
     var y = startPos[1];
@@ -1600,7 +1579,7 @@ const Board = ({
       startX,
       startY,
       cursorDirection,
-      generatedBoard
+      generatedBoard,
     );
 
     guess = expandedGuess.word;
@@ -1619,7 +1598,7 @@ const Board = ({
       [startX, startY],
       generatedBoard,
       generatedHand,
-      cursorDirection
+      cursorDirection,
     );
 
     // Process the main word if valid
@@ -1635,7 +1614,7 @@ const Board = ({
         correctCells,
         removeCells,
         originalGuess,
-        generatedBoard
+        generatedBoard,
       );
 
       totalScore += wordResult.score;
@@ -1651,7 +1630,7 @@ const Board = ({
         const perpendicularWord = getWord(
           [checkX, checkY],
           !cursorDirection,
-          board
+          board,
         );
 
         // Only process if the perpendicular word is longer than 1 letter
@@ -1660,7 +1639,7 @@ const Board = ({
             checkX,
             checkY,
             perpendicularDirection,
-            generatedBoard
+            generatedBoard,
           );
 
           const perpendicularScore = validateWord(
@@ -1668,7 +1647,7 @@ const Board = ({
             [perpendicularResult.x, perpendicularResult.y],
             generatedBoard,
             generatedHand,
-            !cursorDirection
+            !cursorDirection,
           );
 
           if (perpendicularScore > 0) {
@@ -1683,7 +1662,7 @@ const Board = ({
               correctCells,
               removeCells,
               "",
-              generatedBoard
+              generatedBoard,
             );
 
             totalScore += wordResult.score;
@@ -1698,7 +1677,7 @@ const Board = ({
         startY,
         cursorDirection,
         removeCells,
-        generatedBoard
+        generatedBoard,
       );
     }
 
@@ -1728,7 +1707,7 @@ const Board = ({
     x: number,
     y: number,
     direction: boolean,
-    board: string[][]
+    board: string[][],
   ) {
     let word = guess;
     let startX = x;
@@ -1782,7 +1761,7 @@ const Board = ({
     x: number,
     y: number,
     direction: boolean,
-    board: string[][]
+    board: string[][],
   ) {
     if (direction) {
       if (isalpha(board[x]?.[y - 1])) {
@@ -1802,11 +1781,11 @@ const Board = ({
     x: number,
     y: number,
     direction: boolean,
-    guessedWords: any
+    guessedWords: any,
   ) {
     return guessedWords.some(
       (g: any) =>
-        g[0] === word && g[1][0] === x && g[1][1] === y && g[2] === direction
+        g[0] === word && g[1][0] === x && g[1][1] === y && g[2] === direction,
     );
   }
 
@@ -1822,7 +1801,7 @@ const Board = ({
     correctCells: string[][],
     removeCells: string[][],
     originalGuess: string,
-    board: string[][]
+    board: string[][],
   ) {
     let earnedScore = 0;
 
@@ -1840,7 +1819,7 @@ const Board = ({
         sol[0] === word &&
         sol[1][0] === x &&
         sol[1][1] === y &&
-        sol[3] === direction
+        sol[3] === direction,
     );
 
     if (solutionIndex !== -1) {
@@ -1870,7 +1849,7 @@ const Board = ({
     y: number,
     direction: boolean,
     removeCells: string[][],
-    board: string[][]
+    board: string[][],
   ) {
     const isHorizontal = direction;
 
@@ -2039,10 +2018,10 @@ const Board = ({
                   finalCorrect
                     ? "has-letter letter-disappears-animation"
                     : finalLetter
-                    ? "has-letter letter-appears-animation"
-                    : finalRemove
-                    ? "has-letter letter-remove-animation"
-                    : ""
+                      ? "has-letter letter-appears-animation"
+                      : finalRemove
+                        ? "has-letter letter-remove-animation"
+                        : ""
                 }`}
                 onClick={() => moveCursorTo(colNum, rowNum)}
                 style={{
@@ -2052,7 +2031,7 @@ const Board = ({
                           (finalLetter?.toUpperCase() ??
                             finalCorrect?.toUpperCase() ??
                             finalRemove?.toUpperCase()) ||
-                            ""
+                            "",
                         )}.png)`
                       : undefined,
                   backgroundSize: "contain",
@@ -2061,7 +2040,7 @@ const Board = ({
                 {/* Visual letters are handled by the backgroundImage style above */}
               </div>
             );
-          })
+          }),
         )}
 
         {/* Alkupää */}
@@ -2215,7 +2194,7 @@ const Board = ({
             style={{
               backgroundImage: tile.toUpperCase()
                 ? `url(/graphics/tiles/letters/${encodeURIComponent(
-                    tile.toUpperCase()
+                    tile.toUpperCase(),
                   )}.png)`
                 : undefined,
               backgroundSize: "contain",
