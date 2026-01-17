@@ -8,18 +8,9 @@ interface PanelProps {
   seed?: string;
 }
 
-var seedNumber = "0";
 var getCookieTime = true;
 
-const PanelT = ({
-  stats = [1, 100, 1, 100],
-  onHint,
-  onReload,
-  seed = "0",
-}: PanelProps) => {
-  const [showPopup, setShowPopup] = useState(false);
-  const [showInfo, setShowInfo] = useState(false);
-
+const PanelT = ({ stats = [1, 100, 1, 100] }: PanelProps) => {
   const setCookie = (name: any, value: any, days: any) => {
     let expires = "";
     if (days) {
@@ -50,36 +41,6 @@ const PanelT = ({
     }
   }
 
-  const handleShare = () => {
-    console.log("Kopitoitu siemen", seedNumber);
-    navigator.clipboard.writeText(
-      "https://sirquillotine.github.io/#/" + seedNumber
-    );
-    //https://sirquillotine.github.io/#/
-    //window.location.href
-
-    setShowPopup(true);
-    setTimeout(() => {
-      setShowPopup(false);
-    }, 2000);
-  };
-
-  const handleInfo = () => {
-    setShowInfo((prev) => !prev);
-  };
-
-  function setHint() {
-    onHint?.(Math.random().toString());
-  }
-  function setReload() {
-    console.log("Refresh...");
-
-    setCookie("time", 0, 7);
-    setTime(0);
-
-    onReload?.(Math.floor(Math.random() * 1000000).toString());
-  }
-
   useEffect(() => {
     const interval = setInterval(() => {
       setTime((prev) => {
@@ -89,14 +50,6 @@ const PanelT = ({
     }, 1000);
     return () => clearInterval(interval);
   }, []);
-  /*
-  useEffect(() => {
-    if (time !== null) setCookie("time", time + oldTime, 7);
-  }, [time]);*/
-
-  //if (seedNumber === "0") {
-  seedNumber = seed;
-  //}
 
   const getFormattedTime = (milliseconds: number) => {
     const totalSeconds = Math.floor(milliseconds / 1000);
