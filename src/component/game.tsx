@@ -1806,8 +1806,10 @@ const Board = ({
     let earnedScore = 0;
 
     if (isWordAlreadyGuessed(word, x, y, direction, guessedWords)) {
-      handleUsedWord();
+      console.log(word, originalGuess);
+
       if (originalGuess !== "") {
+        handleUsedWord();
         markInvalidWord(originalGuess, x, y, direction, removeCells, board);
       }
       return { score: 0 };
